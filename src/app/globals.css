@@ -53,6 +53,17 @@
   --color-muted-dark: #a8a29a;
 
   /*
+    Validation red. Surface sensitive for the same reason bronze is: the deep
+    shade passes AA on the light surfaces forms actually sit on (7.4:1 on white,
+    6.9:1 on paper) and fails badly on charcoal, so a charcoal shade is defined
+    alongside it and pinned per surface below. Deliberately desaturated toward
+    brick rather than a signal red, because a corporate form should correct you,
+    not alarm you.
+  */
+  --color-danger: #9b1c1c;
+  --color-danger-bright: #f0a6a6;
+
+  /*
     next/font injects the loaded families as --font-heading-family and
     --font-body-family from the root layout. The names MUST differ from the
     theme keys below: a custom property that references itself is a cycle and
@@ -86,12 +97,14 @@
 .bg-ink-700 {
   --color-bronze: var(--color-bronze-bright);
   --color-bronze-hover: var(--color-bronze-bright-hover);
+  --color-danger: var(--color-danger-bright);
 }
 .bg-white,
 .bg-paper,
 .bg-paper-dark {
   --color-bronze: #7a4e16;
   --color-bronze-hover: #6b4413;
+  --color-danger: #9b1c1c;
 }
 
 html {

@@ -126,6 +126,52 @@ export const CAPABILITIES = [
 ] as const;
 
 /**
+ * What Craftline looks for in an operator.
+ *
+ * Traits only. There is deliberately no experience requirement, no background
+ * requirement, and nothing that reads as a qualification threshold, because a
+ * stated threshold pre-FDD is a claim about who will be accepted and this site
+ * cannot make one. Each line below follows from the support model above: a
+ * documented playbook implies someone willing to follow it, and a sequenced
+ * territory plan implies commitment to one market first.
+ */
+export const OPERATOR_PROFILE = [
+  "Operators who intend to run the business themselves rather than hold it passively.",
+  "People who want a system to follow rather than one to invent.",
+  "Commitment to a single market before any conversation about a second.",
+] as const;
+
+/**
+ * Inquiry form option sets.
+ *
+ * These are answer choices, not assertions. Read them anyway with the same
+ * suspicion as copy: a bracket floor implies an expectation whether or not a
+ * sentence states one.
+ *
+ * The capital brackets start below fifty thousand and end with a decline
+ * option, so the form asks the question without implying a minimum. Nothing
+ * anywhere on the site states a capital requirement, because no FDD has been
+ * issued and there is therefore nothing to require.
+ */
+export const CAPITAL_BRACKETS = [
+  "Under $50,000",
+  "$50,000 to $150,000",
+  "$150,000 to $300,000",
+  "Over $300,000",
+  "Prefer not to say",
+] as const;
+
+export const TIMELINE_OPTIONS = [
+  "Within 3 months",
+  "3 to 6 months",
+  "6 to 12 months",
+  "More than 12 months",
+  "Still gathering information",
+] as const;
+
+export const VETERAN_OPTIONS = ["Yes", "No", "Prefer not to say"] as const;
+
+/**
  * FRANCHISE LEGAL DISCLAIMER, VERBATIM AND NON NEGOTIABLE.
  *
  * The FDD is not yet issued. Until it is, and in registration states until

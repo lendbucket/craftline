@@ -1,13 +1,17 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/config/company";
+import { BRANDS, SITE_URL } from "@/config/company";
 
 /**
  * Canonical sitemap.
  *
  * Only routes that actually render belong here. A sitemap that lists a page
  * which 404s is worse than a short sitemap, so this list grows in the same
- * commit as the page it names. The remaining routes (about, brands, franchising,
- * contact, privacy, terms) are added as each one lands.
+ * commit as the page it names. Privacy and terms are still to be written and
+ * are deliberately absent until they are.
+ *
+ * Brand detail routes come from the BRANDS array, the same source the pages are
+ * generated from, so a new brand cannot be published and left out of the
+ * sitemap.
  *
  * No `lastModified`. It would be the build timestamp, which changes on every
  * deploy whether or not the page changed, and a lastmod that always moves is a
@@ -16,7 +20,14 @@ import { SITE_URL } from "@/config/company";
  *
  * The founder's name appears in no URL on this property, by design.
  */
-const ROUTES = ["/"] as const;
+const ROUTES = [
+  "/",
+  "/about",
+  "/brands",
+  ...BRANDS.map((brand) => `/brands/${brand.slug}`),
+  "/franchising",
+  "/contact",
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return ROUTES.map((route) => ({

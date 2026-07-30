@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
+import { Eyebrow } from "@/components/page-header";
 import { BRANDS, CAPABILITIES, COMPANY, FOUNDING_STATEMENT } from "@/config/company";
 
 /**
@@ -17,13 +18,6 @@ import { BRANDS, CAPABILITIES, COMPANY, FOUNDING_STATEMENT } from "@/config/comp
  * rather than to look like it is missing a photograph. See the home-hero slot
  * for the direction if one is ever shot.
  */
-
-/** Small caps label used above every section heading. Keeps the rhythm. */
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="tracked-caps text-[0.65rem] text-bronze">{children}</p>
-  );
-}
 
 export default function HomePage() {
   const [wattsmith] = BRANDS;

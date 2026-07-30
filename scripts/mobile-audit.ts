@@ -120,10 +120,26 @@ async function measurePage(
           if (element.classList.contains("tap-44")) continue;
           // Skip the skip-link, which is intentionally offscreen until focused.
           if (element.classList.contains("sr-only")) continue;
-          if (rect.height < floor - 0.5) {
+
+          // A native radio or checkbox is ~20px and always will be. The thing a
+          // thumb actually lands on is its label, so that is what gets measured.
+          // Falling back to the control's own box when it has no label is
+          // deliberate: an unlabelled control is a real failure, and silently
+          // exempting it would hide two bugs at once.
+          let measured = rect;
+          const type = (element.getAttribute("type") || "").toLowerCase();
+          if (type === "radio" || type === "checkbox") {
+            const label = element.closest("label") ||
+              (element.id
+                ? document.querySelector<HTMLElement>(`label[for="${element.id}"]`)
+                : null);
+            if (label) measured = label.getBoundingClientRect();
+          }
+
+          if (measured.height < floor - 0.5) {
             const label = (element.textContent || element.getAttribute("aria-label") || "").trim();
             smallTargets.push(
-              `${element.tagName.toLowerCase()} ${Math.round(rect.height)}px "${label.slice(0, 40)}"`,
+              `${element.tagName.toLowerCase()}${type ? `[${type}]` : ""} ${Math.round(measured.height)}px "${label.slice(0, 40)}"`,
             );
           }
         }
