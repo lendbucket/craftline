@@ -1,0 +1,241 @@
+@import "tailwindcss";
+
+/*
+  CRAFTLINE BRANDS DESIGN TOKENS
+  ==============================
+
+  No designer identity exists for Craftline yet. This file is therefore the
+  entire visual system, and it is built to be replaced: every colour, face, and
+  radius the site uses is declared once here and referenced by token name
+  everywhere else. Swapping in a real identity later should be an edit to this
+  file, not a sweep through components. Do not hardcode a hex value in a
+  component.
+
+  The system is deliberately restrained corporate, not consumer trade dress:
+    - near-black charcoal for authority
+    - warm off white so the light surfaces do not read clinical
+    - one accent, a deep bronze, used sparingly
+
+  The bronze is chosen to read craft and trade WITHOUT borrowing Wattsmith gold
+  (#F7B11D). Craftline is the parent, not a louder version of the operating
+  brand, so the accent sits back: rules, eyebrows, focus rings, one button.
+*/
+
+@theme {
+  /* Charcoal. `ink` is the primary dark surface and the body text colour. */
+  --color-ink: #191a1c;
+  --color-ink-800: #232528;
+  --color-ink-700: #313438;
+  --color-ink-600: #4a4e54;
+
+  /*
+    Bronze is context sensitive for WCAG AA, the same pattern Wattsmith uses for
+    gold. The bright shade #C68A3B reads 5.86:1 on ink but only 2.6:1 on white,
+    so as text or small UI on a light surface it must be the deep shade
+    (5.7:1 on paper-dark, 7.2:1 on white); on charcoal surfaces it must be the
+    bright shade. The token DEFAULTS to the deep shade and is re-pinned per
+    surface below, so `text-bronze` is always the AA-passing choice for whatever
+    it is sitting on. Solid bronze buttons opt out: they use the bright shade as
+    a fill with ink text (5.86:1), which passes on every surface.
+  */
+  --color-bronze: #7a4e16;
+  --color-bronze-hover: #6b4413;
+  --color-bronze-bright: #c68a3b;
+  --color-bronze-bright-hover: #b57d33;
+
+  /* Warm off white. `paper` is the default light surface. */
+  --color-paper: #f6f3ee;
+  --color-paper-dark: #eae5dc;
+  --color-white: #ffffff;
+
+  /* Secondary text. Two shades because one cannot pass AA on both surfaces. */
+  --color-muted: #6a6560;
+  --color-muted-dark: #a8a29a;
+
+  /*
+    next/font injects the loaded families as --font-heading-family and
+    --font-body-family from the root layout. The names MUST differ from the
+    theme keys below: a custom property that references itself is a cycle and
+    resolves to invalid, so `--font-heading: var(--font-heading), ...` would
+    silently drop the face and fall back to Arial.
+  */
+  --font-heading: var(--font-heading-family), "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-body-family), system-ui, sans-serif;
+
+  /* Corporate restraint: squared, not pill. Nothing rounder than 6px. */
+  --radius-sm: 2px;
+  --radius: 4px;
+  --radius-lg: 6px;
+}
+
+:root {
+  --background: var(--color-white);
+  --foreground: var(--color-ink);
+}
+
+/*
+  Surface-aware bronze. Custom properties inherit, so pinning --color-bronze on
+  each surface class means any descendant `text-bronze` / `border-bronze` /
+  `fill-bronze` resolves to the AA-passing bronze for that background, including
+  nested cards and tone-flexible sections.
+    - Charcoal surfaces -> bright bronze (5.86:1 on ink)
+    - Light surfaces    -> deep bronze  (>= 4.5:1 on white, paper, paper-dark)
+*/
+.bg-ink,
+.bg-ink-800,
+.bg-ink-700 {
+  --color-bronze: var(--color-bronze-bright);
+  --color-bronze-hover: var(--color-bronze-bright-hover);
+}
+.bg-white,
+.bg-paper,
+.bg-paper-dark {
+  --color-bronze: #7a4e16;
+  --color-bronze-hover: #6b4413;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* We supply our own pressed states, so kill the default gray tap flash. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  /* Never allow the page itself to scroll sideways on a phone. Wide content
+     must scroll inside its own container, not the body. */
+  overflow-x: hidden;
+}
+
+/* Long strings wrap instead of forcing overflow. */
+h1, h2, h3, h4, p, li, a, dd {
+  overflow-wrap: break-word;
+}
+
+/* 16px minimum on form controls so iOS never auto-zooms on focus. */
+input, select, textarea {
+  font-size: 16px;
+}
+
+/* Safe-area helpers for fixed elements on notched devices. */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Every tappable element gets an acknowledged pressed state. */
+@media (hover: none) {
+  a:active,
+  button:active,
+  [role="button"]:active {
+    transform: scale(0.98);
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+}
+
+/*
+  Tracked caps. Craftline has no emblem, so the wordmark, the eyebrows, and the
+  nav are all doing the identity work through type alone. Wide tracking at small
+  sizes is what makes that read as a holding company rather than as a label.
+*/
+.tracked-caps {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+/*
+  Fluid display scale. Corporate sites earn authority from restraint, so these
+  top out well below the Wattsmith display sizes: the largest heading on the
+  site is 3.5rem, not 5rem.
+*/
+.display-xl {
+  font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+.display-lg {
+  font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.018em;
+}
+.display-md {
+  font-size: clamp(1.35rem, 1.15rem + 0.9vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.012em;
+}
+
+/* Hover carries weight: interactive surfaces lift, not just tint. */
+@media (hover: hover) {
+  .lift {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .lift:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/*
+  Touch target floor for inline text links.
+
+  Expands an element's hit area to 44px tall WITHOUT changing its box, so a
+  17px inline link on a baseline next to a heading can be tapped reliably on a
+  phone while the layout around it stays where the design put it. Discrete
+  controls (buttons, links styled as buttons) use `min-h-11` instead, because
+  there the height IS the design and growing it is the correct fix.
+
+  Scoped below `md` on purpose: an invisible 44px box is a liability on a
+  pointer device, where it can swallow a click meant for a neighbour. Only ever
+  put this on an element whose neighbours are text, and never on two elements
+  that overlap, or one link quietly eats the other's taps.
+*/
+@media (max-width: 767px) {
+  .tap-44 {
+    position: relative;
+  }
+  .tap-44::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 100%;
+    min-height: 44px;
+    transform: translateY(-50%);
+  }
+}
+
+/* Accessible focus ring in the accent. Surface-aware via --color-bronze, so
+   the ring stays visible on charcoal and on paper alike. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-bronze);
+  outline-offset: 2px;
+}
+
+/* Selection uses bright bronze with ink text (5.86:1). */
+::selection {
+  background: var(--color-bronze-bright);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

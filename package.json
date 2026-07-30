@@ -1,0 +1,37 @@
+{
+  "name": "craftline",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "seo-audit": "node scripts/seo-audit.mjs",
+    "contrast-audit": "node scripts/contrast-audit.mjs",
+    "mobile-audit": "tsx scripts/mobile-audit.ts",
+    "placeholder-audit": "node scripts/placeholder-audit.mjs"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "lucide-react": "^1.24.0",
+    "next": "16.2.10",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "axe-core": "^4.11.0",
+    "chrome-launcher": "^1.2.1",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.10",
+    "lighthouse": "^13.4.0",
+    "playwright": "^1.61.1",
+    "tailwindcss": "^4",
+    "tsx": "^4.23.1",
+    "typescript": "^5"
+  }
+}
