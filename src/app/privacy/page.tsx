@@ -20,27 +20,34 @@ export const metadata: Metadata = pageMetadata({
  * that a lawyer is correcting an accurate document rather than discovering that
  * the site was described from a template.
  *
+ * THIS PAGE CHANGES IN THE SAME COMMIT AS THE FORMS. It previously said the
+ * forms transmitted nothing, which was true until the commit that wired them to
+ * a database. A privacy policy that lags the code by even one deploy is a false
+ * statement about what is happening to someone's data, so the rule is: if you
+ * change what a form sends, where it goes, or who is told about it, this file
+ * changes with it or the change does not ship.
+ *
  * EVERY FACTUAL CLAIM BELOW WAS VERIFIED AGAINST THE BUILT SITE, NOT ASSUMED.
- * If you change what the site loads or stores, re-verify before editing here.
  * What was checked, and how:
  *
- *   - Cookies, localStorage, sessionStorage: a Playwright pass over all six
- *     routes, including after submitting the contact form, returned an empty
- *     cookie jar and no storage keys on every page.
- *   - Third party requests: the same pass recorded zero requests to any origin
- *     other than this site's own.
+ *   - Cookies, localStorage, sessionStorage: a Playwright pass over all eight
+ *     routes, including submitting both forms, returned an empty cookie jar and
+ *     no storage keys on every page. Re-verified after the forms went live,
+ *     because server actions are a new request path.
+ *   - Third party requests from the browser: zero on every route. The forms
+ *     post to this site's own server, which is what then talks to Supabase and
+ *     Resend. The visitor's browser never contacts either one.
  *   - Analytics: @vercel/analytics 2.0.1 contains no occurrence of
  *     document.cookie, localStorage, or sessionStorage anywhere in its
  *     distributed source. In production it loads /_vercel/insights/script.js,
- *     a path on this site's own domain. The external va.vercel-scripts.com host
- *     in that package is used only in development builds.
- *   - Fonts: next/font self hosts Archivo and Inter, so no request reaches
- *     Google Fonts.
+ *     a path on this site's own domain.
+ *   - Stored columns: the forms audit asserts the exact column set written to
+ *     each table, so the list below cannot silently drift from what is stored.
  *
- * The claim this page does NOT make, deliberately: it does not describe a
- * storage or notification pipeline for form submissions, because none exists.
- * The forms transmit nothing. When that changes, this policy is updated in the
- * same commit as the endpoint, not after it ships.
+ * NO EMAIL ADDRESS IS RENDERED ON THIS PAGE. The notification recipient is
+ * described but never printed: publishing an internal mailbox on a public page
+ * is a spam magnet, and the Craftline address does not exist yet anyway. See
+ * the contact section at the bottom, which states that gap plainly.
  */
 export default function PrivacyPage() {
   const [wattsmith] = BRANDS;
@@ -74,21 +81,23 @@ export default function PrivacyPage() {
                 </P>
               </LegalSection>
 
-              <LegalSection id="forms" heading="Information the forms ask for">
+              <LegalSection id="forms" heading="What the forms collect">
                 <P>
-                  There are two forms on this site. The contact form asks for
-                  your name, email address, phone number, and message. The
-                  franchise inquiry form asks for your name, email address,
-                  phone number, the city and state you are interested in, a
-                  broad liquid capital range, a timeline, whether you are a
-                  military veteran, and anything you would like to add.
+                  There are two forms on this site, and they are the only way
+                  this site collects anything about you. Both are voluntary.
                 </P>
                 <P>
-                  Neither form is accepting submissions yet. Nothing you type
-                  into either one is transmitted anywhere, stored anywhere, or
-                  received by anyone. The forms check that what you entered
-                  looks complete and then tell you that submissions are not
-                  open. That check happens entirely in your browser.
+                  The contact form collects your name, your email address, your
+                  phone number if you give one, and your message.
+                </P>
+                <P>
+                  The franchise inquiry form collects your name, your email
+                  address, your phone number if you give one, the city and state
+                  you are interested in, a broad liquid capital range if you
+                  choose to answer, your timeline, whether you are a military
+                  veteran if you choose to answer, and anything you add in the
+                  message box. Declining to answer the capital or veteran
+                  questions is recorded as no answer, not as a no.
                 </P>
                 <P>
                   Neither form asks for a social security number, a financial
@@ -96,12 +105,72 @@ export default function PrivacyPage() {
                 </P>
               </LegalSection>
 
+              <LegalSection id="storage" heading="What happens when you submit">
+                <P>
+                  When you submit a form, what you entered is sent to this
+                  site&apos;s own server, which writes it to a database and then
+                  sends a notification email so that a person knows to read it.
+                  Your browser never contacts the database or the mail provider
+                  directly.
+                </P>
+                <P>
+                  The database is a Supabase project operated by {COMPANY.name}.
+                  It is the same project that holds records for{" "}
+                  {wattsmith.name}, in separate tables. Access is closed by
+                  default: the tables have row level security enabled with no
+                  access policies, which means no browser, no public key, and no
+                  ordinary connection can read them. Only the server, holding a
+                  credential that is never sent to your browser, can write or
+                  read those rows.
+                </P>
+                <P>
+                  The notification email goes to a working company mailbox and
+                  contains what you submitted, so that whoever reads it can
+                  reply. It is not published on this page, and it is not the
+                  same as a public contact address.
+                </P>
+                <P>
+                  If the database write fails, the form tells you plainly that
+                  your message was not sent, and no notification is issued. It
+                  will never show you a confirmation for something that was not
+                  saved.
+                </P>
+              </LegalSection>
+
+              <LegalSection id="processors" heading="Who else handles it">
+                <P>
+                  Three companies process this data on our behalf, and none of
+                  them is permitted to use it for their own purposes:
+                </P>
+                <LegalList
+                  items={[
+                    "Vercel hosts this site and runs the server that receives your submission.",
+                    "Supabase provides the database the submission is stored in.",
+                    "Resend delivers the notification email.",
+                  ]}
+                />
+                <P>
+                  That is the entire list. Your submission is not passed to
+                  anyone else.
+                </P>
+              </LegalSection>
+
+              <LegalSection id="retention" heading="How long it is kept">
+                <P>
+                  Submissions are kept as business records until they are no
+                  longer needed and are then deleted by hand. There is currently
+                  no automatic deletion schedule, and saying otherwise would
+                  describe a process that does not exist. If you want your
+                  submission deleted, ask, and it will be.
+                </P>
+              </LegalSection>
+
               <LegalSection id="cookies" heading="Cookies and browser storage">
                 <P>
                   This site sets no cookies. It does not use local storage or
                   session storage. This was verified by loading every page in a
-                  real browser, including after using a form, and finding an
-                  empty cookie jar and no stored keys.
+                  real browser and submitting both forms, then finding an empty
+                  cookie jar and no stored keys.
                 </P>
                 <P>
                   Because nothing is stored on your device, there is no cookie
@@ -129,22 +198,14 @@ export default function PrivacyPage() {
                 </P>
               </LegalSection>
 
-              <LegalSection id="hosting" heading="Hosting">
-                <P>
-                  This site is hosted by Vercel. Vercel processes requests on
-                  our behalf in order to serve the site and keeps standard
-                  server logs for operational and security purposes.
-                </P>
-              </LegalSection>
-
               <LegalSection id="not" heading="What this site does not do">
                 <LegalList
                   items={[
-                    "It does not sell or share personal information. There is no personal information to sell, and there would be no sale of it if there were.",
+                    "It does not sell personal information, and it does not share it for advertising.",
                     "It carries no advertising and no advertising trackers.",
                     "It has no accounts, no logins, and no user profiles.",
-                    "It runs no third party scripts, no tag manager, no social media pixels, and no session recording.",
-                    "It does not send marketing email, because it holds no email addresses.",
+                    "It runs no third party scripts in your browser, no tag manager, no social media pixels, and no session recording.",
+                    "It does not add you to a mailing list. An address you give on a form is used to reply to you.",
                     "It does not track you across other websites.",
                   ]}
                 />
@@ -170,33 +231,33 @@ export default function PrivacyPage() {
               <LegalSection id="contact" heading="Questions about this policy">
                 {/*
                   CONTACT_EMAIL is unset because no craftlinebrands.com mailbox
-                  exists. Saying so plainly is better than publishing an address
-                  that bounces or borrowing the Wattsmith one. This section
-                  changes in the same commit that the mailbox goes live.
+                  exists. The gap language stays until one does. Do not
+                  substitute the internal notification address here: that is an
+                  operational mailbox, not a published contact point, and the
+                  two are separate decisions.
                 */}
                 {CONTACT_EMAIL ? (
                   <P>
                     Write to {CONTACT_EMAIL} with any question about this
-                    policy or about information held about you.
+                    policy, or to ask for a submission of yours to be deleted.
                   </P>
                 ) : (
                   <P>
-                    A corporate mailbox for {COMPANY.name} is not published yet,
-                    and the contact form is not yet accepting submissions. Until
-                    one of those is live there is no route to reach us about this
-                    policy through this website. That is stated here rather than
-                    papered over with an address that does not work, and it will
-                    be corrected as soon as the mailbox exists.
+                    A public mailbox for {COMPANY.name} is not published yet. In
+                    the meantime the contact form on this site works and reaches
+                    a person, so use it for any question about this policy or to
+                    ask for a submission of yours to be deleted. A published
+                    address will be added here as soon as one exists.
                   </P>
                 )}
               </LegalSection>
 
               <LegalSection id="changes" heading="Changes to this policy">
                 <P>
-                  This policy describes the site as it is today. It will change
-                  when the site does, in particular when the forms begin
-                  accepting submissions, and the date at the top of this page
-                  will change with it.
+                  This policy describes the site as it is today, and it changes
+                  in the same release as the behaviour it describes rather than
+                  afterwards. The date at the top of this page shows when it
+                  last changed.
                 </P>
               </LegalSection>
             </div>

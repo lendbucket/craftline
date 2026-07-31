@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { submitContactMessage } from "@/app/actions/submit";
 import {
   ErrorSummary,
   TextAreaField,
@@ -11,14 +12,17 @@ import { isEmail, isPhone, required } from "@/lib/validate";
 /**
  * General contact form.
  *
- * Validates on submit and goes no further. There is no endpoint yet: storage
- * and notification land once the database decision is made, and wiring a
- * submit handler to nothing in the meantime would produce the worst possible
- * outcome, which is a form that looks like it sent something.
+ * Live: a valid submit stores a row and triggers a notification. Three end
+ * states, and the distinction between the last two is the whole point:
  *
- * So a valid submit says plainly that submissions are not open. That is a
- * deliberately unsatisfying end state and it is the honest one. It is also why
- * this notice should be the first thing removed when the endpoint exists.
+ *   - invalid: field errors, nothing sent
+ *   - sent: the row is stored, and only then does this say so
+ *   - failed: the row is NOT stored, and this says exactly that
+ *
+ * There is deliberately no optimistic success. The server is the only thing
+ * that knows whether a message was saved, so the confirmation waits for it. A
+ * form that says thank you before the write lands teaches people to walk away
+ * from a message nobody received.
  */
 const EMPTY = { name: "", email: "", phone: "", message: "" };
 type Values = typeof EMPTY;
@@ -44,7 +48,9 @@ export function ContactForm() {
   const [values, setValues] = useState<Values>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
-  const [accepted, setAccepted] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
   const summaryRef = useRef<HTMLDivElement | null>(null);
 
   const set = (field: keyof Values) => (value: string) => {
@@ -56,21 +62,54 @@ export function ContactForm() {
     }
   };
 
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setSubmitted(true);
+    setFailure(null);
+
     const found = validate(values);
     setErrors(found);
     if (Object.keys(found).length > 0) {
-      setAccepted(false);
-      // Let the summary render before moving focus to it.
       requestAnimationFrame(() => summaryRef.current?.focus());
       return;
     }
-    setAccepted(true);
+
+    setPending(true);
+    try {
+      const result = await submitContactMessage(values);
+      if (result.ok) {
+        setSent(true);
+      } else {
+        setFailure(result.message);
+      }
+    } catch {
+      // A thrown action means the request never completed. Same user facing
+      // outcome as a rejected one: not saved, and said so.
+      setFailure(
+        "Something went wrong and your message was not saved. Please try again in a moment.",
+      );
+    } finally {
+      setPending(false);
+    }
   };
 
   const errorCount = Object.keys(errors).length;
+
+  if (sent) {
+    return (
+      <div
+        role="status"
+        data-testid="submit-success"
+        className="max-w-xl rounded border border-ink/20 bg-white p-6"
+      >
+        <p className="text-base font-semibold text-ink">Message received.</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          It has been recorded and someone will read it. If it needs a reply you
+          will get one at the address you gave.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form noValidate onSubmit={onSubmit} className="max-w-xl space-y-7">
@@ -117,25 +156,28 @@ export function ContactForm() {
         error={errors.message}
       />
 
-      <div className="flex flex-wrap items-center gap-5">
-        <button
-          type="submit"
-          className="inline-flex min-h-11 items-center justify-center rounded bg-bronze-bright px-6 py-3 text-sm font-semibold tracking-wide text-ink transition-colors hover:bg-bronze-bright-hover"
-        >
-          Send message
-        </button>
-      </div>
+      <button
+        type="submit"
+        disabled={pending}
+        className="inline-flex min-h-11 items-center justify-center rounded bg-bronze-bright px-6 py-3 text-sm font-semibold tracking-wide text-ink transition-colors hover:bg-bronze-bright-hover disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {pending ? "Sending" : "Send message"}
+      </button>
 
-      {accepted ? (
-        <div role="status" className="rounded border border-ink/20 bg-white p-5">
-          <p className="text-sm font-semibold text-ink">
-            This form is not accepting submissions yet.
+      {/*
+        Failure is an alert, not a status. It is the one outcome the person must
+        act on, and it must never be mistakable for the confirmation above.
+      */}
+      {failure ? (
+        <div
+          role="alert"
+          data-testid="submit-failure"
+          className="rounded border border-danger bg-white p-5"
+        >
+          <p className="text-sm font-semibold text-danger">
+            Your message was not sent.
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            Everything you entered is valid, but there is nowhere to send it
-            yet. Nothing has been stored and nothing has been sent. The form
-            goes live with the corporate mailbox.
-          </p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{failure}</p>
         </div>
       ) : null}
     </form>

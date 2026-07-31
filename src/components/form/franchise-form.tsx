@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { submitFranchiseInquiry } from "@/app/actions/submit";
 import {
   ErrorSummary,
   RadioGroupField,
@@ -28,13 +29,20 @@ import { isEmail, isPhone, required } from "@/lib/validate";
  * option. Nothing on the page states a capital requirement, because there is
  * none to state.
  *
- * Like the contact form, it validates and stops. No endpoint exists yet.
+ * City and state are two fields rather than one, because the table stores them
+ * as two columns. The alternative was a single free text box split on a comma
+ * at write time, which quietly mangles "Kansas City, Kansas" and every other
+ * address a person writes in a way the parser did not anticipate. Ask for what
+ * is stored.
+ *
+ * Confirmation waits for the server. See contact-form.tsx for why.
  */
 const EMPTY = {
   name: "",
   email: "",
   phone: "",
-  location: "",
+  city: "",
+  state: "",
   capital: "",
   timeline: "",
   veteran: "",
@@ -54,12 +62,9 @@ function validate(values: Values): Errors {
   if (required(values.phone) && !isPhone(values.phone)) {
     errors.phone = "Enter a phone number with at least 10 digits.";
   }
-  if (!required(values.location)) {
-    errors.location = "Tell us the city and state you are interested in.";
-  }
-  if (!required(values.timeline)) {
-    errors.timeline = "Choose a timeline.";
-  }
+  if (!required(values.city)) errors.city = "Enter the city you are interested in.";
+  if (!required(values.state)) errors.state = "Enter the state.";
+  if (!required(values.timeline)) errors.timeline = "Choose a timeline.";
   // Capital, veteran status, and message are all optional. Capital especially:
   // requiring it would turn an inquiry into a screening step.
   return errors;
@@ -69,7 +74,9 @@ export function FranchiseForm() {
   const [values, setValues] = useState<Values>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
-  const [accepted, setAccepted] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [failure, setFailure] = useState<string | null>(null);
   const summaryRef = useRef<HTMLDivElement | null>(null);
 
   const set = (field: keyof Values) => (value: string) => {
@@ -79,20 +86,53 @@ export function FranchiseForm() {
     }
   };
 
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setSubmitted(true);
+    setFailure(null);
+
     const found = validate(values);
     setErrors(found);
     if (Object.keys(found).length > 0) {
-      setAccepted(false);
       requestAnimationFrame(() => summaryRef.current?.focus());
       return;
     }
-    setAccepted(true);
+
+    setPending(true);
+    try {
+      const result = await submitFranchiseInquiry(values);
+      if (result.ok) {
+        setSent(true);
+      } else {
+        setFailure(result.message);
+      }
+    } catch {
+      setFailure(
+        "Something went wrong and your inquiry was not saved. Please try again in a moment.",
+      );
+    } finally {
+      setPending(false);
+    }
   };
 
   const errorCount = Object.keys(errors).length;
+
+  if (sent) {
+    return (
+      <div
+        role="status"
+        data-testid="submit-success"
+        className="max-w-xl rounded border border-ink/20 bg-white p-6"
+      >
+        <p className="text-base font-semibold text-ink">Inquiry received.</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          It has been recorded and a person will read it. This is an inquiry
+          only. Nothing has been offered, promised, or reserved, and no
+          agreement exists between you and Craftline Brands.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <form noValidate onSubmit={onSubmit} className="max-w-xl space-y-7">
@@ -131,12 +171,22 @@ export function FranchiseForm() {
         autoComplete="tel"
       />
       <TextField
-        id="franchise-location"
-        name="location"
-        label="City and state of interest"
-        value={values.location}
-        onChange={set("location")}
-        error={errors.location}
+        id="franchise-city"
+        name="city"
+        label="City of interest"
+        value={values.city}
+        onChange={set("city")}
+        error={errors.city}
+        autoComplete="address-level2"
+      />
+      <TextField
+        id="franchise-state"
+        name="state"
+        label="State of interest"
+        value={values.state}
+        onChange={set("state")}
+        error={errors.state}
+        autoComplete="address-level1"
       />
       <SelectField
         id="franchise-capital"
@@ -177,20 +227,22 @@ export function FranchiseForm() {
 
       <button
         type="submit"
-        className="inline-flex min-h-11 items-center justify-center rounded bg-bronze-bright px-6 py-3 text-sm font-semibold tracking-wide text-ink transition-colors hover:bg-bronze-bright-hover"
+        disabled={pending}
+        className="inline-flex min-h-11 items-center justify-center rounded bg-bronze-bright px-6 py-3 text-sm font-semibold tracking-wide text-ink transition-colors hover:bg-bronze-bright-hover disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Send inquiry
+        {pending ? "Sending" : "Send inquiry"}
       </button>
 
-      {accepted ? (
-        <div role="status" className="rounded border border-ink/20 bg-white p-5">
-          <p className="text-sm font-semibold text-ink">
-            This form is not accepting submissions yet.
+      {failure ? (
+        <div
+          role="alert"
+          data-testid="submit-failure"
+          className="rounded border border-danger bg-white p-5"
+        >
+          <p className="text-sm font-semibold text-danger">
+            Your inquiry was not sent.
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            Everything you entered is valid, but there is nowhere to send it
-            yet. Nothing has been stored and nothing has been sent.
-          </p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{failure}</p>
         </div>
       ) : null}
     </form>
