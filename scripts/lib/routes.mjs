@@ -21,6 +21,8 @@ const ALL_ROUTES = [
   { name: "brand detail", path: "/brands/wattsmith-electric" },
   { name: "franchising", path: "/franchising" },
   { name: "contact", path: "/contact" },
+  { name: "privacy", path: "/privacy" },
+  { name: "terms", path: "/terms" },
 ];
 
 export function auditRoutes() {

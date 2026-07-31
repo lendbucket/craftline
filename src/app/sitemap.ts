@@ -6,8 +6,7 @@ import { BRANDS, SITE_URL } from "@/config/company";
  *
  * Only routes that actually render belong here. A sitemap that lists a page
  * which 404s is worse than a short sitemap, so this list grows in the same
- * commit as the page it names. Privacy and terms are still to be written and
- * are deliberately absent until they are.
+ * commit as the page it names.
  *
  * Brand detail routes come from the BRANDS array, the same source the pages are
  * generated from, so a new brand cannot be published and left out of the
@@ -27,6 +26,8 @@ const ROUTES = [
   ...BRANDS.map((brand) => `/brands/${brand.slug}`),
   "/franchising",
   "/contact",
+  "/privacy",
+  "/terms",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

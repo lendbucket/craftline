@@ -186,6 +186,16 @@ export const FRANCHISE_DISCLAIMER =
   "This website and the information on it do not constitute an offer to sell a franchise. An offer to sell a franchise can be made only after delivery of a Franchise Disclosure Document in compliance with applicable law, and in certain states only after registration or qualification in that state.";
 
 /**
+ * Effective date shown on the privacy policy and the terms.
+ *
+ * A hardcoded string rather than a build time date. Rendering `new Date()`
+ * would restamp both documents on every deploy, which tells a reader the terms
+ * changed when they did not, and destroys the one signal the date exists to
+ * give. Update this by hand, in the same commit as the wording change.
+ */
+export const POLICY_LAST_UPDATED = "30 July 2026";
+
+/**
  * Primary navigation. Single source so the header, the footer, and the sitemap
  * cannot drift apart.
  */

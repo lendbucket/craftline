@@ -10,6 +10,7 @@
     "seo-audit": "node scripts/seo-audit.mjs",
     "contrast-audit": "node scripts/contrast-audit.mjs",
     "mobile-audit": "tsx scripts/mobile-audit.ts",
+    "forms-audit": "node scripts/forms-audit.mjs",
     "placeholder-audit": "node scripts/placeholder-audit.mjs"
   },
   "dependencies": {
