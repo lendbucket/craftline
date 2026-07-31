@@ -3,108 +3,170 @@
 /*
   CRAFTLINE BRANDS DESIGN TOKENS
   ==============================
+  System name: PANEL INTERIOR
 
   No designer identity exists for Craftline yet. This file is therefore the
   entire visual system, and it is built to be replaced: every colour, face, and
-  radius the site uses is declared once here and referenced by token name
+  measure the site uses is declared once here and referenced by token name
   everywhere else. Swapping in a real identity later should be an edit to this
   file, not a sweep through components. Do not hardcode a hex value in a
   component.
 
-  The system is deliberately restrained corporate, not consumer trade dress:
-    - near-black charcoal for authority
-    - warm off white so the light surfaces do not read clinical
-    - one accent, a deep bronze, used sparingly
+  WHERE THE PALETTE COMES FROM
+  ----------------------------
+  It is what you see with the dead front off an electrical panel: a galvanized
+  steel enclosure, copper conductors, and the permit packet taped inside the
+  door. Cool ground, warm metal. That pairing is the material truth of the work
+  the brands do, and it is the reason this system is not a warm cream page with
+  a terracotta accent, which is what a corporate brief usually produces.
 
-  The bronze is chosen to read craft and trade WITHOUT borrowing Wattsmith gold
-  (#F7B11D). Craftline is the parent, not a louder version of the operating
-  brand, so the accent sits back: rules, eyebrows, focus rings, one button.
+  The site is LIGHT DOMINANT. Graphite appears in the header, the footer, the
+  title block, and one anchor band per page. It is punctuation, not the field.
+  A dark site reads sparse; a dense light document reads substantial, and
+  substantial is the brief.
 */
 
 @theme {
-  /* Charcoal. `ink` is the primary dark surface and the body text colour. */
-  --color-ink: #191a1c;
-  --color-ink-800: #232528;
-  --color-ink-700: #313438;
-  --color-ink-600: #4a4e54;
+  /*
+    ZINC. The primary ground, and the colour of a galvanized enclosure. Cool
+    and very slightly green so it never reads as cream. Everything else is
+    positioned against this.
+  */
+  --color-zinc: #e7e9e8;
+  /* Elevated light surface. Cards and specimen panels sitting on zinc. */
+  --color-chalk: #f4f5f4;
 
   /*
-    Bronze is context sensitive for WCAG AA, the same pattern Wattsmith uses for
-    gold. The bright shade #C68A3B reads 5.86:1 on ink but only 2.6:1 on white,
-    so as text or small UI on a light surface it must be the deep shade
-    (5.7:1 on paper-dark, 7.2:1 on white); on charcoal surfaces it must be the
-    bright shade. The token DEFAULTS to the deep shade and is re-pinned per
-    surface below, so `text-bronze` is always the AA-passing choice for whatever
-    it is sitting on. Solid bronze buttons opt out: they use the bright shade as
-    a fill with ink text (5.86:1), which passes on every surface.
+    KRAFT. The document ground: job packets, permits, printed schedules. It
+    carries the reading surfaces, which is where the warmth in this system
+    lives. Reserved for long-form and for record-like content, never used as a
+    general alternate band, or it stops meaning anything.
   */
-  --color-bronze: #7a4e16;
-  --color-bronze-hover: #6b4413;
-  --color-bronze-bright: #c68a3b;
-  --color-bronze-bright-hover: #b57d33;
-
-  /* Warm off white. `paper` is the default light surface. */
-  --color-paper: #f6f3ee;
-  --color-paper-dark: #eae5dc;
-  --color-white: #ffffff;
-
-  /* Secondary text. Two shades because one cannot pass AA on both surfaces. */
-  --color-muted: #6a6560;
-  --color-muted-dark: #a8a29a;
+  --color-kraft: #dccfb8;
 
   /*
-    Validation red. Surface sensitive for the same reason bronze is: the deep
-    shade passes AA on the light surfaces forms actually sit on (7.4:1 on white,
-    6.9:1 on paper) and fails badly on charcoal, so a charcoal shade is defined
-    alongside it and pinned per surface below. Deliberately desaturated toward
-    brick rather than a signal red, because a corporate form should correct you,
-    not alarm you.
+    GRAPHITE. The dark ground and the body text colour on light surfaces.
+    Deliberately NOT near-black: it holds a cool cast so it reads as steel.
+
+    It is also pulled well clear of Wattsmith navy (#1A2634). Those two sitting
+    at similar values would make the Wattsmith lockup plate dissolve into a
+    dark section instead of reading as a distinct plate.
   */
-  --color-danger: #9b1c1c;
-  --color-danger-bright: #f0a6a6;
+  --color-graphite: #14191c;
+  --color-graphite-700: #232b30;
+  --color-graphite-600: #323c42;
 
   /*
-    next/font injects the loaded families as --font-heading-family and
-    --font-body-family from the root layout. The names MUST differ from the
-    theme keys below: a custom property that references itself is a cycle and
-    resolves to invalid, so `--font-heading: var(--font-heading), ...` would
-    silently drop the face and fall back to Arial.
+    STEEL. Secondary text and rules. Surface sensitive: the base value clears
+    AA on zinc and chalk but NOT on kraft, which is lighter than it looks, so
+    kraft re-pins it darker below. Never set --color-steel directly in a
+    component; use text-steel and let the surface decide.
   */
-  --font-heading: var(--font-heading-family), "Helvetica Neue", Arial, sans-serif;
-  --font-sans: var(--font-body-family), system-ui, sans-serif;
+  --color-steel: #5a6569;
 
-  /* Corporate restraint: squared, not pill. Nothing rounder than 6px. */
-  --radius-sm: 2px;
-  --radius: 4px;
-  --radius-lg: 6px;
+  /*
+    COPPER. The one accent, and the only saturated colour in the system. Flat
+    ink only: no gradient, no sheen, no glow. The cliche in this category is
+    copper used as a luxury metallic finish, and that is exactly what this is
+    not. It marks structure, rules, active state, and one button.
+
+    Two shades, pinned per surface, because a single copper cannot clear AA on
+    both a light and a dark ground. The deep shade is the default so any
+    unpinned usage fails safe on light rather than silently failing contrast.
+  */
+  --color-copper: #8a4020;
+  --color-copper-hover: #75351a;
+  --color-copper-bright: #d08a5c;
+  --color-copper-bright-hover: #c07c50;
+  /*
+    The deep copper again, under a name that is NEVER re-pinned per surface.
+    Solid fills need it. A solid button reading --color-copper would flip to
+    the bright shade inside a graphite section and put light text on a light
+    fill, which is the exact failure the surface aware mechanism exists to
+    prevent and would reintroduce through the back door. Zinc on this clears
+    AA at 6:1 regardless of what the button is sitting on.
+  */
+  --color-copper-solid: #8a4020;
+  --color-copper-solid-hover: #75351a;
+
+  /*
+    OXIDE. Validation and failure. Rust rather than signal red, because a
+    corporate form should correct you, not alarm you. Surface pinned for the
+    same reason copper is.
+  */
+  --color-oxide: #7e2e22;
+  --color-oxide-bright: #e8a79b;
+
+  /*
+    TYPE. Three roles, each with a job the subject actually has.
+
+    next/font injects the loaded families under *-family names from the root
+    layout. Those names MUST differ from the theme keys below: a custom
+    property that references itself is a cycle, resolves to invalid, and
+    silently drops the face to a system fallback with no error anywhere.
+
+    - DISPLAY, Bricolage Grotesque. A humanist grotesque with real irregularity
+      in the letterforms, so it reads drawn rather than engineered. Display
+      sizes only; it is not a UI face.
+    - BODY, Source Serif 4. Documentary and sturdy, built for long technical
+      reading. The register of code books, permits, and specifications.
+    - MONO, IBM Plex Mono. Labels, title block fields, dates, schedules.
+      Engineering software lineage, which is exactly where it is used.
+  */
+  --font-display: var(--font-display-family), "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-body-family), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-mono-family), ui-monospace, "SFMono-Regular", monospace;
+
+  /*
+    Squared. A drawing sheet has no rounded corners and neither does this. The
+    small radius exists only so hairline borders do not look chipped at their
+    joins on a high density display.
+  */
+  --radius-sm: 0px;
+  --radius: 1px;
+  --radius-lg: 2px;
 }
 
 :root {
-  --background: var(--color-white);
-  --foreground: var(--color-ink);
+  --background: var(--color-zinc);
+  --foreground: var(--color-graphite);
 }
 
 /*
-  Surface-aware bronze. Custom properties inherit, so pinning --color-bronze on
-  each surface class means any descendant `text-bronze` / `border-bronze` /
-  `fill-bronze` resolves to the AA-passing bronze for that background, including
-  nested cards and tone-flexible sections.
-    - Charcoal surfaces -> bright bronze (5.86:1 on ink)
-    - Light surfaces    -> deep bronze  (>= 4.5:1 on white, paper, paper-dark)
+  SURFACE AWARE COLOUR
+  --------------------
+  Custom properties inherit, so re-pinning them on a surface class means every
+  descendant utility resolves to the value that clears AA on that background,
+  including inside nested cards and specimen panels.
+
+  This is the mechanism most likely to break silently when someone nests a
+  panel in a section they did not anticipate, which is precisely why the
+  contrast audit runs on every route at two widths. If you add a surface class,
+  add it here in the same commit.
+
+  An inline background-color is INVISIBLE to this mechanism. Panels painted
+  with a brand colour from config (the Wattsmith navy plate) must therefore not
+  use text-copper or text-steel inside; they set their own foreground from the
+  brand's own values.
 */
-.bg-ink,
-.bg-ink-800,
-.bg-ink-700 {
-  --color-bronze: var(--color-bronze-bright);
-  --color-bronze-hover: var(--color-bronze-bright-hover);
-  --color-danger: var(--color-danger-bright);
+.bg-zinc,
+.bg-chalk {
+  --color-steel: #5a6569;
+  --color-rule: #14191c26;
 }
-.bg-white,
-.bg-paper,
-.bg-paper-dark {
-  --color-bronze: #7a4e16;
-  --color-bronze-hover: #6b4413;
-  --color-danger: #9b1c1c;
+.bg-kraft {
+  /* Kraft is lighter than it looks. Both of these darken to hold AA on it. */
+  --color-steel: #4a5457;
+  --color-rule: #14191c33;
+}
+.bg-graphite,
+.bg-graphite-700,
+.bg-graphite-600 {
+  --color-copper: var(--color-copper-bright);
+  --color-copper-hover: var(--color-copper-bright-hover);
+  --color-oxide: var(--color-oxide-bright);
+  --color-steel: #9aa4ac;
+  --color-rule: #e7e9e824;
 }
 
 html {
@@ -118,15 +180,19 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.75;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  /* Never allow the page itself to scroll sideways on a phone. Wide content
-     must scroll inside its own container, not the body. */
+  /*
+    Never allow the page itself to scroll sideways on a phone. Wide content
+    must scroll inside its own container, not the body.
+  */
   overflow-x: hidden;
 }
 
 /* Long strings wrap instead of forcing overflow. */
-h1, h2, h3, h4, p, li, a, dd {
+h1, h2, h3, h4, p, li, a, dd, dt {
   overflow-wrap: break-word;
 }
 
@@ -135,7 +201,7 @@ input, select, textarea {
   font-size: 16px;
 }
 
-/* Safe-area helpers for fixed elements on notched devices. */
+/* Safe-area helper for fixed elements on notched devices. */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom);
 }
@@ -145,72 +211,152 @@ input, select, textarea {
   a:active,
   button:active,
   [role="button"]:active {
-    transform: scale(0.98);
+    transform: scale(0.985);
   }
 }
 
+/*
+  TYPE SCALE
+  ----------
+  A real scale with intentional weights, not a set of sizes chosen per page.
+  The top end is deliberately larger than a corporate site usually goes: the
+  previous system topped out at 3.5rem and the result read timid.
+
+  Bricolage is variable on weight and width. Display sizes take a slight
+  negative tracking because the face is drawn loose, and headline caps at large
+  sizes otherwise pull apart.
+*/
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.08;
-}
-
-/*
-  Tracked caps. Craftline has no emblem, so the wordmark, the eyebrows, and the
-  nav are all doing the identity work through type alone. Wide tracking at small
-  sizes is what makes that read as a holding company rather than as a label.
-*/
-.tracked-caps {
-  font-family: var(--font-heading);
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-}
-
-/*
-  Fluid display scale. Corporate sites earn authority from restraint, so these
-  top out well below the Wattsmith display sizes: the largest heading on the
-  site is 3.5rem, not 5rem.
-*/
-.display-xl {
-  font-size: clamp(2.25rem, 1.5rem + 3vw, 3.5rem);
-  line-height: 1.04;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.06;
   letter-spacing: -0.02em;
 }
-.display-lg {
-  font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.5rem);
-  line-height: 1.08;
-  letter-spacing: -0.018em;
+
+.display-1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 2rem + 3.6vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
 }
-.display-md {
-  font-size: clamp(1.35rem, 1.15rem + 0.9vw, 1.75rem);
+.display-2 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.6rem + 2vw, 3rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.022em;
+}
+.display-3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.625rem);
+  font-weight: 700;
   line-height: 1.15;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.015em;
 }
 
-/* Hover carries weight: interactive surfaces lift, not just tint. */
-@media (hover: hover) {
-  .lift {
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+/* Long-form reading measure. Slightly larger than UI body. */
+.body-lg {
+  font-size: 1.1875rem;
+  line-height: 1.72;
+}
+
+/*
+  THE MONO LABEL LAYER
+  --------------------
+  Field names on a title block, section registers, dates, schedule values.
+  Tracked wide and set in caps because that is how a drawing labels itself.
+
+  Never used for reading. If a sentence ends up in this class, it is in the
+  wrong class.
+*/
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.label-sm {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+/* Values in a title block field. Mono, but not shouted. */
+.value {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+/*
+  MOTION: THE PLOTTED RULE
+  ------------------------
+  One idea, applied consistently. A section's copper rule draws from zero to
+  full width and its content rises into place, which is a line being plotted on
+  a drawing. That is the subject's own motion. There is nothing else: no
+  parallax, no counters, no staggered card cascades.
+
+  Implemented with scroll driven animations and NO JavaScript. Browsers without
+  animation-timeline get the finished state immediately, which is the correct
+  fallback and is identical to what a reduced-motion user gets. Nothing is
+  hidden behind a script that might not run, so content is never invisible
+  because of a failed observer.
+*/
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
-  .lift:hover {
-    transform: translateY(-2px);
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 26%;
+    }
+    .rule-draw {
+      transform-origin: left center;
+      animation: rule-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 30%;
+    }
   }
 }
 
 /*
   Touch target floor for inline text links.
 
-  Expands an element's hit area to 44px tall WITHOUT changing its box, so a
-  17px inline link on a baseline next to a heading can be tapped reliably on a
-  phone while the layout around it stays where the design put it. Discrete
-  controls (buttons, links styled as buttons) use `min-h-11` instead, because
-  there the height IS the design and growing it is the correct fix.
+  Expands an element's hit area to 44px tall WITHOUT changing its box, so an
+  inline link on a baseline next to a heading can be tapped reliably on a phone
+  while the layout around it stays where the design put it. Discrete controls
+  use min-h-11 instead, because there the height IS the design.
 
-  Scoped below `md` on purpose: an invisible 44px box is a liability on a
-  pointer device, where it can swallow a click meant for a neighbour. Only ever
-  put this on an element whose neighbours are text, and never on two elements
-  that overlap, or one link quietly eats the other's taps.
+  Scoped below md on purpose: an invisible 44px box is a liability on a pointer
+  device, where it can swallow a click meant for a neighbour. Only ever put
+  this on an element whose neighbours are text, and never on two elements that
+  overlap, or one link quietly eats the other's taps.
 */
 @media (max-width: 767px) {
   .tap-44 {
@@ -228,17 +374,20 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Accessible focus ring in the accent. Surface-aware via --color-bronze, so
-   the ring stays visible on charcoal and on paper alike. */
+/*
+  Focus ring in the accent, surface aware through --color-copper, so it stays
+  visible on graphite and on zinc alike. Offset so it never sits on top of the
+  thing it is marking.
+*/
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-bronze);
+  outline: 2px solid var(--color-copper);
   outline-offset: 2px;
 }
 
-/* Selection uses bright bronze with ink text (5.86:1). */
+/* Bright copper with graphite text clears AA on the selection fill. */
 ::selection {
-  background: var(--color-bronze-bright);
-  color: var(--color-ink);
+  background: var(--color-copper-bright);
+  color: var(--color-graphite);
 }
 
 @media (prefers-reduced-motion: reduce) {

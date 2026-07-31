@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { Container } from "@/components/container";
+import { Rule } from "@/components/section";
 import { Wordmark } from "@/components/wordmark";
 import {
   BRANDS,
   COMPANY,
   CONTACT_EMAIL,
-  FRANCHISE_DISCLAIMER,
-  LEGAL_ENTITIES,
   LEGAL_NAV,
   NAV,
 } from "@/config/company";
@@ -14,39 +13,44 @@ import {
 /**
  * Site footer.
  *
- * This component carries the franchise disclaimer, and it is global on purpose.
- * The rule is that every franchise related page carries it verbatim in the
- * footer region; the home page has a franchise call to action, so the set of
- * "franchise related pages" is not a subset anyone should have to maintain by
- * hand. Rendering it site wide makes the rule impossible to violate by adding
- * a page and forgetting.
+ * THE DISCLAIMER MOVED, AND THAT IS THE POINT. It used to live here as small
+ * grey type at the foot of the page. It now renders in the NOTES field of the
+ * TitleBlock, which every page places directly above this footer. The rule
+ * that every page carries FRANCHISE_DISCLAIMER verbatim is unchanged and still
+ * impossible to violate by adding a page, because the title block is part of
+ * the page shell rather than something an author remembers to include.
  *
- * The disclaimer text is interpolated from FRANCHISE_DISCLAIMER and never
- * retyped here. If you find yourself editing the string in this file, stop:
- * it is the one piece of copy on the site that is legally load bearing.
+ * If you are adding a page: render TitleBlock at the end of it. If you find
+ * yourself typing the disclaimer text into a component, stop. It is the one
+ * piece of copy on this site that is legally load bearing and it exists in
+ * exactly one place.
+ *
+ * The corporate structure also moved into the title block's ENTITY field,
+ * where it belongs, so this footer is now navigation and nothing else.
  */
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-ink text-paper">
+    <footer className="bg-graphite text-zinc">
       <Container wide>
-        <div className="grid gap-10 border-b border-ink-700 py-14 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <Wordmark as="plain" />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-dark">
+            <p className="text-steel mt-5 max-w-xs text-[0.9375rem] leading-relaxed">
               {COMPANY.descriptor}
             </p>
           </div>
 
           <div>
-            <h2 className="tracked-caps text-[0.65rem] text-bronze">Company</h2>
-            <ul className="mt-4 space-y-1">
+            <Rule className="max-w-[8rem]" />
+            <h2 className="label text-copper mt-4">Company</h2>
+            <ul className="mt-5 space-y-1">
               {NAV.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="tap-44 inline-block py-1 text-sm text-paper transition-colors hover:text-bronze"
+                    className="text-zinc hover:text-copper tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -56,13 +60,14 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h2 className="tracked-caps text-[0.65rem] text-bronze">Brands</h2>
-            <ul className="mt-4 space-y-1">
+            <Rule className="max-w-[8rem]" />
+            <h2 className="label text-copper mt-4">Brands</h2>
+            <ul className="mt-5 space-y-1">
               {BRANDS.map((brand) => (
                 <li key={brand.slug}>
                   <Link
                     href={`/brands/${brand.slug}`}
-                    className="tap-44 inline-block py-1 text-sm text-paper transition-colors hover:text-bronze"
+                    className="text-zinc hover:text-copper tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
                   >
                     {brand.name}
                   </Link>
@@ -72,13 +77,14 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h2 className="tracked-caps text-[0.65rem] text-bronze">Legal</h2>
-            <ul className="mt-4 space-y-1">
+            <Rule className="max-w-[8rem]" />
+            <h2 className="label text-copper mt-4">Legal</h2>
+            <ul className="mt-5 space-y-1">
               {LEGAL_NAV.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="tap-44 inline-block py-1 text-sm text-paper transition-colors hover:text-bronze"
+                    className="text-zinc hover:text-copper tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -93,7 +99,7 @@ export function SiteFooter() {
             {CONTACT_EMAIL ? (
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="tap-44 mt-4 inline-block py-1 text-sm text-paper transition-colors hover:text-bronze"
+                className="text-zinc hover:text-copper tap-44 mt-5 inline-block py-1 text-[0.9375rem] transition-colors"
               >
                 {CONTACT_EMAIL}
               </a>
@@ -101,36 +107,8 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="border-b border-ink-700 py-8">
-          <h2 className="tracked-caps text-[0.65rem] text-bronze">
-            Corporate structure
-          </h2>
-          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-            {LEGAL_ENTITIES.map((entity) => (
-              <li key={entity.name} className="text-sm leading-relaxed">
-                <span className="text-paper">{entity.name}</span>{" "}
-                <span className="text-muted-dark">
-                  is a {entity.jurisdiction} limited liability company.{" "}
-                  {entity.role}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/*
-          FRANCHISE DISCLAIMER. Verbatim, unabbreviated, and present on every
-          page of this property. Do not move it behind a disclosure, do not
-          shrink it below this size, and do not reword it.
-        */}
-        <div className="py-8">
-          <p className="max-w-4xl text-xs leading-relaxed text-muted-dark">
-            {FRANCHISE_DISCLAIMER}
-          </p>
-        </div>
-
-        <div className="border-t border-ink-700 py-6">
-          <p className="text-xs text-muted-dark">
+        <div className="border-rule border-t py-7">
+          <p className="value text-steel">
             Copyright {year} {COMPANY.name}. All rights reserved.
           </p>
         </div>

@@ -122,10 +122,10 @@ export function FranchiseForm() {
       <div
         role="status"
         data-testid="submit-success"
-        className="max-w-xl rounded border border-ink/20 bg-white p-6"
+        className="max-w-xl rounded border border-rule bg-chalk p-6"
       >
-        <p className="text-base font-semibold text-ink">Inquiry received.</p>
-        <p className="mt-3 text-sm leading-relaxed text-muted">
+        <p className="text-base font-semibold text-graphite">Inquiry received.</p>
+        <p className="mt-3 text-sm leading-relaxed text-steel">
           It has been recorded and a person will read it. This is an inquiry
           only. Nothing has been offered, promised, or reserved, and no
           agreement exists between you and Craftline Brands.
@@ -228,7 +228,7 @@ export function FranchiseForm() {
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex min-h-11 items-center justify-center rounded bg-bronze-bright px-6 py-3 text-sm font-semibold tracking-wide text-ink transition-colors hover:bg-bronze-bright-hover disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex min-h-11 items-center justify-center rounded bg-copper-solid px-6 py-3 text-sm font-semibold tracking-wide text-graphite transition-colors hover:bg-copper-solid-hover disabled:cursor-not-allowed disabled:opacity-60"
       >
         {pending ? "Sending" : "Send inquiry"}
       </button>
@@ -237,12 +237,12 @@ export function FranchiseForm() {
         <div
           role="alert"
           data-testid="submit-failure"
-          className="rounded border border-danger bg-white p-5"
+          className="rounded border border-oxide bg-chalk p-5"
         >
-          <p className="text-sm font-semibold text-danger">
+          <p className="text-sm font-semibold text-oxide">
             Your inquiry was not sent.
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{failure}</p>
+          <p className="mt-2 text-sm leading-relaxed text-steel">{failure}</p>
         </div>
       ) : null}
     </form>

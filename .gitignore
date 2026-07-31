@@ -47,3 +47,6 @@ next-env.d.ts
 # audit proofs and generated output (regenerate with the audit scripts)
 /scratch/
 /screenshots/
+
+# Design review screenshots. Local tooling output, never committed.
+/shots/

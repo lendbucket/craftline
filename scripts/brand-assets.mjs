@@ -48,27 +48,30 @@ const ROOT = process.cwd();
 const OUT_DIR = join(ROOT, "public", "brand");
 
 /** Mirrored from src/app/globals.css. Token name in the comment. */
-const INK = "#191a1c"; // --color-ink
-const PAPER = "#f6f3ee"; // --color-paper
-const MUTED_DARK = "#a8a29a"; // --color-muted-dark, AA on ink
-const BRONZE_BRIGHT = "#c68a3b"; // --color-bronze-bright, 5.86:1 on ink
+const GRAPHITE = "#14191c"; // --color-graphite
+const ZINC = "#e7e9e8"; // --color-zinc
+const STEEL_ON_DARK = "#9aa4ac"; // --color-steel as pinned on graphite
+const COPPER_BRIGHT = "#d08a5c"; // --color-copper-bright, AA on graphite
 
 /**
- * Pulls the Archivo TTFs Google serves.
+ * Pulls a TTF Google serves.
  *
- * Archivo is what next/font loads for headings, so the generated assets and the
- * rendered pages are the same typeface rather than a lookalike. The CSS
- * endpoint is asked for TTF explicitly by sending a desktop user agent: sent a
- * modern one, Google returns WOFF2, which satori cannot decompress.
+ * IBM Plex Mono is the label face, and the rendered wordmark in
+ * src/components/wordmark.tsx is set in it. Generating these assets in the same
+ * face means the browser tab, a shared link, and the site header all carry the
+ * same mark rather than three near misses.
+ *
+ * The CSS endpoint is asked for TTF by sending an old desktop user agent. Sent
+ * a modern one, Google returns WOFF2, which satori cannot decompress.
  */
-async function loadArchivo(weight) {
-  const cssUrl = `https://fonts.googleapis.com/css2?family=Archivo:wght@${weight}&display=swap`;
+async function loadFont(family, weight) {
+  const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&display=swap`;
   const cssResponse = await fetch(cssUrl, {
     headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" },
   });
   if (!cssResponse.ok) {
     throw new Error(
-      `Google Fonts returned ${cssResponse.status} for Archivo ${weight}. ` +
+      `Google Fonts returned ${cssResponse.status} for ${family} ${weight}. ` +
         "This script needs network access. Nothing was written.",
     );
   }
@@ -76,13 +79,13 @@ async function loadArchivo(weight) {
   const match = css.match(/src:\s*url\((https:[^)]+\.ttf)\)/);
   if (!match) {
     throw new Error(
-      `No TTF source found in the Archivo ${weight} stylesheet. Google may have ` +
+      `No TTF source found in the ${family} ${weight} stylesheet. Google may have ` +
         "changed its response format. Nothing was written.",
     );
   }
   const fontResponse = await fetch(match[1]);
   if (!fontResponse.ok) {
-    throw new Error(`Archivo ${weight} TTF returned ${fontResponse.status}.`);
+    throw new Error(`${family} ${weight} TTF returned ${fontResponse.status}.`);
   }
   return fontResponse.arrayBuffer();
 }
@@ -113,7 +116,7 @@ function ogCard() {
         display: "flex",
         width: "100%",
         height: "100%",
-        background: INK,
+        background: GRAPHITE,
         alignItems: "center",
         justifyContent: "center",
         // Generous margin is the whole composition. Nothing fills this space.
@@ -122,39 +125,39 @@ function ogCard() {
     },
     el(
       "div",
-      { style: { display: "flex", alignItems: "center", gap: 40 } },
+      { style: { display: "flex", alignItems: "center", gap: 36 } },
       el(
         "div",
         {
           style: {
             display: "flex",
-            fontFamily: "Archivo",
-            fontWeight: 600,
-            fontSize: 104,
-            letterSpacing: "0.18em",
-            color: PAPER,
+            fontFamily: "IBM Plex Mono",
+            fontWeight: 500,
+            fontSize: 88,
+            letterSpacing: "0.12em",
+            color: ZINC,
             // Tracking adds space after the final letter too. Pulling it back
             // keeps the rule optically centred between the two words.
-            marginRight: -18,
+            marginRight: -11,
           },
         },
         "CRAFTLINE",
       ),
-      // The bronze rule. The one accent, and the only non type element here.
+      // The copper rule. The one accent, and the only non type element here.
       el("div", {
-        style: { display: "flex", width: 56, height: 3, background: BRONZE_BRIGHT },
+        style: { display: "flex", width: 52, height: 2, background: COPPER_BRIGHT },
       }),
       el(
         "div",
         {
           style: {
             display: "flex",
-            fontFamily: "Archivo",
+            fontFamily: "IBM Plex Mono",
             fontWeight: 400,
             fontSize: 40,
-            letterSpacing: "0.18em",
-            color: MUTED_DARK,
-            marginRight: -7,
+            letterSpacing: "0.1em",
+            color: STEEL_ON_DARK,
+            marginRight: -4,
           },
         },
         "BRANDS",
@@ -179,7 +182,7 @@ function icon(size) {
         display: "flex",
         width: "100%",
         height: "100%",
-        background: INK,
+        background: GRAPHITE,
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
@@ -190,14 +193,14 @@ function icon(size) {
       {
         style: {
           display: "flex",
-          fontFamily: "Archivo",
-          fontWeight: 600,
+          fontFamily: "IBM Plex Mono",
+          fontWeight: 500,
           // Set large on purpose. At 16 and 32 pixels a favicon is competing
           // with a row of other tabs, so the letterform has to reach the edges
           // of the tile to be identifiable at a glance. Anything smaller reads
           // as a dark square with something in the middle.
-          fontSize: size * 0.8,
-          color: PAPER,
+          fontSize: size * 0.72,
+          color: ZINC,
           // Lifted off centre so the optical middle accounts for the foot bar.
           marginTop: -size * 0.04,
         },
@@ -212,7 +215,7 @@ function icon(size) {
         left: 0,
         width: `${size}px`,
         height: `${Math.max(2, Math.round(size * 0.1))}px`,
-        background: BRONZE_BRIGHT,
+        background: COPPER_BRIGHT,
       },
     }),
   );
@@ -248,14 +251,14 @@ function pngToIco(png, size) {
 }
 
 async function main() {
-  console.log("brand-assets: fetching Archivo from Google Fonts ...");
-  const [regular, semibold] = await Promise.all([
-    loadArchivo(400),
-    loadArchivo(600),
+  console.log("brand-assets: fetching IBM Plex Mono from Google Fonts ...");
+  const [regular, medium] = await Promise.all([
+    loadFont("IBM+Plex+Mono", 400),
+    loadFont("IBM+Plex+Mono", 500),
   ]);
   const fonts = [
-    { name: "Archivo", data: regular, weight: 400, style: "normal" },
-    { name: "Archivo", data: semibold, weight: 600, style: "normal" },
+    { name: "IBM Plex Mono", data: regular, weight: 400, style: "normal" },
+    { name: "IBM Plex Mono", data: medium, weight: 500, style: "normal" },
   ];
 
   await mkdir(OUT_DIR, { recursive: true });

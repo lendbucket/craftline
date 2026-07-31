@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
-import { SystemSpine } from "@/components/graphic";
 import { JsonLd } from "@/components/json-ld";
-import { Eyebrow, PageHeader } from "@/components/page-header";
-import { FRANCHISE_DISCLAIMER } from "@/config/company";
+import { MaterialPlate } from "@/components/material-plate";
+import { PageHeader } from "@/components/page-header";
+import { Band, SectionLabel } from "@/components/section";
+import { TitleBlock } from "@/components/title-block";
 import { formatPublished, ORDERED_INSIGHTS } from "@/data/insights";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -20,9 +21,14 @@ export const metadata: Metadata = pageMetadata({
 /**
  * Insights hub.
  *
- * A list, not a magazine. There are three posts, so there is no pagination, no
- * tag taxonomy, and no featured slot: building navigation for a volume of
- * content that does not exist is how a section starts looking abandoned.
+ * A schedule of pieces, not a magazine. There are three posts, so there is no
+ * pagination, no tag taxonomy, and no featured slot: building navigation for a
+ * volume of content that does not exist is how a section starts looking
+ * abandoned.
+ *
+ * Kraft ground, because this is a reading surface. That is the whole reason
+ * kraft exists in the palette and it is not used as a general alternate band
+ * elsewhere.
  *
  * No author bylines anywhere in this section. The founder's name is never
  * rendered on this property, and corporate authorship is also the truthful
@@ -32,20 +38,25 @@ export default function InsightsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Insights"
+        label="Insights"
         title="How trade service businesses and franchise systems actually work."
         lead="Category writing for people evaluating this kind of business. No statistics anyone cannot source, no figures about what an operator might earn, and nothing here is an offer."
       />
 
-      <section className="bg-paper">
-        <Container wide>
-          <div className="py-20 sm:py-24">
-            <ul className="space-y-8">
+      <section className="bg-kraft">
+        <Container>
+          <Band>
+            {/*
+              A ruled schedule. Each row is date, category, title, summary,
+              which is the register a document index uses rather than a grid of
+              cards with equal visual weight.
+            */}
+            <ol className="border-rule border-t">
               {ORDERED_INSIGHTS.map((insight) => (
-                <li key={insight.slug}>
-                  <article className="rounded-lg border border-ink/10 bg-white p-7 sm:p-10">
-                    <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
-                      <Eyebrow>{insight.eyebrow}</Eyebrow>
+                <li key={insight.slug} className="border-rule border-b">
+                  <article className="reveal grid gap-5 py-10 lg:grid-cols-[minmax(0,14rem)_1fr] lg:gap-12">
+                    <div>
+                      <p className="label-sm text-copper">{insight.eyebrow}</p>
                       {/*
                         A real date, hardcoded in the post data. It is the one
                         piece of metadata a reader can use to judge whether a
@@ -53,89 +64,68 @@ export default function InsightsPage() {
                       */}
                       <time
                         dateTime={insight.published}
-                        className="text-xs text-muted"
+                        className="value text-steel mt-3 block"
                       >
                         {formatPublished(insight.published)}
                       </time>
                     </div>
 
-                    <h2 className="display-md mt-5 max-w-3xl">
+                    <div>
+                      <h2 className="display-3 max-w-3xl">
+                        <Link
+                          href={`/insights/${insight.slug}`}
+                          className="hover:text-copper tap-44 transition-colors"
+                        >
+                          {insight.title}
+                        </Link>
+                      </h2>
+                      <p className="text-steel mt-5 max-w-2xl leading-relaxed">
+                        {insight.description}
+                      </p>
                       <Link
                         href={`/insights/${insight.slug}`}
-                        className="tap-44 hover:text-bronze"
+                        className="text-copper tap-44 mt-6 inline-flex min-h-11 items-center text-[0.9375rem] font-semibold hover:underline"
                       >
-                        {insight.title}
+                        Read this
+                        <span className="sr-only">: {insight.title}</span>
                       </Link>
-                    </h2>
-
-                    <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted">
-                      {insight.description}
-                    </p>
-
-                    <Link
-                      href={`/insights/${insight.slug}`}
-                      className="tap-44 mt-7 inline-flex min-h-11 items-center text-sm font-semibold text-bronze hover:underline"
-                    >
-                      Read this
-                      <span className="sr-only">: {insight.title}</span>
-                    </Link>
+                    </div>
                   </article>
                 </li>
               ))}
-            </ul>
-          </div>
+            </ol>
+          </Band>
         </Container>
       </section>
 
-      {/* WHAT THIS SECTION IS FOR */}
-      <section className="bg-ink text-paper">
-        <Container wide>
-          <div className="py-20 sm:py-24">
-            <div className="grid items-center gap-12 lg:grid-cols-[1fr_minmax(0,22rem)]">
-              <div>
-                <Eyebrow>Why this section exists</Eyebrow>
-                <h2 className="display-lg mt-5 max-w-2xl text-paper">
-                  Information, published before there is anything to sell.
-                </h2>
-                <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-dark">
-                  Craftline is developing its franchise programme and no
-                  Franchise Disclosure Document has been issued. Until one is,
-                  there is nothing to offer and no terms to discuss. What can be
-                  done honestly in the meantime is to set out how this kind of
-                  business works, so that anyone who eventually looks at a real
-                  disclosure document arrives already understanding the
-                  structure.
-                </p>
-                <div className="mt-10">
-                  <Cta href="/franchising">Franchise information</Cta>
-                </div>
-              </div>
-              {/*
-                Decorative geometry, aria-hidden at the component. It echoes the
-                four part structure the third article describes and carries no
-                information that is not in the text.
-              */}
-              <SystemSpine className="hidden w-full text-bronze-bright lg:block" />
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/*
-        FRANCHISE DISCLAIMER, verbatim and in the page body, in addition to the
-        global instance in the site footer. Every franchise related page carries
-        it, and a section devoted to writing about franchise systems is
-        emphatically one of those.
-      */}
-      <section className="bg-paper-dark">
+      {/* ---------------------------------------------------------------
+          WHY THIS SECTION EXISTS
+          --------------------------------------------------------------- */}
+      <section className="bg-graphite text-zinc relative isolate overflow-hidden">
+        <MaterialPlate id="insights-texture" intensity="quiet" />
         <Container>
-          <div className="py-12">
-            <p className="max-w-4xl text-xs leading-relaxed text-muted">
-              {FRANCHISE_DISCLAIMER}
+          <Band className="relative">
+            <SectionLabel>Why this section exists</SectionLabel>
+            <h2 className="display-2 mt-8 max-w-3xl text-balance">
+              Information, published before there is anything to sell.
+            </h2>
+            <p className="body-lg text-steel mt-8 max-w-2xl">
+              Craftline is developing its franchise programme and no Franchise
+              Disclosure Document has been issued. Until one is, there is
+              nothing to offer and no terms to discuss. What can be done
+              honestly in the meantime is to set out how this kind of business
+              works, so that anyone who eventually reads a real disclosure
+              document arrives already understanding the structure and can tell
+              a good one from a bad one.
             </p>
-          </div>
+            <div className="mt-12">
+              <Cta href="/franchising">Franchise information</Cta>
+            </div>
+          </Band>
         </Container>
       </section>
+
+      <TitleBlock sheet="Insights" />
 
       <JsonLd
         data={breadcrumbSchema([{ name: "Insights", path: "/insights" }])}

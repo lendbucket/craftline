@@ -10,14 +10,14 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <section className="bg-ink text-paper">
+    <section className="bg-graphite text-zinc">
       <Container>
         <div className="py-28 sm:py-36">
-          <p className="tracked-caps text-[0.65rem] text-bronze">Error 404</p>
-          <h1 className="display-lg mt-5 text-paper">
+          <p className="label-sm text-copper">Error 404</p>
+          <h1 className="display-2 mt-5 text-zinc">
             That page does not exist.
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-muted-dark">
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-steel">
             The address may be mistyped, or the page may have moved.
           </p>
           <div className="mt-10">

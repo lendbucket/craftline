@@ -31,29 +31,29 @@
 
 /** Marks a field optional. Required is the default, so it needs no marker. */
 function OptionalTag() {
-  return <span className="ml-2 text-xs font-normal text-muted">Optional</span>;
+  return <span className="ml-2 text-xs font-normal text-steel">Optional</span>;
 }
 
 function ErrorText({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <p id={id} role="alert" className="mt-2 text-sm font-medium text-danger">
+    <p id={id} role="alert" className="mt-2 text-sm font-medium text-oxide">
       {children}
     </p>
   );
 }
 
 function labelClasses() {
-  return "block text-sm font-semibold text-ink";
+  return "block text-sm font-semibold text-graphite";
 }
 
 function controlClasses(hasError: boolean) {
   // min-h-11 is the 44px touch floor. Font size comes from globals.css, which
   // pins form controls to 16px so iOS never zooms the viewport on focus.
   const base =
-    "mt-2 block w-full min-h-11 rounded border bg-white px-3 py-3 text-ink transition-colors";
+    "mt-2 block w-full min-h-11 rounded border bg-chalk px-3 py-3 text-graphite transition-colors";
   return hasError
-    ? `${base} border-danger`
-    : `${base} border-ink/25 hover:border-ink/40`;
+    ? `${base} border-oxide`
+    : `${base} border-rule hover:border-ink/40`;
 }
 
 interface BaseProps {
@@ -216,7 +216,7 @@ export function RadioGroupField({
         {options.map((option) => (
           <label
             key={option}
-            className="flex min-h-11 cursor-pointer items-center gap-3 text-ink"
+            className="flex min-h-11 cursor-pointer items-center gap-3 text-graphite"
           >
             <input
               type="radio"
@@ -258,9 +258,9 @@ export function ErrorSummary({
       ref={headingRef}
       tabIndex={-1}
       role="alert"
-      className="rounded border border-danger bg-white p-4"
+      className="rounded border border-oxide bg-chalk p-4"
     >
-      <p className="text-sm font-semibold text-danger">
+      <p className="text-sm font-semibold text-oxide">
         {count === 1
           ? "One field needs attention before this can be sent."
           : `${count} fields need attention before this can be sent.`}

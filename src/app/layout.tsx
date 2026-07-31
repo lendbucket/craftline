@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Inter } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
@@ -11,29 +11,50 @@ import { OG_IMAGE } from "@/lib/seo";
 import "./globals.css";
 
 /**
- * Type is the whole identity for now, so the pairing does real work.
+ * THREE TYPE ROLES, EACH WITH A JOB THE SUBJECT ACTUALLY HAS.
  *
- * Archivo is a squared grotesque. In tracked caps at small sizes it reads
- * industrial and corporate rather than editorial, which is exactly the register
- * a holding company mark needs when there is no emblem beside it.
+ * Bricolage Grotesque carries display. It is a humanist grotesque with real
+ * irregularity in its letterforms, so it reads drawn rather than engineered.
+ * That is where the warmth in this system comes from, and it is why the
+ * display face is not another neutral corporate sans. Display sizes only; it
+ * is deliberately not used for UI.
  *
- * Inter is the body face because it is invisible. Nothing about the reading
- * experience should compete with the wordmark treatment.
+ * Source Serif 4 carries body. It is documentary rather than literary, built
+ * for long technical reading, which is the register of code books, permits,
+ * and specifications. There is a lot of copy on this site now and it has to be
+ * genuinely readable at length.
  *
- * Both are variable, both self host through next/font, and both are declared
- * under *-family names that differ from the Tailwind theme keys in globals.css.
- * Matching the names would create a self-referential custom property, which
- * resolves to invalid and silently drops the face.
+ * IBM Plex Mono carries the label layer: title block fields, section
+ * registers, dates, schedules. It has an engineering software lineage, which
+ * is exactly the vernacular being borrowed.
+ *
+ * WEIGHT BUDGET. Bricolage and Source Serif load as variable weight only. Both
+ * support an optical size axis and Bricolage also supports width; neither is
+ * requested, because the gain is invisible at the sizes used here and the axes
+ * cost real bytes. Plex Mono is not variable on Google Fonts, so it loads the
+ * two static weights actually used and no more.
+ *
+ * All three are declared under *-family names that differ from the Tailwind
+ * theme keys in globals.css. Matching the names would create a
+ * self-referential custom property, which resolves to invalid and silently
+ * drops the face to a system fallback with no error anywhere.
  */
-const heading = Archivo({
+const display = Bricolage_Grotesque({
   subsets: ["latin"],
-  variable: "--font-heading-family",
+  variable: "--font-display-family",
   display: "swap",
 });
 
-const body = Inter({
+const body = Source_Serif_4({
   subsets: ["latin"],
   variable: "--font-body-family",
+  display: "swap",
+});
+
+const mono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono-family",
   display: "swap",
 });
 
@@ -115,15 +136,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${heading.variable} ${body.variable}`}>
-      <body className="flex min-h-screen flex-col bg-paper text-ink">
+    <html
+      lang="en"
+      className={`${display.variable} ${body.variable} ${mono.variable}`}
+    >
+      <body className="bg-zinc text-graphite flex min-h-screen flex-col">
         {/*
           First focusable element on the page. The header nav is short, but a
           keyboard user still should not have to walk it on every route.
         */}
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink focus:px-4 focus:py-3 focus:text-paper"
+          className="label focus:bg-graphite focus:text-zinc sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:px-4 focus:py-3"
         >
           Skip to content
         </a>

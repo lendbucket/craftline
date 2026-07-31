@@ -3,71 +3,108 @@
  * ================
  *
  * Every image slot on this site is declared here, whether or not a real asset
- * exists for it yet. The manifest is the answer to "what imagery does this site
- * still owe?" and it is the thing `npm run placeholder-audit` reads to decide
- * whether the site is shippable.
+ * exists for it yet. The manifest answers "what imagery does this site still
+ * owe, and where would it come from?", it is what `npm run placeholder-audit`
+ * reads to decide whether the site is shippable, and it is the source the
+ * licensing shopping list is generated from by `npm run image-brief`. There is
+ * no second document to keep in sync.
+ *
+ * THE HONESTY LINE, STATED PRECISELY
+ * ----------------------------------
+ * Imagery may never assert a false fact.
+ *
+ * That rules out, permanently and without exception:
+ *   - Any person presented as staff, a crew, a franchisee, or a customer.
+ *     Craftline has none of these to photograph, and a stock model in a
+ *     branded polo is a claim about the company, not decoration.
+ *   - Any job site, vehicle, or premises implied to be ours.
+ *   - Anything implying scale, footprint, or activity that does not exist.
+ *
+ * It permits, and this redesign is built on:
+ *   - Macro and material photography of the trade world used as texture and
+ *     atmosphere. Copper, conduit, panel interiors, drawings, steel, brass,
+ *     timber. A close photograph of copper busbar asserts nothing about who
+ *     owns it; a photograph of a crew does.
+ *   - The real Wattsmith brand assets, which are genuinely ours.
+ *   - Original SVG line illustration in the design system.
  *
  * Rules:
- *   - A slot with status "pending" has NO asset. Components must render the
- *     designed empty state for it, not a grey box, not a stock photo, and not
- *     an <img> pointing at a file that does not exist. A missing image is
- *     honest; a fake one is not.
+ *   - A slot with status "pending" has NO asset. Components render the designed
+ *     treatment for it, which on this site is the schematic linework on
+ *     graphite. Not a grey box, not a stock photo, and not an <img> pointing at
+ *     a file that does not exist. A missing image is honest; a fake one is not.
  *   - A slot only moves to "ready" in the same commit that adds the real file
- *     under /public and fills in `src`, `width`, `height`, and `alt`.
+ *     under /public and fills in `src`, `width`, `height`, `alt`, and `license`.
+ *   - `license` is not optional bookkeeping. An unlicensed or unattributed
+ *     stock image on a commercial site is a legal exposure that surfaces years
+ *     later with no record of where the file came from. If you cannot state the
+ *     licence, the image does not ship.
  *   - Alt text is written here, next to the intent of the slot, so it is
  *     composed deliberately rather than typed into a component at 2am. It must
- *     never contain the founder's name.
- *
- * WHAT CHANGED, AND WHY THE REMAINING PENDING SLOTS ARE NOT A BACKLOG
- * -------------------------------------------------------------------
- * The three slots that could be produced honestly have been. The Open Graph
- * card and the app icon are generated from the Craftline wordmark by
- * `npm run brand-assets`, and the Wattsmith card carries that brand's real
- * delivered lockup rather than a photograph of it.
- *
- * The three still pending all want photographs of people doing work. Craftline
- * has no such photographs of its own operations, and buying stock ones is
- * refused rather than deferred: a franchisor in formation showing crews, trucks,
- * and job sites that are not its own implies scale that does not exist, which
- * belongs in the same category as inventing a franchisee count. So the pages
- * that would have used them carry abstract geometry from the design system
- * instead, and they are built to look finished without a photograph. These slots
- * stay tracked because the direction is worth keeping, not because the site is
- * waiting on them.
+ *     never contain the founder's name, and for a texture image it is usually
+ *     null, because atmosphere behind a headline is decorative and announcing
+ *     it to a screen reader is noise.
  *
  * NOT TRACKED HERE, DELIBERATELY: the inline SVG in src/components/graphic.tsx
  * and the brand lockups in src/components/brand/. Those are components, not
  * assets. They ship inside the HTML, have no file under /public, and cannot be
- * a broken image or a placeholder, which is the entire failure mode this
- * manifest exists to catch. The one exception is the Wattsmith lockup, whose
- * source file IS committed and so IS tracked below.
+ * a broken image, which is the failure mode this manifest exists to catch. The
+ * one exception is the Wattsmith lockup, whose source file IS committed and so
+ * IS tracked below.
  */
 
 export type ImageStatus = "pending" | "ready";
+
+/** Where an asset comes from. Determines what licence evidence is required. */
+export type ImageSource =
+  /** Licensed stock. `license` must name the library and the licence type. */
+  | "stock"
+  /** Owned brand artwork, ours or an operating brand's. */
+  | "brand"
+  /** Produced by a script in this repository. */
+  | "generated";
 
 export interface ImageSlot {
   /** Stable key. Referenced by components and by the audit script. */
   id: string;
   /** Where it appears, in plain language. */
   location: string;
-  /** What the finished asset needs to show. Direction for whoever makes it. */
+  /** What the finished asset needs to show. Direction for whoever buys it. */
   intent: string;
   /** Target intrinsic dimensions. Aspect ratio is the binding part. */
   aspect: string;
+  orientation: "landscape" | "portrait" | "square";
+  /**
+   * Tone direction. This is the part most likely to be ignored by whoever
+   * sources the file, and it is the part that decides whether the image sits
+   * under headline type or fights it.
+   */
+  tone: string;
+  /**
+   * Search terms for the stock library, in priority order. Empty for assets
+   * that are not bought. Read by the image brief generator.
+   */
+  searchTerms: readonly string[];
+  source: ImageSource;
+  /**
+   * Licence record. Null while pending. For stock this must name the library,
+   * the licence type, and the asset id, so the entitlement is provable years
+   * from now without anyone remembering the purchase.
+   */
+  license: string | null;
   status: ImageStatus;
   /** Path under /public. Null while pending. */
   src: string | null;
   /**
    * Intrinsic pixel dimensions of the real asset. Null while pending, and null
-   * for vector assets that have no single intrinsic size. Open Graph consumers
-   * want these declared, so they are recorded rather than measured at runtime.
+   * for vector assets with no single intrinsic size.
    */
   width: number | null;
   height: number | null;
   /**
-   * Alt text for the finished asset. Null for slots that are decorative when
-   * they land, in which case the component renders them hidden from assistive
-   * technology rather than with an empty alt on a meaningful image.
+   * Alt text. Null for slots that are decorative when they land, in which case
+   * the component hides them from assistive technology rather than shipping an
+   * empty alt on a meaningful image.
    */
   alt: string | null;
 }
@@ -77,20 +114,30 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     id: "og-default",
     location: "Open Graph and Twitter card fallback for every page.",
     intent:
-      "The Craftline wordmark set in type on a charcoal field, with generous margin. No photograph, no emblem, no tagline. Produced from the identity system rather than shot, and to be replaced the day a real identity exists. Generated by scripts/brand-assets.mjs from the same Archivo tracked caps treatment the site header uses, so a shared link and the page it opens carry the same mark.",
+      "The Craftline wordmark set in type on a graphite field, with generous margin. No photograph, no emblem, no tagline. Produced from the identity system rather than shot, and to be replaced the day a real identity exists. Generated by scripts/brand-assets.mjs in the Panel Interior palette using the same mono label face the title block uses, so a shared link and the page it opens carry the same mark.",
     aspect: "1200x630",
+    orientation: "landscape",
+    tone: "Graphite ground, zinc wordmark, one copper rule. Nothing else.",
+    searchTerms: [],
+    source: "generated",
+    license: "Owned. Generated in this repository by scripts/brand-assets.mjs.",
     status: "ready",
     src: "/brand/craftline-og-default.png",
     width: 1200,
     height: 630,
-    alt: "The Craftline Brands wordmark on a charcoal field.",
+    alt: "The Craftline Brands wordmark on a graphite field.",
   },
   {
     id: "app-icon",
     location: "Browser tab, bookmark, and home screen icon.",
     intent:
-      "A single letterform drawn from the wordmark on a charcoal field: the C, with the bronze rule reduced to a bar along the foot of the tile. Still not a commissioned emblem, which was the original objection and remains correct. It is the wordmark cut down to what survives at 16 pixels, so it carries no recognition the real identity would have to fight. Generated by scripts/brand-assets.mjs at each size rather than downscaled, so the bar stays crisp.",
+      "A single letterform drawn from the wordmark on a graphite field: the C, with the copper rule reduced to a bar along the foot of the tile. Still not a commissioned emblem, which was the original objection and remains correct. It is the wordmark cut down to what survives at 16 pixels, so it carries no recognition the real identity would have to fight.",
     aspect: "512x512",
+    orientation: "square",
+    tone: "Graphite ground, zinc letterform, copper foot bar.",
+    searchTerms: [],
+    source: "generated",
+    license: "Owned. Generated in this repository by scripts/brand-assets.mjs.",
     status: "ready",
     src: "/brand/craftline-icon-512.png",
     width: 512,
@@ -104,18 +151,42 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     intent:
       "The delivered Wattsmith Electric lockup, copied from that brand's own repository so the two properties cannot drift apart. This file is the designer master and the source of truth; it is rendered as inline SVG by src/components/brand/wattsmith-lockup.tsx so the navy artwork can reverse on a navy field, which an <img> cannot do. Decorative at every call site, because the brand name is always present as visible text beside it.",
     aspect: "1372x498",
+    orientation: "landscape",
+    tone: "Brand navy and gold, unmodified. Craftline does not restyle it.",
+    searchTerms: [],
+    source: "brand",
+    license:
+      "Owned. Wattsmith Electric is a Craftline Brands operating brand; artwork supplied by that brand's repository.",
     status: "ready",
     src: "/brand/wattsmith-electric-lockup.svg",
     width: null,
     height: null,
     alt: null,
   },
+
+  /* ---------------------------------------------------------------------
+     PENDING. All four are material texture. None contains a person, a job
+     site, or anything that could be read as a claim about Craftline's
+     operations. Each has a designed treatment already in place, so the page
+     is finished without the photograph and improved by it.
+     --------------------------------------------------------------------- */
+
   {
     id: "home-hero",
-    location: "Home page hero, behind the headline.",
+    location: "Home page hero, behind the thesis headline.",
     intent:
-      "Wide environmental shot of skilled trade work in progress, shot dark and low contrast so headline type stays legible over it. Real technicians on a real job, from a Craftline brand, never stock. No posed models, no crossed arms, no branded truck hero shot. The hero now carries the abstract rule field from src/components/graphic.tsx and looks deliberate without a photograph, so the bar for replacing it has gone up rather than down: this only lands if the photograph is genuinely better than the geometry.",
-    aspect: "16x9",
+      "Macro of copper conductors landed in a panel, or copper busbar, shot close enough that it reads as material rather than as a location. The whole point is that it asserts nothing: it is copper, not our copper. Must hold large white display type across the left two thirds without the type fighting detail, so the composition needs a quiet zone or an even field on that side.",
+    aspect: "16x9, minimum 2400px wide",
+    orientation: "landscape",
+    tone: "Dark and low contrast, cool shadows, warm copper highlights. It will be set at low opacity over the graphite ground. Reject anything bright, saturated, orange graded, or lit like a product shot.",
+    searchTerms: [
+      "copper busbar macro",
+      "electrical panel copper conductors close up",
+      "copper wire terminals macro dark",
+      "bare copper conductor detail low key",
+    ],
+    source: "stock",
+    license: null,
     status: "pending",
     src: null,
     width: null,
@@ -123,34 +194,81 @@ export const IMAGE_SLOTS: ImageSlot[] = [
     alt: null,
   },
   {
-    id: "about-operations",
-    location: "About page, alongside the holding company explanation.",
+    id: "about-system",
+    location: "About page, beside the four part model explanation.",
     intent:
-      "Documentation, training, or dispatch in use. The point is the system behind the trade, not the trade itself. Must be our own material, not stock office imagery.",
-    aspect: "4x3",
+      "A technical drawing detail. Contemporary construction drawing linework, a panel schedule, or a one line diagram, photographed flat or scanned. NOT a cyanotype blueprint: modern trade drawings are not blue, and the blue print is the most predictable image in this category. Paper grain and print texture are wanted; a crisp CAD export is not.",
+    aspect: "4x3, minimum 1800px wide",
+    orientation: "landscape",
+    tone: "Neutral to slightly warm paper, black or grey linework, ideally a little pencil or red markup. Flat even light, no dramatic shadow, no shallow depth of field.",
+    searchTerms: [
+      "electrical drawing panel schedule paper",
+      "construction drawing detail linework close up",
+      "one line diagram print markup",
+      "engineering drawing paper texture flat lay",
+    ],
+    source: "stock",
+    license: null,
     status: "pending",
     src: null,
     width: null,
     height: null,
-    alt: "Craftline operating procedures in use.",
+    alt: null,
   },
   {
-    id: "franchising-operator",
-    location: "Franchising page, supporting the operator profile section.",
+    id: "franchising-material",
+    location: "Franchising page, between the operator profile and the process.",
     intent:
-      "An owner operator running the business side of a trade company. Must not read as a sales pitch and must not imply any financial outcome. A stock photograph of a smiling person in a branded polo is the exact thing this slot exists to refuse.",
-    aspect: "3x2",
+      "Brass, steel, or a precision hand tool as material. A torque driver, brass fittings, threaded conduit, or a machined surface. It stands for standards and tolerance, which is what the section beside it is about. No hands, no person, no workshop context that reads as somebody's premises.",
+    aspect: "3x2, minimum 2000px wide",
+    orientation: "landscape",
+    tone: "Muted and mineral. Cool steel with a warm brass note, matching the palette. No dramatic rim lighting, no black backdrop product photography, nothing that looks like an advertisement for the tool.",
+    searchTerms: [
+      "brass fittings macro muted",
+      "steel conduit threaded close up",
+      "precision hand tool macro neutral background",
+      "machined metal surface texture detail",
+    ],
+    source: "stock",
+    license: null,
     status: "pending",
     src: null,
     width: null,
     height: null,
-    alt: "An owner operator at work.",
+    alt: null,
+  },
+  {
+    id: "insights-texture",
+    location: "Insights hub, behind the section that explains why it exists.",
+    intent:
+      "Paper as material. Kraft stock, a manila job packet, drafting vellum, or the edge of a bound code book. It is the reading surface of the trade and it sits behind the section about publishing information. Abstract enough that no document is legible, because legible text in a photograph is a fact being asserted.",
+    aspect: "16x9, minimum 2000px wide",
+    orientation: "landscape",
+    tone: "Warm kraft and manila, soft even light, low contrast. No desk scene, no coffee cup, no pen placed for composition, nothing styled as a flat lay.",
+    searchTerms: [
+      "kraft paper texture macro",
+      "manila folder edge close up",
+      "drafting vellum texture",
+      "bound technical manual page edges macro",
+    ],
+    source: "stock",
+    license: null,
+    status: "pending",
+    src: null,
+    width: null,
+    height: null,
+    alt: null,
   },
 ];
 
 /** Slots still awaiting a real asset. Used by the placeholder audit. */
 export const PENDING_IMAGE_SLOTS = IMAGE_SLOTS.filter(
   (slot) => slot.status === "pending",
+);
+
+/** Slots that must be licensed. Drives the image brief. */
+export const STOCK_IMAGE_SLOTS = IMAGE_SLOTS.filter(
+  (slot) => slot.source === "stock",
 );
 
 /**
@@ -170,10 +288,10 @@ export function getImageSlot(id: string): ImageSlot {
 /**
  * A slot that is ready, with its asset path guaranteed present.
  *
- * Metadata builders need `src`, `width`, `height`, and `alt` as non null values.
- * Rather than have every caller assert that a slot it knows is ready really is,
- * this narrows once and throws loudly if a slot is downgraded to pending
- * without its consumers being updated in the same commit.
+ * Metadata builders need `src`, `width`, `height`, and `alt` as non null
+ * values. Rather than have every caller assert that a slot it knows is ready
+ * really is, this narrows once and throws loudly if a slot is downgraded to
+ * pending without its consumers being updated in the same commit.
  */
 export function getReadyImage(id: string): {
   src: string;

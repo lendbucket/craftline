@@ -19,8 +19,8 @@ export function LegalSection({
   children: React.ReactNode;
 }) {
   return (
-    <section aria-labelledby={id} className="border-t border-ink/10 pt-9">
-      <h2 id={id} className="display-md">
+    <section aria-labelledby={id} className="border-t border-rule pt-9">
+      <h2 id={id} className="display-3">
         {heading}
       </h2>
       <div className="mt-5 space-y-4">{children}</div>
@@ -30,7 +30,7 @@ export function LegalSection({
 
 export function P({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-base leading-relaxed text-muted">{children}</p>
+    <p className="text-base leading-relaxed text-steel">{children}</p>
   );
 }
 
@@ -40,7 +40,7 @@ export function LegalList({ items }: { items: readonly string[] }) {
       {items.map((item) => (
         <li
           key={item}
-          className="list-disc text-base leading-relaxed text-muted marker:text-bronze"
+          className="list-disc text-base leading-relaxed text-steel marker:text-copper"
         >
           {item}
         </li>
@@ -52,7 +52,7 @@ export function LegalList({ items }: { items: readonly string[] }) {
 /** Effective date line. Same treatment on both documents. */
 export function EffectiveDate() {
   return (
-    <p className="tracked-caps text-[0.65rem] text-muted">
+    <p className="label-sm text-steel">
       Last updated {POLICY_LAST_UPDATED}
     </p>
   );

@@ -213,6 +213,102 @@ export const OPERATOR_PROFILE = [
 ] as const;
 
 /**
+ * FRANCHISE FAQ.
+ *
+ * The questions a serious operator actually asks, answered inside the legal
+ * gates rather than around them.
+ *
+ * THE HARD PART OF THIS SECTION IS THE QUESTIONS THAT CANNOT BE ANSWERED.
+ * Cost and earnings are the first two things anyone wants to know, and both
+ * are off limits until the FDD is issued. The temptation is to omit those
+ * questions so the page reads smoothly. That is worse than useless: it leaves
+ * the reader thinking the site is evasive, and it wastes the chance to explain
+ * why no honest franchisor answers them early. So both are asked and both are
+ * answered with the reason, not with a deflection.
+ *
+ * Rules for editing this array:
+ *   - No fee, price, royalty, or capital figure. Not a range, not an example.
+ *   - No revenue, profit, earnings, margin, or payback, including comparative
+ *     forms like "stronger returns" or "faster payback".
+ *   - No statement that a franchise is available, anywhere, to anyone.
+ *   - No qualification threshold, because a stated threshold is a claim about
+ *     who will be accepted and no such claim can be made before disclosure.
+ *   - Describing the regulatory framework is permitted and is the point. An
+ *     FDD exists, it has a standard format, and a waiting period applies
+ *     before anything is signed. Those are facts about the law rather than
+ *     representations about this company.
+ */
+export const FRANCHISE_FAQ = [
+  {
+    q: "Is Craftline offering franchises right now?",
+    a: "No. The Franchise Disclosure Document has not been issued, so there is nothing to offer and nothing to accept. This site is information and inquiry only. If you send an inquiry, you are starting a conversation, not applying for anything and not reserving anything.",
+  },
+  {
+    q: "What does it cost?",
+    a: "Nothing on this site states a fee, and nothing can until the FDD is issued. That is not evasion, it is the rule. Franchise fees, royalties, and required investment belong in the disclosure document, in a standard format regulators specify, so that you can compare one system against another on the same terms. Anyone who quotes you a number for a franchise before handing you a disclosure document is telling you something about how they operate.",
+  },
+  {
+    q: "What can I expect to earn?",
+    a: "No answer, and you should be wary of anyone who gives you one. A franchisor may only make a financial performance representation inside the disclosure document, where it has to be substantiated and where the basis for it has to be stated. Outside that document the honest answer is silence. What the business earns depends on the operator, the market, and the execution, and that would be true no matter what anyone put in a brochure.",
+  },
+  {
+    q: "What would I actually be running?",
+    a: "A trade service business in one market, under a brand you did not have to build, using a documented method you did not have to invent. Generically, a franchise system is four things: the brand and the marks, the operating playbook, the technology stack, and a defined territory. The insights section explains how those four depend on each other in more detail.",
+  },
+  {
+    q: "Do I need to be an electrician?",
+    a: "Electrical work is licensed, and the licensing rules are set by each jurisdiction rather than by a brand. What every jurisdiction has in common is that the work must be performed and supervised by properly licensed people. Whether that has to be the owner, or whether an owner can employ the licence holder, depends on where the business operates. It is a question for the regulator in that jurisdiction, and it is one worth answering early because it shapes what the business needs on day one.",
+  },
+  {
+    q: "Do I have to be a veteran?",
+    a: "No. Craftline was founded by a service disabled veteran entrepreneur and the operating brand is veteran owned, so veterans considering ownership are encouraged to make contact. That is an invitation, not a requirement, and no part of this is limited to people who served.",
+  },
+  {
+    q: "Is a territory open in my market?",
+    a: "That question cannot be answered here. Territory is a term of a franchise agreement, and terms only exist once there is a disclosure document behind them. This site publishes no map, no list of open markets, and no availability language, because any of those would be an offer in everything but name.",
+  },
+  {
+    q: "Why is there only one brand?",
+    a: "Because the order matters. Wattsmith Electric was built and put into operation first, and the systems Craftline holds were built against a business that actually runs rather than designed in the abstract and handed to someone else to test. A playbook written by people who have not done the work is the most expensive kind of document there is.",
+  },
+  {
+    q: "What happens if I send an inquiry?",
+    a: "A person reads it and gets back to you. The process below describes what follows. There is no automated sequence, no drip campaign, and no sales pipeline you get dropped into, and the form asks for nothing sensitive.",
+  },
+] as const;
+
+/**
+ * THE PROCESS, INQUIRY TO CONVERSATION.
+ *
+ * Genuinely sequential, which is the only reason it is permitted to render
+ * with the numbered Register device. Step three cannot happen before step two.
+ * See the warning on Register in src/components/section.tsx.
+ *
+ * The last step is deliberately conditional and deliberately vague on timing.
+ * The FDD is not issued, no date is committed to anywhere on this site, and
+ * writing "then you receive the FDD" as though it were scheduled would be a
+ * promise this company is not in a position to make.
+ */
+export const INQUIRY_PROCESS = [
+  {
+    title: "You send an inquiry",
+    body: "The form asks who you are, where you are interested, roughly when, and anything you want to add. It asks for no financial documents, no social security number, and no signature, and submitting it commits you to nothing.",
+  },
+  {
+    title: "A person reads it and replies",
+    body: "Not an automated sequence. You get a reply from someone who can answer questions, and if what you are looking for is not what Craftline is building, you get told that plainly rather than pursued.",
+  },
+  {
+    title: "A conversation, both directions",
+    body: "You ask what you need to ask about the brand, the method, and the support. Craftline asks what it needs to ask about how you intend to run a business. Either side can decide it is not a fit, and that is a normal outcome rather than a failure.",
+  },
+  {
+    title: "Disclosure, if and when there is something to disclose",
+    body: "No Franchise Disclosure Document has been issued and no date is being committed to. If one is issued and you are still interested, you receive it, you get a waiting period set by federal rule to read it and take advice before anything is signed, and only then does anything become an offer.",
+  },
+] as const;
+
+/**
  * Inquiry form option sets.
  *
  * These are answer choices, not assertions. Read them anyway with the same

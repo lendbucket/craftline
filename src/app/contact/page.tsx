@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { ContactForm } from "@/components/form/contact-form";
-import { Eyebrow, PageHeader } from "@/components/page-header";
+import { PageHeader } from "@/components/page-header";
+import { SectionLabel } from "@/components/section";
+import { TitleBlock } from "@/components/title-block";
 import { BRANDS, COMPANY, CONTACT_EMAIL } from "@/config/company";
 import { pageMetadata } from "@/lib/seo";
 
@@ -30,12 +32,12 @@ export default function ContactPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Contact"
+        label="Contact"
         title="Corporate and brand inquiries."
         lead={`For questions about ${COMPANY.name}, the brands it operates, or franchise development.`}
       />
 
-      <section className="bg-paper">
+      <section className="bg-zinc">
         <Container>
           <div className="py-20 sm:py-24">
             {/*
@@ -43,18 +45,18 @@ export default function ContactPage() {
               this page should leave for the brand site before filling anything
               in, not after waiting for a reply that is not coming.
             */}
-            <div className="max-w-xl rounded-lg border border-ink/15 bg-white p-6">
+            <div className="max-w-xl rounded-lg border border-rule bg-chalk p-6">
               <h2 className="text-base font-semibold">
                 Looking for electrical service?
               </h2>
-              <p className="mt-3 text-[0.95rem] leading-relaxed text-muted">
+              <p className="mt-3 text-[0.95rem] leading-relaxed text-steel">
                 Craftline does not take service calls. {wattsmith.name} handles
                 work in {wattsmith.state} and is reachable at{" "}
                 <a
                   href={wattsmith.url}
                   target="_blank"
                   rel="noopener"
-                  className="tap-44 font-semibold text-bronze hover:underline"
+                  className="tap-44 font-semibold text-copper hover:underline"
                 >
                   {wattsmith.url.replace("https://", "")}
                   <span className="sr-only">(opens in a new tab)</span>
@@ -64,14 +66,14 @@ export default function ContactPage() {
             </div>
 
             <div className="mt-14">
-              <Eyebrow>Send a message</Eyebrow>
-              <h2 className="display-lg mt-5 max-w-2xl">Get in touch.</h2>
+              <SectionLabel>Send a message</SectionLabel>
+              <h2 className="display-2 mt-5 max-w-2xl">Get in touch.</h2>
               {CONTACT_EMAIL ? (
-                <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">
+                <p className="mt-6 max-w-2xl text-base leading-relaxed text-steel">
                   You can also write to{" "}
                   <a
                     href={`mailto:${CONTACT_EMAIL}`}
-                    className="font-semibold text-bronze hover:underline"
+                    className="font-semibold text-copper hover:underline"
                   >
                     {CONTACT_EMAIL}
                   </a>
@@ -86,6 +88,8 @@ export default function ContactPage() {
           </div>
         </Container>
       </section>
+
+      <TitleBlock sheet="Contact" />
     </>
   );
 }

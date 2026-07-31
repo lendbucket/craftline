@@ -2,7 +2,14 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { EffectiveDate, LegalList, LegalSection, P } from "@/components/legal";
 import { PageHeader } from "@/components/page-header";
-import { BRANDS, COMPANY, CONTACT_EMAIL, LEGAL_ENTITIES } from "@/config/company";
+import { TitleBlock } from "@/components/title-block";
+import {
+  BRANDS,
+  COMPANY,
+  CONTACT_EMAIL,
+  LEGAL_ENTITIES,
+  POLICY_LAST_UPDATED,
+} from "@/config/company";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -55,12 +62,12 @@ export default function PrivacyPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Legal"
+        label="Legal"
         title="Privacy policy"
         lead="What this site collects, which is very little, and what it does with it."
       />
 
-      <section className="bg-paper">
+      <section className="bg-zinc">
         <Container>
           <div className="py-16 sm:py-20">
             <div className="max-w-2xl space-y-12">
@@ -264,6 +271,12 @@ export default function PrivacyPage() {
           </div>
         </Container>
       </section>
+
+      <TitleBlock
+        sheet="Privacy policy"
+        issuedFor="Policy as published."
+        revision={POLICY_LAST_UPDATED}
+      />
     </>
   );
 }

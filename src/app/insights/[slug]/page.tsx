@@ -5,7 +5,8 @@ import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
-import { FRANCHISE_DISCLAIMER } from "@/config/company";
+import { Band, Rule, SectionLabel } from "@/components/section";
+import { TitleBlock } from "@/components/title-block";
 import {
   type Block,
   formatPublished,
@@ -23,6 +24,10 @@ import { pageMetadata } from "@/lib/seo";
  * a markdown string or MDX: it keeps the posts type checked, adds no dependency
  * and no build step, and means the renderer here decides the typography instead
  * of a prose plugin deciding it differently on each page.
+ *
+ * Kraft ground and a real measure. This is the one part of the site with
+ * enough continuous text for reading comfort to be the governing concern, and
+ * it is why the body face is a documentary serif rather than a UI sans.
  *
  * Everything legally load bearing about this section is documented at the top
  * of src/data/insights.ts. The short version: no statistics, no financial
@@ -56,17 +61,26 @@ export async function generateMetadata({
  * Headings are h2 because the post title is the h1. Nothing in the data can
  * emit a heading level, which keeps the document outline correct by
  * construction rather than by review.
+ *
+ * Each heading carries a short copper rule above it. That is the same device
+ * the section labels use, so a long article stays navigable by scanning for
+ * the rule rather than by reading heading weights.
  */
 function BlockView({ block }: { block: Block }) {
   if (block.kind === "heading") {
-    return <h2 className="display-md mt-14 first:mt-0">{block.text}</h2>;
+    return (
+      <div className="mt-16 first:mt-0">
+        <Rule className="max-w-[4rem]" />
+        <h2 className="display-3 mt-5">{block.text}</h2>
+      </div>
+    );
   }
 
   if (block.kind === "list") {
     return (
-      <ul className="mt-6 space-y-3 border-l-2 border-bronze/40 pl-6">
+      <ul className="border-copper mt-7 space-y-4 border-l-2 pl-7">
         {block.items.map((item) => (
-          <li key={item} className="text-[1.05rem] leading-relaxed text-ink-600">
+          <li key={item} className="text-steel leading-relaxed">
             {item}
           </li>
         ))}
@@ -74,11 +88,7 @@ function BlockView({ block }: { block: Block }) {
     );
   }
 
-  return (
-    <p className="mt-6 text-[1.05rem] leading-relaxed text-ink-600">
-      {block.text}
-    </p>
-  );
+  return <p className="body-lg text-steel mt-7">{block.text}</p>;
 }
 
 export default async function InsightPage({
@@ -90,8 +100,8 @@ export default async function InsightPage({
   const insight = getInsight(slug);
   if (!insight) notFound();
 
-  // Everything except this post, so the further reading list cannot link to the
-  // page it is sitting on.
+  // Everything except this post, so the further reading list cannot link to
+  // the page it is sitting on.
   const others = ORDERED_INSIGHTS.filter(
     (candidate) => candidate.slug !== insight.slug,
   );
@@ -99,84 +109,73 @@ export default async function InsightPage({
   return (
     <>
       <PageHeader
-        eyebrow={insight.eyebrow}
+        label={insight.eyebrow}
         title={insight.title}
         lead={insight.lead}
       />
 
-      <section className="bg-paper">
+      <section className="bg-kraft">
         <Container>
-          <div className="py-16 sm:py-20">
+          <Band>
             {/*
-              The article is a single measure column. Prose that runs the full
-              container width is unreadable, and this is the one part of the
-              site with enough continuous text for that to matter.
+              A single measure column. Prose that runs the full container width
+              is unreadable, and this is the one part of the site with enough
+              continuous text for that to matter.
             */}
-            <article className="max-w-2xl">
-              <p className="text-xs text-muted">
+            <article className="max-w-[38rem]">
+              <p className="value text-steel">
                 Published{" "}
                 <time dateTime={insight.published}>
                   {formatPublished(insight.published)}
                 </time>
               </p>
 
-              <div className="mt-10">
+              <div className="mt-12">
                 {insight.body.map((block, index) => (
                   <BlockView key={index} block={block} />
                 ))}
               </div>
-
-              {/*
-                FRANCHISE DISCLAIMER, verbatim, in the body of the article as
-                well as in the global site footer. Do not reword it, do not
-                summarise it, and do not split it across elements.
-              */}
-              <div className="mt-16 border-t border-ink/15 pt-8">
-                <p className="text-xs leading-relaxed text-muted">
-                  {FRANCHISE_DISCLAIMER}
-                </p>
-              </div>
             </article>
-          </div>
+          </Band>
         </Container>
       </section>
 
       {others.length > 0 ? (
-        <section className="bg-paper-dark">
+        <section className="bg-zinc">
           <Container wide>
-            <div className="py-16 sm:py-20">
-              <h2 className="display-md">More from Insights</h2>
-              <ul className="mt-8 grid gap-6 sm:grid-cols-2">
+            <Band>
+              <SectionLabel>More from Insights</SectionLabel>
+              <ul className="mt-12 grid gap-8 sm:grid-cols-2">
                 {others.map((other) => (
                   <li key={other.slug}>
                     <Link
                       href={`/insights/${other.slug}`}
-                      className="lift block h-full rounded-lg border border-ink/10 bg-white p-6 hover:border-bronze"
+                      className="border-rule bg-chalk hover:border-copper reveal block h-full border p-8 transition-colors"
                     >
-                      <p className="tracked-caps text-[0.65rem] text-bronze">
-                        {other.eyebrow}
-                      </p>
-                      <p className="mt-4 text-base font-semibold leading-snug text-ink">
+                      <p className="label-sm text-copper">{other.eyebrow}</p>
+                      <p className="display-3 text-graphite mt-5">
                         {other.title}
+                      </p>
+                      <p className="text-steel mt-4 text-[0.9375rem] leading-relaxed">
+                        {other.description}
                       </p>
                     </Link>
                   </li>
                 ))}
               </ul>
 
-              <div className="mt-12 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-14 flex flex-col gap-3 sm:flex-row">
                 <Cta href="/franchising">Franchise information</Cta>
-                <Link
-                  href="/insights"
-                  className="tap-44 inline-flex min-h-11 items-center text-sm font-semibold text-bronze hover:underline"
-                >
+                <Cta href="/insights" variant="outline">
                   All insights
-                </Link>
+                </Cta>
               </div>
-            </div>
+            </Band>
           </Container>
         </section>
       ) : null}
+
+      <TitleBlock sheet={insight.title} revision={insight.published} />
 
       <JsonLd
         data={articleSchema({

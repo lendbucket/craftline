@@ -41,7 +41,7 @@ export function SiteHeader() {
     pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="bg-ink text-paper">
+    <header className="bg-graphite text-zinc">
       <Container wide>
         <div className="flex h-16 items-center justify-between sm:h-20">
           <Wordmark />
@@ -59,10 +59,10 @@ export function SiteHeader() {
                   <Link
                     href={item.href}
                     aria-current={isActive(item.href) ? "page" : undefined}
-                    className={`tracked-caps inline-flex min-h-11 items-center text-[0.7rem] transition-colors ${
+                    className={`label-sm inline-flex min-h-11 items-center transition-colors ${
                       isActive(item.href)
-                        ? "text-bronze"
-                        : "text-paper hover:text-bronze"
+                        ? "text-copper"
+                        : "text-zinc hover:text-copper"
                     }`}
                   >
                     {item.label}
@@ -78,7 +78,7 @@ export function SiteHeader() {
             aria-expanded={open}
             aria-controls="mobile-nav"
             aria-label={open ? "Close menu" : "Open menu"}
-            className="-mr-2 inline-flex h-11 w-11 items-center justify-center text-paper md:hidden"
+            className="text-zinc -mr-2 inline-flex h-11 w-11 items-center justify-center md:hidden"
           >
             {open ? (
               <X aria-hidden="true" className="h-6 w-6" />
@@ -104,18 +104,18 @@ export function SiteHeader() {
         <nav
           id="mobile-nav"
           aria-label="Primary"
-          className="border-t border-ink-700 bg-ink md:hidden"
+          className="border-rule bg-graphite border-t md:hidden"
         >
           <Container wide>
             <ul className="flex flex-col py-2">
               {NAV.map((item) => (
-                <li key={item.href} className="border-b border-ink-800 last:border-b-0">
+                <li key={item.href} className="border-rule border-b last:border-b-0">
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
                     aria-current={isActive(item.href) ? "page" : undefined}
-                    className={`tracked-caps flex min-h-14 items-center text-xs ${
-                      isActive(item.href) ? "text-bronze" : "text-paper"
+                    className={`label-sm flex min-h-14 items-center ${
+                      isActive(item.href) ? "text-copper" : "text-zinc"
                     }`}
                   >
                     {item.label}
