@@ -5,7 +5,9 @@ import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { COMPANY, SITE_URL } from "@/config/company";
+import { getImageSlot } from "@/data/images";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
+import { OG_IMAGE } from "@/lib/seo";
 import "./globals.css";
 
 /**
@@ -56,17 +58,44 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    // Required on every page. Set once here and inherited.
+    // Set here for the home page. NOT inherited by pages that export their own
+    // openGraph: Next replaces the object rather than merging it. Every other
+    // page goes through pageMetadata in src/lib/seo.ts, which restates all of
+    // this. See the long note in that file before changing anything here.
     siteName: COMPANY.name,
     locale: "en_US",
     url: "/",
     title: `${COMPANY.name} | Skilled trade brand and franchise development`,
     description: COMPANY.descriptor,
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: `${COMPANY.name} | Skilled trade brand and franchise development`,
     description: COMPANY.descriptor,
+    images: [OG_IMAGE.url],
+  },
+  /**
+   * Icons are declared explicitly rather than through the app/icon file
+   * convention. The convention would work, but it puts the asset somewhere
+   * src/data/images.ts cannot see, and the placeholder audit verifies that
+   * every manifest path resolves under /public. Keeping the files in /public
+   * keeps the manifest load bearing instead of decorative.
+   *
+   * The SVG-first ordering the file convention would give us is not available
+   * for a generated raster icon, so the set is: a 32px PNG for the tab, a
+   * 512px PNG for home screens and app switchers, and favicon.ico at the root
+   * for the many clients that request it without reading these tags at all.
+   */
+  icons: {
+    icon: [
+      { url: getImageSlot("app-icon").src as string, sizes: "512x512", type: "image/png" },
+      { url: "/brand/craftline-icon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: getImageSlot("app-icon").src as string, sizes: "512x512", type: "image/png" },
+    ],
   },
   robots: {
     index: true,

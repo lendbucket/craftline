@@ -1,0 +1,181 @@
+import { BRANDS } from "@/config/company";
+
+/**
+ * THE WATTSMITH ELECTRIC LOCKUP, AS DELIVERED.
+ * ============================================
+ *
+ * The angular W-and-bolt mark, the WATTSMITH wordmark, and ELECTRIC set on a
+ * gold banner beneath it.
+ *
+ * Path data is inlined verbatim from the designer master, which is committed to
+ * this repository at public/brand/wattsmith-electric-lockup.svg (viewBox
+ * 0 0 1372.83 497.62). It is the real delivered typography, not a font
+ * approximation, and it is not redrawn here. If a newer master lands, replace
+ * the file and re-derive these constants from it in this one place.
+ *
+ * WHY INLINE SVG RATHER THAN <img src="...svg">
+ * ---------------------------------------------
+ * The master is a single-colour-per-class file: navy elements are .cls-2, gold
+ * elements are .cls-1. Rendered as an <img> it is a sealed box, so the navy
+ * mark and wordmark stay navy on a navy field and simply disappear. Craftline
+ * shows this lockup on both a navy surface and a light one, which is the whole
+ * point of the showcase, so the artwork has to be able to reverse. Inlining it
+ * also keeps it crisp at every size and costs no extra request.
+ *
+ * THE RECOLOURING RULES ARE THE ASSET SET'S, NOT AN INVENTION
+ * -----------------------------------------------------------
+ * Read off what the delivered file actually does with each element:
+ *
+ *   - The mark body and the WATTSMITH wordmark are .cls-2 navy. They carry the
+ *     brand on light surfaces. On a navy field they reverse to the brand's
+ *     reversed ink so they stay legible. Navy on navy is not a style choice, it
+ *     is an invisible logo.
+ *   - The lightning bolt and the ELECTRIC banner are .cls-1 gold and are
+ *     CONSTANT on every surface. Gold is the accent that identifies the brand;
+ *     reversing it would produce a lockup Wattsmith does not use.
+ *   - The ELECTRIC letters are knocked out of the gold banner, so they are
+ *     always navy, on every surface, for navy-on-gold contrast. They are
+ *     painted first and the banner is laid over them with an even-odd fill.
+ *
+ * COLOURS COME FROM CONFIG, NOT FROM THIS FILE. They are facts about another
+ * company's trademark, so they live in src/config/company.ts with everything
+ * else this site is allowed to assert. They must NOT be swapped for Craftline
+ * design tokens: when a real Craftline identity replaces the token set, this
+ * artwork has to stay exactly as it is.
+ */
+
+const [wattsmith] = BRANDS;
+const NAVY = wattsmith.palette[0].hex;
+const GOLD = wattsmith.palette[1].hex;
+const REVERSED = wattsmith.reversedInk;
+
+// Mark body, the angular W. .cls-2 in the master.
+const MARK_BODY =
+  "M175.62,346.98c-1.05-5.21.34-9.34,1.12-13.88l6.55-37.77-20.09-.34,12.71-104.36-84.96,104.55-37.83.45c-3.19.04-6.22.26-9.19-1.05l17.93-149.06,2.24-22.3c-7.38-8.24-14.69-15.33-21.6-25.21l104.58-.14c-6.8,8.41-15.1,14.21-22.82,21.84l10.64,1.01-14.33,70,78.75-93.13,35.8.06-14.55,106.35,28.61.28-73.58,142.69Z";
+// Gold lightning bolt. .cls-1 in the master.
+const MARK_BOLT =
+  "M159.49,398.74l25.21-48.54,82.87-148.77,41.59-18.85-76.07,10.83,47.29-84.61c1.6-2.86,1.42-5.7,4.8-7.59-.15-.53,1.06-3.57,2.08-3.57l78.12.09-47.43,68.94,32.72,1.04-122.57,147.92,27.16.6-95.77,82.51Z";
+
+type Vector = { tag: "path" | "polygon"; d?: string; points?: string };
+
+/** WATTSMITH wordmark letters. Follow the mark's surface colour. */
+const WORDMARK: Vector[] = [
+  { tag: "path", d: "M406.68,269.37l-59.53-.45-20.99,26.35-49.67-.32,103.82-124.11c1.05-2.93,2.78-3.99,5.75-3.99l63.02.04,3.54,128.27-45.36.18-.58-25.96ZM407.08,238.28l-1.09-41.85-35.07,41.84h36.16Z" },
+  { tag: "path", d: "M795.04,295.06l-79.75-.14c-4.9,0-8.44-2.8-10.86-5.75-3.12-3.8-3.71-8.56-2.32-13.29l7.61-25.84,37.76-.03-2.8,10.59c-.31,1.16.6,3.03,2.06,3.02l37.86-.15c2.57-3.97,3.88-8.43,3.92-13.18l-59.88-15.28c-6.82-1.74-11.68-9.05-9.61-16l9.96-33.54c3.47-11.7,14.9-18.53,26.96-18.58l59.16-.27,18.59.62c9.65.32,15.99,9.87,13.39,19l-6.94,24.38h-38.33s2.38-9.33,2.38-9.33c.3-1.17-.62-2.88-2.06-2.88l-36.95-.03c-3.09,3.29-4.7,7.74-3.88,12.23l58.58,15.53c9.1,2.41,12.26,11.84,9.76,20.09l-8.63,28.58c-3.38,11.2-13.15,20.29-25.98,20.27Z" },
+  { tag: "polygon", points: "1290.5 294.71 1252.09 295.16 1266.84 245.73 1231.27 245.74 1215.66 295.33 1176.81 295.17 1216.03 166.94 1255.04 166.9 1240.42 215.21 1276.58 215.21 1291.23 166.89 1330.31 166.98 1290.5 294.71" },
+  { tag: "polygon", points: "514.99 294.97 474.91 295.35 504.07 198.44 464.42 198.08 473.41 166.86 592.59 166.89 583.74 197.98 544.48 198.42 514.99 294.97" },
+  { tag: "path", d: "M643.99,294.99l-40.15.35,29.52-96.91-39.65-.38,9.21-31.12,72.34-.02c3.01-.9,5.84-.82,8.78,0l38.09.02-9.06,31.24-39.5.22-29.57,96.61Z" },
+  { tag: "polygon", points: "1129.16 295.04 1089.97 295.1 1119.51 198.71 1082.15 198.33 1091.34 166.87 1205.04 166.87 1195.78 198.21 1159.08 198.42 1129.16 295.04" },
+  { tag: "polygon", points: "1040.58 295.23 1001.69 295.26 1040.66 166.91 1079.6 166.98 1040.58 295.23" },
+  { tag: "path", d: "M947.06,295.14l18.07-61.97-47.06,58.52-22.31.22-7.02-59.46-20.19,62.79h-38.77l38.85-128.3,52.28-.05,7.03,62.94,50.84-62.83,46.18-.05-39.04,128.26-38.86-.07Z" },
+];
+
+/**
+ * ELECTRIC letters. Painted first, then the gold banner is laid over them with
+ * an even-odd fill that knocks them back out, so they read navy on gold on
+ * every surface.
+ */
+const ELECTRIC: Vector[] = [
+  { tag: "path", d: "M873.56,372.55l-11.09.34-3.6-12.19c-.56-1.89-6.37-1.87-6.91.01l-3.43,11.91-10.25.1,10.27-39.11,26.63.07c3.77.01,6.21,3.52,5.58,7.14l-2.96,11.94c-.91,3.69-4.33,5.61-8.17,6.55l3.93,13.22ZM867.74,351c1.16-3.41,1.93-5.37,2.1-8.69l-13.24-.04-2.22,9.28,13.36-.55Z" },
+  { tag: "path", d: "M440.17,357l-17.91.78c-1.53.71-2.24,4.35-1.91,6.39l20.77.1-2.05,8.59-31.74.02,10.01-39.12,31.19-.31-1.76,8.25-20.28.73c-1.57.06-2.4,4.28-1.73,6.2l17.06.64-1.64,7.73Z" },
+  { tag: "path", d: "M611.38,357.07l-18.07.72c-1.48.77-2.12,4.34-1.89,6.2l20.33.51-1.71,8.26-31.64.2,10.21-39.45,31.32.11-2.04,8.07-20.72.37c-1.12,2.35-1.57,4.54-1.45,7.14l17.46-.14-1.81,8.02Z" },
+  { tag: "path", d: "M687.1,364.52c3.39.26,5.51-1.14,6.3-4.17l9.51,1.52c.18,5.62-4.37,10.75-10.29,10.8l-18.89.16c-2.13.02-3.72-.85-4.78-1.91-1.43-1.43-2.15-3.63-1.55-5.9l6.16-23.28c1.37-5.19,5.71-8.33,11.17-8.22l19.97.41c2.47.05,3.64,2.57,3.91,4.01.39,2.13.76,5.7-1.51,6.63-3.22,1.31-6.55,1.14-9.8,1.54.17-1.09-.49-3.7-1.31-3.7l-11.74-.04-6.23,21.45,9.09.71Z" },
+  { tag: "path", d: "M1005.93,363.83c8.67.9,14.37,1.88,15.3-3.74l9.08,1.85c.51,4.46-2.68,10.41-7.82,10.47l-22.04.27c-3.34.04-6.37-3.36-5.53-6.56l6.53-24.81c1.15-4.37,5.09-7.77,9.68-7.7l20.95.31c2.51.04,3.85,2.5,4.09,3.99.31,1.95.74,6.39-1.39,6.76l-9.34,1.61-.66-3.75c-4.37-.92-8.84-1.06-13.22.41l-5.64,20.9Z" },
+  { tag: "polygon", points: "773.89 372.5 763.36 372.89 771.45 342.47 760.06 342.21 762.41 333.45 795.76 333.72 793.93 341.77 781.89 342.15 773.89 372.5" },
+  { tag: "polygon", points: "526.13 364.35 524.16 372.83 494.3 372.86 504.8 333.69 515.19 333.52 507.09 364.22 526.13 364.35" },
+  { tag: "polygon", points: "939.88 372.77 929.46 372.64 939.86 333.75 950.27 333.7 939.88 372.77" },
+];
+
+/** The two banner end slashes. */
+const BANNER_SLASHES = [
+  "1221.55 390.82 1195.46 390.6 1259.25 316.02 1288.96 316.07 1221.55 390.82",
+  "1181.59 390.74 1155.88 390.58 1220 315.94 1246.29 316.06 1181.59 390.74",
+];
+
+/** The gold ELECTRIC banner, with the letters knocked out via even-odd. */
+const BANNER =
+  "M1141.93,391.04l-903.89-.09,71.54-75.03,896.92.05-64.57,75.07ZM440.17,357l1.64-7.73-17.06-.64c-.67-1.92.16-6.14,1.73-6.2l20.28-.73,1.76-8.25-31.19.31-10.01,39.12,31.74-.02,2.05-8.59-20.77-.1c-.33-2.04.38-5.68,1.91-6.39l17.91-.78ZM526.13,364.35l-19.04-.13,8.1-30.7-10.4.17-10.5,39.17,29.86-.02,1.97-8.48ZM611.38,357.07l1.81-8.02-17.46.14c-.12-2.6.33-4.79,1.45-7.14l20.72-.37,2.04-8.07-31.32-.11-10.21,39.45,31.64-.2,1.71-8.26-20.33-.51c-.24-1.86.4-5.43,1.89-6.2l18.07-.72ZM687.1,364.52l-9.09-.71,6.23-21.45,11.74.04c.83,0,1.49,2.61,1.31,3.7,3.26-.4,6.58-.23,9.8-1.54,2.27-.92,1.9-4.5,1.51-6.63-.27-1.45-1.43-3.96-3.91-4.01l-19.97-.41c-5.46-.11-9.79,3.03-11.17,8.22l-6.16,23.28c-.6,2.27.11,4.48,1.55,5.9,1.07,1.06,2.66,1.93,4.78,1.91l18.89-.16c5.92-.05,10.46-5.18,10.29-10.8l-9.51-1.52c-.79,3.03-2.91,4.44-6.3,4.17ZM773.89,372.5l8-30.35,12.04-.38,1.83-8.05-33.35-.27-2.36,8.76,11.4.25-8.09,30.43,10.53-.39ZM873.56,372.55l-3.93-13.22c3.84-.94,7.25-2.86,8.17-6.55l2.96-11.94c.63-3.62-1.8-7.13-5.58-7.14l-26.63-.07-10.27,39.11,10.25-.1,3.43-11.91c.54-1.88,6.35-1.91,6.91-.01l3.6,12.19,11.09-.34ZM939.88,372.77l10.38-39.07-10.4.05-10.4,38.89,10.42.13ZM1005.93,363.83l5.64-20.9c4.39-1.47,8.86-1.33,13.22-.41l.66,3.75,9.34-1.61c2.13-.37,1.7-4.81,1.39-6.76-.24-1.49-1.58-3.95-4.09-3.99l-20.95-.31c-4.59-.07-8.53,3.33-9.68,7.7l-6.53,24.81c-.84,3.2,2.19,6.6,5.53,6.56l22.04-.27c5.14-.06,8.33-6.01,7.82-10.47l-9.08-1.85c-.94,5.62-6.63,4.65-15.3,3.74Z";
+
+function renderVectors(vectors: Vector[], fill: string, prefix: string) {
+  return vectors.map((vector, index) =>
+    vector.tag === "polygon" ? (
+      <polygon key={`${prefix}${index}`} points={vector.points} fill={fill} />
+    ) : (
+      <path key={`${prefix}${index}`} d={vector.d} fill={fill} />
+    ),
+  );
+}
+
+type LockupProps = {
+  className?: string;
+  /**
+   * Set on navy and charcoal surfaces. Reverses the navy elements only; the
+   * gold stays gold. See the recolouring rules at the top of this file.
+   */
+  onDark?: boolean;
+  /**
+   * Hide the artwork from assistive technology. Use whenever the brand name is
+   * already present as visible text beside or beneath the lockup, so a screen
+   * reader announces the name once rather than twice.
+   */
+  decorative?: boolean;
+};
+
+export function WattsmithLockup({
+  className,
+  onDark = false,
+  decorative = false,
+}: LockupProps) {
+  const markFill = onDark ? REVERSED : NAVY;
+  const label = wattsmith.name;
+
+  return (
+    <svg
+      viewBox="0 0 1372.83 497.62"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      {...(decorative
+        ? { "aria-hidden": true, focusable: false }
+        : { role: "img", "aria-label": label })}
+    >
+      {decorative ? null : <title>{label}</title>}
+      <path d={MARK_BODY} fill={markFill} />
+      <path d={MARK_BOLT} fill={GOLD} />
+      {renderVectors(WORDMARK, markFill, "w")}
+      {renderVectors(ELECTRIC, NAVY, "e")}
+      {BANNER_SLASHES.map((points, index) => (
+        <polygon key={`b${index}`} points={points} fill={GOLD} />
+      ))}
+      <path d={BANNER} fill={GOLD} fillRule="evenodd" />
+    </svg>
+  );
+}
+
+/**
+ * The mark alone, cropped to its bounding box. For places too small to carry
+ * the full horizontal lockup legibly, where squeezing it would make the
+ * ELECTRIC banner unreadable rather than just small.
+ */
+export function WattsmithMark({
+  className,
+  onDark = false,
+  decorative = false,
+}: LockupProps) {
+  const bodyFill = onDark ? REVERSED : NAVY;
+  const label = wattsmith.name;
+
+  return (
+    <svg
+      viewBox="33 78 342 342"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      {...(decorative
+        ? { "aria-hidden": true, focusable: false }
+        : { role: "img", "aria-label": label })}
+    >
+      {decorative ? null : <title>{label}</title>}
+      <path d={MARK_BODY} fill={bodyFill} />
+      <path d={MARK_BOLT} fill={GOLD} />
+    </svg>
+  );
+}

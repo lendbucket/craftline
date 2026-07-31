@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { COMPANY } from "@/config/company";
+import { getReadyImage } from "@/data/images";
 
 /**
  * Builds a page's Metadata.
@@ -19,8 +20,27 @@ import { COMPANY } from "@/config/company";
  * every field the layout sets is restated rather than assumed to be inherited.
  *
  * The same replace-not-merge rule applies to `twitter`, which is why the card
- * type is repeated here too.
+ * type is repeated here too, and why the Open Graph image is restated on every
+ * page rather than inherited from the layout. A page that sets `openGraph`
+ * without `images` has no card image at all, which is the same failure that
+ * dropped `og:site_name` and is just as invisible in a browser.
  */
+
+/**
+ * The shared card image, read from the imagery manifest rather than written as
+ * a literal path. If the slot is ever downgraded to pending, the build fails
+ * here instead of shipping a card that points at a deleted file.
+ */
+const OG = getReadyImage("og-default");
+
+/** Restated on the layout and on every page. See the note above. */
+export const OG_IMAGE = {
+  url: OG.src,
+  width: OG.width,
+  height: OG.height,
+  alt: OG.alt,
+} as const;
+
 export function pageMetadata({
   title,
   description,
@@ -47,11 +67,13 @@ export function pageMetadata({
       url: path,
       title: socialTitle,
       description,
+      images: [OG_IMAGE],
     },
     twitter: {
       card: "summary_large_image",
       title: socialTitle,
       description,
+      images: [OG_IMAGE.url],
     },
   };
 }

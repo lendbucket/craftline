@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { BrandLockup, hasBrandLockup } from "@/components/brand/brand-lockup";
 import { Container } from "@/components/container";
+import { JsonLd } from "@/components/json-ld";
 import { Eyebrow, PageHeader } from "@/components/page-header";
 import { BRANDS } from "@/config/company";
+import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "Brands",
   description:
-    "The operating brands held by Craftline Brands. Wattsmith Electric is a licensed, insured, veteran owned electrical contractor operating in Texas.",
+    "The operating brands held by Craftline Brands. Wattsmith Electric is a licensed, insured, veteran owned electrical contractor operating in San Antonio, Texas.",
   path: "/brands",
 });
 
@@ -39,6 +42,21 @@ export default function BrandsPage() {
               {BRANDS.map((brand) => (
                 <li key={brand.slug}>
                   <article className="rounded-lg border border-ink/10 bg-white p-7 sm:p-10">
+                    {/*
+                      The delivered lockup, on a light field, which is its
+                      primary approved usage. Decorative because the brand name
+                      is the h2 directly beneath it. Rendered only when artwork
+                      has actually been ported: a brand without it gets a type
+                      only card rather than a gap or a stand in mark.
+                    */}
+                    {hasBrandLockup(brand.slug) ? (
+                      <BrandLockup
+                        slug={brand.slug}
+                        decorative
+                        className="mb-8 w-full max-w-[13rem]"
+                      />
+                    ) : null}
+
                     <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
                       <h2 className="display-md">
                         {/*
@@ -106,6 +124,8 @@ export default function BrandsPage() {
           </div>
         </Container>
       </section>
+
+      <JsonLd data={breadcrumbSchema([{ name: "Brands", path: "/brands" }])} />
     </>
   );
 }

@@ -14,8 +14,8 @@ import { NAV } from "@/config/company";
  * the server.
  *
  * There is no sticky behaviour and no scroll transform. A corporate site with
- * five destinations does not need a header that follows you down the page, and
- * a static header is one less thing to get wrong on a phone in landscape.
+ * this few destinations does not need a header that follows you down the page,
+ * and a static header is one less thing to get wrong on a phone in landscape.
  */
 export function SiteHeader() {
   const pathname = usePathname();
@@ -47,7 +47,13 @@ export function SiteHeader() {
           <Wordmark />
 
           <nav aria-label="Primary" className="hidden md:block">
-            <ul className="flex items-center gap-8">
+            {/*
+              Tighter gap at md, opening up at lg. The nav is data driven, and
+              at the md breakpoint the current five labels plus the wordmark sit
+              close enough to the container edge that gap-8 risks a wrap. Adding
+              a sixth destination means checking this again.
+            */}
+            <ul className="flex items-center gap-5 lg:gap-8">
               {NAV.map((item) => (
                 <li key={item.href}>
                   <Link

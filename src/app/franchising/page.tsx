@@ -10,10 +10,17 @@ import {
 } from "@/config/company";
 import { pageMetadata } from "@/lib/seo";
 
+/**
+ * Category language in the description is confined to what the company IS. A
+ * franchise development company that builds home services brands is a
+ * description; anything about where a franchise is available, what it costs, or
+ * what it returns would be an offer term. There is no place name in here and
+ * none may be added.
+ */
 export const metadata: Metadata = pageMetadata({
   title: "Franchising",
   description:
-    "Information about Craftline Brands franchise development: what the company looks for in an operator and how the support model works. Information and inquiry only.",
+    "Franchise development at Craftline Brands, a veteran founded home services franchise company building skilled trade brands. What the company looks for in an operator and how the support model works. Information and inquiry only.",
   path: "/franchising",
 });
 
@@ -78,8 +85,9 @@ export default function FranchisingPage() {
             </ul>
 
             <p className="mt-10 max-w-2xl text-base leading-relaxed text-muted">
-              {FOUNDING_STATEMENT} Veterans considering ownership are encouraged
-              to make contact.
+              {FOUNDING_STATEMENT} That makes this a veteran franchise company
+              by origin rather than by positioning, and veterans considering
+              ownership are encouraged to make contact.
             </p>
           </div>
         </Container>
@@ -100,8 +108,9 @@ export default function FranchisingPage() {
               representation wearing a different coat.
             */}
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">
-              Described in plain terms, without claims about what any of it
-              produces. Results depend on the operator, the market, and the
+              These four parts are what a home services franchise system is
+              made of, described in plain terms and without any claim about what
+              they produce. Results depend on the operator, the market, and the
               work.
             </p>
 

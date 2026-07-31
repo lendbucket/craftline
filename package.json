@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "brand-assets": "node scripts/brand-assets.mjs",
     "seo-audit": "node scripts/seo-audit.mjs",
     "contrast-audit": "node scripts/contrast-audit.mjs",
     "mobile-audit": "tsx scripts/mobile-audit.ts",

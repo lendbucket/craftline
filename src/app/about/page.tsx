@@ -15,7 +15,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "About",
   description:
-    "Craftline Brands is a holding company for skilled trade service brands. It owns the marks, the operating playbooks, the technology, and the territory plan that its brands run on.",
+    "Craftline Brands is a holding company for skilled trade service brands and the skilled trades franchise system behind them. It owns the marks, the operating playbooks, the technology, and the territory plan that its brands run on.",
   path: "/about",
 });
 
@@ -57,7 +57,8 @@ export default function AboutPage() {
               twice. What separates one good shop from a brand that works in
               several markets is whether the standard survives being handed to
               someone else. These are the four pieces Craftline holds so that it
-              can.
+              can, and together they are the skilled trades franchise system its
+              brands run on.
             </p>
 
             {/*

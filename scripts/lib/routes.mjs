@@ -20,6 +20,18 @@ const ALL_ROUTES = [
   { name: "brands", path: "/brands" },
   { name: "brand detail", path: "/brands/wattsmith-electric" },
   { name: "franchising", path: "/franchising" },
+  { name: "insights", path: "/insights" },
+  /*
+   * All three insight posts, not a sample. They share one template, so one
+   * would catch most template level problems, but the posts differ in content
+   * shape: only some contain lists, and they vary in length enough to change
+   * how the prose column behaves. Auditing all three costs seconds and removes
+   * the judgement call about which one is representative. Add the fourth post
+   * here in the commit that writes it.
+   */
+  { name: "insight 1", path: "/insights/why-trade-services-suit-franchise-systems" },
+  { name: "insight 2", path: "/insights/what-veteran-operators-bring-to-trade-services" },
+  { name: "insight 3", path: "/insights/how-a-franchise-brand-system-works" },
   { name: "contact", path: "/contact" },
   { name: "privacy", path: "/privacy" },
   { name: "terms", path: "/terms" },

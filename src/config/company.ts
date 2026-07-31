@@ -79,11 +79,12 @@ export const BRANDS = [
     name: "Wattsmith Electric",
     /** Trade category, not a service keyword target. */
     category: "Electrical contracting",
+    city: "San Antonio",
     state: "Texas",
     /** External site. Craftline links out; it does not duplicate that content. */
     url: "https://wattsmithelectric.com",
     summary:
-      "A licensed, insured, veteran owned electrical contractor serving residential and light commercial customers in Texas.",
+      "A licensed, insured, veteran owned electrical contractor serving residential and light commercial customers in San Antonio, Texas.",
     /**
      * Each of these is a fact Wattsmith can evidence on demand. Nothing here
      * is a superlative and nothing here is a performance claim.
@@ -92,7 +93,77 @@ export const BRANDS = [
       "Licensed and insured",
       "Veteran owned",
       "Residential and light commercial service",
-      "Operating in Texas",
+      "Operating in San Antonio, Texas",
+    ],
+
+    /**
+     * BRAND SYSTEM.
+     *
+     * The delivered identity, sourced from the Wattsmith repository's design
+     * masters rather than sampled by eye from a screenshot. These two colours
+     * are the brand system as it is presented publicly on this site.
+     *
+     * `onRatio` is measured against the paired surface and is why the lockup
+     * component recolours per background: navy on a navy field is invisible,
+     * so the reversed artwork substitutes `reversedInk` for it. The gold is
+     * constant on every surface because it clears AA on both.
+     */
+    palette: [
+      {
+        name: "Wattsmith Navy",
+        hex: "#1A2634",
+        role: "The primary brand colour. Carries the mark, the wordmark, and every dark surface the brand owns.",
+      },
+      {
+        name: "Wattsmith Gold",
+        hex: "#F7B11D",
+        role: "The single accent. Reserved for the lightning bolt and the ELECTRIC banner, never used as a background for body text.",
+      },
+    ],
+    /**
+     * NOT part of the public palette above, and deliberately not presented as
+     * a brand colour. It is the reversed ink the delivered artwork uses so the
+     * navy elements stay visible when the lockup sits on a navy field. It lives
+     * here rather than in the component because the artwork rule is a fact
+     * about the asset set, not a Craftline design choice.
+     */
+    reversedInk: "#F4EFE8",
+
+    /**
+     * The delivered lockup, copied from the Wattsmith repository's
+     * public/brand directory. Tracked in src/data/images.ts like every other
+     * asset on this site.
+     */
+    logo: "/brand/wattsmith-electric-lockup.svg",
+
+    /**
+     * SERVICE CATEGORIES, DESCRIPTIVE ONLY.
+     *
+     * Sourced from the operating brand's own service data. They are listed
+     * here so a reader can see what kind of business the brand actually is,
+     * and they are rendered as a plain category list.
+     *
+     * READ THIS BEFORE EDITING. Craftline does not compete with
+     * wattsmithelectric.com for service keywords and never targets city plus
+     * service queries. That is why these are the non geographic category
+     * names and not the operating brand's page titles: "Panel upgrades and
+     * replacements", never "Panel Upgrade San Antonio". Do not attach a city
+     * to any of these, do not give any of them a page on this site, and do not
+     * link them to the operating brand's service pages.
+     */
+    services: [
+      "Electrical repair and troubleshooting",
+      "Panel upgrades and replacements",
+      "EV charger installation",
+      "Whole home rewiring",
+      "Lighting installation",
+      "Generator installation and hookups",
+      "Whole home surge protection",
+      "GFCI and outlet installation",
+      "Smoke and carbon monoxide detector installation",
+      "Electrical inspections and code compliance",
+      "Commercial electrical and tenant improvements",
+      "New construction wiring",
     ],
   },
 ] as const;
@@ -196,6 +267,29 @@ export const FRANCHISE_DISCLAIMER =
 export const POLICY_LAST_UPDATED = "30 July 2026";
 
 /**
+ * NATIONAL CATEGORY POSITIONING.
+ *
+ * The four categories this site is written to be understood as. They are
+ * descriptions of what Craftline is, which is the only reason they are
+ * permitted to appear in copy and metadata at all.
+ *
+ * NATIONAL ONLY, AND THAT IS A HARD BOUNDARY. There are no state pages, no
+ * city pages, and no language anywhere about which markets are open, which are
+ * taken, or where a franchise is available. Territory availability is an offer
+ * term, and the FDD is not issued. Attaching a place name to any string below
+ * turns a category description into a geographic offer, so do not do it.
+ *
+ * These are also not a keyword dump. Each one is used once, in a sentence that
+ * would still be worth writing if search engines did not exist.
+ */
+export const CATEGORY_POSITIONING = [
+  "home services franchise",
+  "electrician franchise",
+  "skilled trades franchise",
+  "veteran franchise",
+] as const;
+
+/**
  * Primary navigation. Single source so the header, the footer, and the sitemap
  * cannot drift apart.
  */
@@ -203,6 +297,7 @@ export const NAV = [
   { href: "/about", label: "About" },
   { href: "/brands", label: "Brands" },
   { href: "/franchising", label: "Franchising" },
+  { href: "/insights", label: "Insights" },
   { href: "/contact", label: "Contact" },
 ] as const;
 
