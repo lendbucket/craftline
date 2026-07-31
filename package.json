@@ -9,6 +9,7 @@
     "lint": "eslint",
     "brand-assets": "node scripts/brand-assets.mjs",
     "shots": "node scripts/shots.mjs",
+    "image-brief": "tsx scripts/image-brief.ts",
     "seo-audit": "node scripts/seo-audit.mjs",
     "contrast-audit": "node scripts/contrast-audit.mjs",
     "mobile-audit": "tsx scripts/mobile-audit.ts",

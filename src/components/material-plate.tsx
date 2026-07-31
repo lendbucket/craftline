@@ -41,7 +41,29 @@ export function MaterialPlate({
   intensity?: "quiet" | "present";
 }) {
   const slot = getImageSlot(id);
-  const opacity = intensity === "quiet" ? "opacity-[0.22]" : "opacity-40";
+
+  /**
+   * Quieter on phones and stronger on desktop. On a narrow viewport the text
+   * column spans the full width, so there is nowhere for texture to sit that
+   * is not behind type.
+   */
+  const opacity =
+    intensity === "quiet"
+      ? "opacity-[0.12] lg:opacity-[0.2]"
+      : "opacity-25 lg:opacity-40";
+
+  /**
+   * Fades the plate out across the top left, which is where the label, the
+   * headline, and the lead paragraph sit on every band that uses one.
+   *
+   * This exists because the first build ran the raceway linework edge to edge
+   * and a conduit run went straight through the middle of the hero headline.
+   * It was still legible, and it still looked like an accident. Texture behind
+   * display type has to get out of the way of it rather than rely on being
+   * faint enough to forgive.
+   */
+  const mask =
+    "[mask-image:linear-gradient(115deg,transparent_0%,transparent_42%,black_92%)]";
 
   return (
     <div
@@ -54,12 +76,12 @@ export function MaterialPlate({
           alt=""
           fill
           sizes="100vw"
-          className={`object-cover ${opacity}`}
+          className={`object-cover ${opacity} ${mask}`}
           priority={false}
         />
       ) : (
         <SchematicField
-          className={`text-copper h-full w-full ${opacity}`}
+          className={`text-copper h-full w-full ${opacity} ${mask}`}
         />
       )}
     </div>

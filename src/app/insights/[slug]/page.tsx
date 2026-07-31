@@ -80,7 +80,7 @@ function BlockView({ block }: { block: Block }) {
     return (
       <ul className="border-copper mt-7 space-y-4 border-l-2 pl-7">
         {block.items.map((item) => (
-          <li key={item} className="text-steel leading-relaxed">
+          <li key={item} className="text-graphite leading-relaxed">
             {item}
           </li>
         ))}
@@ -88,7 +88,7 @@ function BlockView({ block }: { block: Block }) {
     );
   }
 
-  return <p className="body-lg text-steel mt-7">{block.text}</p>;
+  return <p className="body-lg text-graphite mt-7">{block.text}</p>;
 }
 
 export default async function InsightPage({

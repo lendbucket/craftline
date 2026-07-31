@@ -121,7 +121,7 @@ export default function HomePage() {
                   some shapes and not others. Trade service work happens to have
                   the properties the structure needs.
                 </p>
-                <p className="text-steel">
+                <p className="text-graphite">
                   The work has to happen where the customer is, so the natural
                   unit is one crew serving one metro area and there is no way to
                   consolidate it into a warehouse. Demand is a problem rather
@@ -132,7 +132,7 @@ export default function HomePage() {
                 </p>
               </div>
               <div className="reveal space-y-6">
-                <p className="text-steel">
+                <p className="text-graphite">
                   The standards already exist and somebody else wrote them.
                   Electrical work is governed by a code, permits are pulled, and
                   an inspector with no stake in the job signs it off. A playbook
@@ -140,10 +140,10 @@ export default function HomePage() {
                   correct. It has to define how a business consistently produces
                   work that passes.
                 </p>
-                <p className="text-steel">
+                <p className="text-graphite">
                   And the customer cannot check the work. Once the drywall is
                   closed nobody can tell careful wiring from wiring that becomes
-                  someone else's problem in nine years. That is why a brand is
+                  someone else&apos;s problem in nine years. That is why a brand is
                   worth something here, and why it is only worth something if
                   there is a real method behind it.
                 </p>
@@ -192,7 +192,7 @@ export default function HomePage() {
                   label={capability.title}
                 >
                   <h3 className="display-3 max-w-2xl">{capability.title}</h3>
-                  <p className="text-steel mt-5 max-w-2xl leading-relaxed">
+                  <p className="text-graphite mt-5 max-w-2xl leading-relaxed">
                     {capability.body}
                   </p>
                 </Register>
@@ -255,7 +255,7 @@ export default function HomePage() {
               <div className="p-8 sm:p-12">
                 <p className="label-sm text-copper">{wattsmith.category}</p>
                 <h3 className="display-3 mt-4">{wattsmith.name}</h3>
-                <p className="text-steel mt-5 max-w-xl leading-relaxed">
+                <p className="text-graphite mt-5 max-w-xl leading-relaxed">
                   {wattsmith.summary}
                 </p>
 

@@ -30,7 +30,7 @@ export function LegalSection({
 
 export function P({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-base leading-relaxed text-steel">{children}</p>
+    <p className="text-base leading-relaxed text-graphite">{children}</p>
   );
 }
 
@@ -40,7 +40,7 @@ export function LegalList({ items }: { items: readonly string[] }) {
       {items.map((item) => (
         <li
           key={item}
-          className="list-disc text-base leading-relaxed text-steel marker:text-copper"
+          className="list-disc text-base leading-relaxed text-graphite marker:text-copper"
         >
           {item}
         </li>

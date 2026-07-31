@@ -82,7 +82,7 @@ export default function BrandsPage() {
                         </Link>
                       </h2>
 
-                      <p className="text-steel mt-5 max-w-xl leading-relaxed">
+                      <p className="text-graphite mt-5 max-w-xl leading-relaxed">
                         {brand.summary}
                       </p>
 
@@ -127,7 +127,7 @@ export default function BrandsPage() {
             */}
             <div className="mt-16 max-w-2xl">
               <SectionLabel>Additional brands</SectionLabel>
-              <p className="text-steel mt-6 leading-relaxed">
+              <p className="text-graphite mt-6 leading-relaxed">
                 Additional brands will be listed here as they begin operating.
                 There is no announced timeline and nothing in development that
                 is being held back from this page.

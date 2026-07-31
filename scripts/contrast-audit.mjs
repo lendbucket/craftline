@@ -37,7 +37,29 @@ const HEIGHT = 900;
 const routes = auditRoutes();
 
 async function auditPage(browser, base, path, width) {
-  const context = await browser.newContext({ viewport: { width, height: HEIGHT } });
+  const context = await browser.newContext({
+    viewport: { width, height: HEIGHT },
+    /**
+     * Judge the RESTING state, not a frame mid animation.
+     *
+     * The site's one motion idea is a scroll driven reveal: content below the
+     * fold sits at reduced opacity until it is scrolled into view. axe computes
+     * contrast from the composited colour, so auditing without this reported
+     * every below-fold element as a failure at ratios like 1.05:1, with a
+     * blended foreground that no user ever reads at rest. Those were artefacts
+     * of the harness never scrolling, not real findings.
+     *
+     * Asking for reduced motion disables the animation at the media query in
+     * globals.css, so every element is measured at full opacity, which is the
+     * state a reader actually reads. It also means this audit exercises the
+     * reduced-motion path, which is the one a user with that preference gets.
+     *
+     * This is NOT a way to silence contrast failures. The reveal animates
+     * opacity and transform only; it never changes a colour. If a resting
+     * colour pair fails, it still fails here.
+     */
+    reducedMotion: "reduce",
+  });
   const page = await context.newPage();
   try {
     const response = await page.goto(base + path, {

@@ -108,7 +108,7 @@ export default function AboutPage() {
                   </p>
                   <div className="border-rule mt-8 max-w-2xl border-l-2 pl-6">
                     <p className="label-sm text-copper">What it does not do</p>
-                    <p className="text-steel mt-3 leading-relaxed">
+                    <p className="text-graphite mt-3 leading-relaxed">
                       {LIMITS[capability.title]}
                     </p>
                   </div>
@@ -165,7 +165,7 @@ export default function AboutPage() {
                   <dt className="text-graphite text-[1.0625rem] font-semibold">
                     {entity.name}
                   </dt>
-                  <dd className="text-steel leading-relaxed">
+                  <dd className="text-graphite leading-relaxed">
                     <span className="label-sm text-copper block">
                       {entity.jurisdiction} limited liability company
                     </span>

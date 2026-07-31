@@ -228,7 +228,7 @@ export function FranchiseForm() {
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex min-h-11 items-center justify-center rounded bg-copper-solid px-6 py-3 text-sm font-semibold tracking-wide text-graphite transition-colors hover:bg-copper-solid-hover disabled:cursor-not-allowed disabled:opacity-60"
+        className="label bg-copper-solid text-zinc hover:bg-copper-solid-hover inline-flex min-h-11 items-center justify-center px-7 py-3.5 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
       >
         {pending ? "Sending" : "Send inquiry"}
       </button>

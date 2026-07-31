@@ -79,7 +79,7 @@ export default function InsightsPage() {
                           {insight.title}
                         </Link>
                       </h2>
-                      <p className="text-steel mt-5 max-w-2xl leading-relaxed">
+                      <p className="text-graphite mt-5 max-w-2xl leading-relaxed">
                         {insight.description}
                       </p>
                       <Link

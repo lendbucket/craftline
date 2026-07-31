@@ -139,7 +139,7 @@ export default function FranchisingPage() {
                   label={capability.title}
                 >
                   <h3 className="display-3 max-w-2xl">{capability.title}</h3>
-                  <p className="text-steel mt-5 max-w-2xl leading-relaxed">
+                  <p className="text-graphite mt-5 max-w-2xl leading-relaxed">
                     {capability.body}
                   </p>
                 </Register>
@@ -192,7 +192,7 @@ export default function FranchisingPage() {
                   label={`Step ${index + 1}`}
                 >
                   <h3 className="display-3 max-w-2xl">{step.title}</h3>
-                  <p className="text-steel mt-5 max-w-2xl leading-relaxed">
+                  <p className="text-graphite mt-5 max-w-2xl leading-relaxed">
                     {step.body}
                   </p>
                 </Register>
@@ -236,7 +236,7 @@ export default function FranchisingPage() {
                   className="border-rule reveal grid gap-4 border-b py-8 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-12"
                 >
                   <dt className="display-3 text-graphite">{entry.q}</dt>
-                  <dd className="text-steel max-w-2xl leading-relaxed">
+                  <dd className="text-graphite max-w-2xl leading-relaxed">
                     {entry.a}
                   </dd>
                 </div>

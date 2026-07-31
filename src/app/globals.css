@@ -57,10 +57,22 @@
   --color-graphite-600: #323c42;
 
   /*
-    STEEL. Secondary text and rules. Surface sensitive: the base value clears
-    AA on zinc and chalk but NOT on kraft, which is lighter than it looks, so
-    kraft re-pins it darker below. Never set --color-steel directly in a
-    component; use text-steel and let the surface decide.
+    STEEL. SECONDARY text, captions, metadata, and rules.
+
+    READ THIS BEFORE USING IT. It is not the body colour. The first build set
+    every paragraph on the site in steel, including eight paragraph articles,
+    and the result was a page that cleared AA everywhere and still looked
+    washed out and thin. Grey body copy is one of the main reasons a layout
+    reads as sparse.
+
+    Body copy on a light ground is text-graphite. Steel is for the layer below
+    it: a caption under a specimen, a date, a figure note, a lead paragraph
+    that is deliberately a step down from the heading above it.
+
+    Surface sensitive: the base value clears AA on zinc and chalk but NOT on
+    kraft, which is lighter than it looks, so kraft re-pins it darker below.
+    Never set --color-steel directly in a component; use text-steel and let the
+    surface decide.
   */
   --color-steel: #5a6569;
 
@@ -165,7 +177,13 @@
   --color-copper: var(--color-copper-bright);
   --color-copper-hover: var(--color-copper-bright-hover);
   --color-oxide: var(--color-oxide-bright);
-  --color-steel: #9aa4ac;
+  /*
+    Lighter than the first pass, which set this to #9AA4AC. That cleared AA at
+    7:1 and still looked washed out under a heavy display headline: a lead
+    paragraph is secondary in the hierarchy, not faint. This sits at about
+    8.6:1 and reads as text rather than as a caption.
+  */
+  --color-steel: #aeb6bc;
   --color-rule: #e7e9e824;
 }
 
