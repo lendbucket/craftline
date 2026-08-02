@@ -24,8 +24,8 @@
  *     stays native: no sr-only input with a styled proxy, because that pattern
  *     breaks focus visibility in ways that are easy to ship and hard to notice.
  *
- * Colour comes entirely from tokens. `--color-danger` is surface aware in
- * globals.css the same way bronze is, so error text passes AA wherever a form
+ * Colour comes entirely from tokens. `--color-oxide` is surface aware in
+ * globals.css the same way copper is, so error text passes AA wherever a form
  * ends up sitting.
  */
 
@@ -42,8 +42,19 @@ function ErrorText({ id, children }: { id: string; children: React.ReactNode }) 
   );
 }
 
+/**
+ * Field labels are set in the mono label face, matching the title block and the
+ * section registers. A form is a set of fields, and the rest of the site labels
+ * fields in exactly one hand; leaving these in the body serif made the form
+ * look like it belonged to a different design.
+ *
+ * Deliberately NOT the .label class: that is uppercase and tracked wide, which
+ * is right for a document field name a reader scans once and wrong for a form
+ * label a person reads while deciding what to type. Sentence case, mild
+ * tracking, and a size that stays comfortable next to a 16px control.
+ */
 function labelClasses() {
-  return "block text-sm font-semibold text-graphite";
+  return "block font-mono text-[0.8125rem] font-medium tracking-[0.05em] text-graphite";
 }
 
 function controlClasses(hasError: boolean) {
@@ -53,7 +64,7 @@ function controlClasses(hasError: boolean) {
     "mt-2 block w-full min-h-11 rounded border bg-chalk px-3 py-3 text-graphite transition-colors";
   return hasError
     ? `${base} border-oxide`
-    : `${base} border-rule hover:border-ink/40`;
+    : `${base} border-rule hover:border-graphite/40`;
 }
 
 interface BaseProps {
@@ -224,7 +235,7 @@ export function RadioGroupField({
               value={option}
               checked={value === option}
               onChange={() => onChange(option)}
-              className="h-5 w-5 accent-bronze"
+              className="accent-copper h-5 w-5"
             />
             <span className="text-base">{option}</span>
           </label>

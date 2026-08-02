@@ -103,7 +103,13 @@ export default function AboutPage() {
                   label={capability.title}
                 >
                   <h3 className="display-3 max-w-2xl">{capability.title}</h3>
-                  <p className="body-lg text-steel mt-6 max-w-2xl">
+                  {/*
+                    Graphite, not steel. This is the primary description of the
+                    part; the limits block beneath it is the commentary. Setting
+                    this in the secondary colour put the two the wrong way round
+                    and made the main paragraph read as the footnote.
+                  */}
+                  <p className="body-lg text-graphite mt-6 max-w-2xl">
                     {capability.body}
                   </p>
                   <div className="border-rule mt-8 max-w-2xl border-l-2 pl-6">
