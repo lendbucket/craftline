@@ -9,25 +9,28 @@
  */
 
 /**
- * The copper rule.
+ * The datum rule.
  *
- * The single accent mark in the system, and the thing that carries the site's
- * one motion idea: on scroll into view it draws from zero to full width, which
- * is a line being plotted on a drawing. See globals.css. The animation is
- * scroll driven CSS with no JavaScript, so a browser without support simply
- * shows the finished rule rather than hiding content behind a script.
+ * The structural mark of the system, and the thing that carries the site's one
+ * motion idea: on scroll into view it draws from zero to full width, which is a
+ * line being plotted on a drawing. See globals.css. The animation is scroll
+ * driven CSS with no JavaScript, so a browser without support simply shows the
+ * finished rule rather than hiding content behind a script.
+ *
+ * Painted in datum-true, the exact brand blue, because this is a decorative
+ * hairline and not text. It clears the 3:1 non-text floor on every ground.
  */
 export function Rule({ className = "" }: { className?: string }) {
   return (
     <span
       aria-hidden="true"
-      className={`bg-copper rule-draw block h-px w-full ${className}`}
+      className={`bg-datum-true rule-draw block h-px w-full ${className}`}
     />
   );
 }
 
 /**
- * A section's label: mono caps over a copper rule.
+ * A section's label: mono caps over a datum rule.
  *
  * This replaces the old eyebrow. The difference is not cosmetic. An eyebrow is
  * a small line of text above a heading; this is the label on a drawing,
@@ -44,7 +47,7 @@ export function SectionLabel({
   return (
     <div className={`max-w-[22rem] ${className}`}>
       <Rule />
-      <p className="label text-copper mt-4">{children}</p>
+      <p className="label text-datum mt-4">{children}</p>
     </div>
   );
 }
@@ -80,7 +83,7 @@ export function Register({
   return (
     <div className="border-rule reveal grid gap-6 border-t pt-8 lg:grid-cols-[9rem_minmax(0,1fr)] lg:gap-12">
       <div className="lg:sticky lg:top-10 lg:self-start">
-        <p className="label-sm text-copper">
+        <p className="label-sm text-datum">
           {String(index).padStart(2, "0")}
         </p>
         <p className="label-sm text-steel mt-2">{label}</p>

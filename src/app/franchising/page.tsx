@@ -112,7 +112,7 @@ export default function FranchisingPage() {
       {/* ---------------------------------------------------------------
           SUPPORT MODEL
           --------------------------------------------------------------- */}
-      <section className="bg-kraft">
+      <section className="bg-chalk">
         <Container>
           <Band>
             <SectionLabel>The support model</SectionLabel>
@@ -205,7 +205,7 @@ export default function FranchisingPage() {
       {/* ---------------------------------------------------------------
           FAQ
           --------------------------------------------------------------- */}
-      <section className="bg-kraft">
+      <section className="bg-chalk">
         <Container>
           <Band>
             <SectionLabel>Questions</SectionLabel>
@@ -267,8 +267,15 @@ export default function FranchisingPage() {
               not reword it, do not summarise it, and do not move it below the
               submit button.
             */}
-            <div className="border-copper bg-chalk mt-12 max-w-xl border-l-2 p-7">
-              <h3 className="label-sm text-copper">Important legal notice</h3>
+            {/*
+              The ONE piece of red on this site that is not a control. Red means
+              act or do not miss this, and an unissued FDD disclaimer sitting
+              directly above an inquiry form is the second of those. It stays
+              distinguishable from a form error because failures are amber and
+              always carry a mono FAULT tag.
+            */}
+            <div className="border-signal bg-chalk mt-12 max-w-xl border-l-2 p-7">
+              <h3 className="label-sm text-signal">Important legal notice</h3>
               <p className="text-steel mt-4 text-[0.9375rem] leading-relaxed">
                 {FRANCHISE_DISCLAIMER}
               </p>

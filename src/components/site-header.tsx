@@ -61,8 +61,8 @@ export function SiteHeader() {
                     aria-current={isActive(item.href) ? "page" : undefined}
                     className={`label-sm inline-flex min-h-11 items-center transition-colors ${
                       isActive(item.href)
-                        ? "text-copper"
-                        : "text-zinc hover:text-copper"
+                        ? "text-datum"
+                        : "text-zinc hover:text-datum"
                     }`}
                   >
                     {item.label}
@@ -115,7 +115,7 @@ export function SiteHeader() {
                     onClick={() => setOpen(false)}
                     aria-current={isActive(item.href) ? "page" : undefined}
                     className={`label-sm flex min-h-14 items-center ${
-                      isActive(item.href) ? "text-copper" : "text-zinc"
+                      isActive(item.href) ? "text-datum" : "text-zinc"
                     }`}
                   >
                     {item.label}

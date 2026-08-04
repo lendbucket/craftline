@@ -7,7 +7,7 @@ import { COMPANY } from "@/config/company";
  * remove later, because it accumulates recognition it did not earn.
  *
  * What carries the identity is the treatment. CRAFTLINE in the mono label face
- * at weight, a copper rule, then BRANDS lighter behind it. Setting the wordmark
+ * at weight, a datum rule, then BRANDS lighter behind it. Setting the wordmark
  * in the same face as the title block fields is deliberate: the company signs
  * its documents in the same hand it labels them with.
  *
@@ -35,7 +35,7 @@ export function Wordmark({
       <span className={`label ${primary}`}>Craftline</span>
       <span
         aria-hidden="true"
-        className="bg-copper h-px w-4 shrink-0 self-center"
+        className="bg-datum-true h-px w-4 shrink-0 self-center"
       />
       <span className="label-sm text-steel">Brands</span>
     </span>

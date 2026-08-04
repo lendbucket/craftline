@@ -24,10 +24,35 @@
  *     stays native: no sr-only input with a styled proxy, because that pattern
  *     breaks focus visibility in ways that are easy to ship and hard to notice.
  *
- * Colour comes entirely from tokens. `--color-oxide` is surface aware in
- * globals.css the same way copper is, so error text passes AA wherever a form
- * ends up sitting.
+ * Colour comes entirely from tokens. `--color-fault` is surface aware in
+ * globals.css the same way the accents are, so error text passes AA wherever a
+ * form ends up sitting.
+ *
+ * FAULT IS AMBER, NOT RED, AND IT NEVER TRAVELS ALONE. Red is the action colour
+ * on this site, so an error painted red would look like the submit button. And
+ * no hue separates reliably from red for a red-green colourblind reader, which
+ * means colour cannot be the carrier at all. Every failure state below pairs the
+ * amber with a literal mono FAULT label. If you add an error state, it gets the
+ * label too.
  */
+
+/**
+ * The mono FAULT tag. This is the part that actually carries the meaning; the
+ * amber is reinforcement. Do not render an error without it.
+ */
+export function FaultTag() {
+  return (
+    <>
+      <span className="label-sm text-fault mr-2 align-baseline">Fault</span>
+      {/*
+        A real space, not just the margin. Without it the text content runs
+        together as "Faultyour inquiry was not sent", which is what a screen
+        reader announces and what the forms audit reads. The margin is visual
+        only and does nothing for either.
+      */}{" "}
+    </>
+  );
+}
 
 /** Marks a field optional. Required is the default, so it needs no marker. */
 function OptionalTag() {
@@ -36,7 +61,8 @@ function OptionalTag() {
 
 function ErrorText({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <p id={id} role="alert" className="mt-2 text-sm font-medium text-oxide">
+    <p id={id} role="alert" className="text-fault mt-2 text-sm font-medium">
+      <FaultTag />
       {children}
     </p>
   );
@@ -63,7 +89,7 @@ function controlClasses(hasError: boolean) {
   const base =
     "mt-2 block w-full min-h-11 rounded border bg-chalk px-3 py-3 text-graphite transition-colors";
   return hasError
-    ? `${base} border-oxide`
+    ? `${base} border-fault`
     : `${base} border-rule hover:border-graphite/40`;
 }
 
@@ -235,7 +261,7 @@ export function RadioGroupField({
               value={option}
               checked={value === option}
               onChange={() => onChange(option)}
-              className="accent-copper h-5 w-5"
+              className="accent-signal h-5 w-5"
             />
             <span className="text-base">{option}</span>
           </label>
@@ -269,9 +295,10 @@ export function ErrorSummary({
       ref={headingRef}
       tabIndex={-1}
       role="alert"
-      className="rounded border border-oxide bg-chalk p-4"
+      className="border-fault bg-chalk rounded border p-4"
     >
-      <p className="text-sm font-semibold text-oxide">
+      <p className="text-fault text-sm font-semibold">
+        <FaultTag />
         {count === 1
           ? "One field needs attention before this can be sent."
           : `${count} fields need attention before this can be sent.`}

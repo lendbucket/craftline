@@ -11,14 +11,17 @@ import Link from "next/link";
  * information and inquiry only.
  *
  * Contrast, since these sit on every ground:
- *   - `solid` fills with the deep copper and sets zinc on it. That pairing
- *     clears AA on every surface the site has, which is why the fill is pinned
- *     to the deep shade rather than reading the surface aware --color-copper.
- *     Reading the token would flip the fill to the bright shade on graphite and
- *     put light text on a light fill.
- *   - `outline` inherits the surface aware --color-copper from the section
- *     ground, so its text and border are the AA-passing shade for whatever it
- *     is sitting on.
+ *   - `solid` fills with the brand red and sets zinc on it, clearing AA at 4.86
+ *     on every surface the site has. The fill is pinned to --color-signal-solid
+ *     rather than the surface aware --color-signal, because reading the aware
+ *     token would flip the fill to the salmon dark ground pin and put light
+ *     text on a light fill.
+ *   - `outline` is NEUTRAL, through the surface aware --color-control, which is
+ *     graphite on light grounds and zinc on dark. It is not a second red. Red
+ *     means the primary action, so a band gets one red control and the
+ *     secondary takes the ground's own foreground. Making both red also breaks
+ *     on graphite, where the solid fill stays brand red while an outline
+ *     reading --color-signal flips to salmon, and the pair reads as a mistake.
  *
  * min-h-11 is the 44px touch floor. These are discrete controls, so the height
  * IS the design and growing it is the correct fix rather than the invisible
@@ -43,8 +46,8 @@ export function Cta({
 
   const variants = {
     solid:
-      "bg-copper-solid text-zinc hover:bg-copper-solid-hover",
-    outline: "border border-copper text-copper hover:bg-copper/10",
+      "bg-signal-solid text-zinc hover:bg-signal-solid-hover",
+    outline: "border border-control text-control hover:bg-control/10",
   } as const;
 
   const classes = `${base} ${variants[variant]} ${className}`;

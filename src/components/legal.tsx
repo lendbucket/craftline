@@ -40,7 +40,7 @@ export function LegalList({ items }: { items: readonly string[] }) {
       {items.map((item) => (
         <li
           key={item}
-          className="list-disc text-base leading-relaxed text-graphite marker:text-copper"
+          className="list-disc text-base leading-relaxed text-graphite marker:text-datum"
         >
           {item}
         </li>

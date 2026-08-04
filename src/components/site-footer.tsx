@@ -44,13 +44,13 @@ export function SiteFooter() {
 
           <div>
             <Rule className="max-w-[8rem]" />
-            <h2 className="label text-copper mt-4">Company</h2>
+            <h2 className="label text-datum mt-4">Company</h2>
             <ul className="mt-5 space-y-1">
               {NAV.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-zinc hover:text-copper tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
+                    className="text-zinc hover:text-datum tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -61,13 +61,13 @@ export function SiteFooter() {
 
           <div>
             <Rule className="max-w-[8rem]" />
-            <h2 className="label text-copper mt-4">Brands</h2>
+            <h2 className="label text-datum mt-4">Brands</h2>
             <ul className="mt-5 space-y-1">
               {BRANDS.map((brand) => (
                 <li key={brand.slug}>
                   <Link
                     href={`/brands/${brand.slug}`}
-                    className="text-zinc hover:text-copper tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
+                    className="text-zinc hover:text-datum tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
                   >
                     {brand.name}
                   </Link>
@@ -78,13 +78,13 @@ export function SiteFooter() {
 
           <div>
             <Rule className="max-w-[8rem]" />
-            <h2 className="label text-copper mt-4">Legal</h2>
+            <h2 className="label text-datum mt-4">Legal</h2>
             <ul className="mt-5 space-y-1">
               {LEGAL_NAV.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-zinc hover:text-copper tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
+                    className="text-zinc hover:text-datum tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -99,7 +99,7 @@ export function SiteFooter() {
             {CONTACT_EMAIL ? (
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="text-zinc hover:text-copper tap-44 mt-5 inline-block py-1 text-[0.9375rem] transition-colors"
+                className="text-zinc hover:text-datum tap-44 mt-5 inline-block py-1 text-[0.9375rem] transition-colors"
               >
                 {CONTACT_EMAIL}
               </a>

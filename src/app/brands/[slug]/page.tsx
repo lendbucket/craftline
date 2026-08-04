@@ -132,11 +132,11 @@ export default async function BrandPage({
                 from config rather than typed in, so it cannot drift from the
                 value the schedule below publishes.
 
-                No text-copper and no SectionLabel inside this panel. The
+                No text-datum and no SectionLabel inside this panel. The
                 surface aware colour in globals.css is pinned by the ground
                 class names, and an inline background is invisible to that
-                mechanism, so copper here would silently resolve to the deep
-                shade and fail contrast on navy.
+                mechanism, so datum here would silently resolve to its light
+                ground value and fail contrast on navy.
               */}
               <figure className="border-rule reveal border">
                 <div
@@ -150,7 +150,7 @@ export default async function BrandPage({
                   />
                 </div>
                 <figcaption className="bg-chalk border-rule border-t px-7 py-5">
-                  <p className="label-sm text-copper">Reversed</p>
+                  <p className="label-sm text-datum">Reversed</p>
                   <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
                     On the brand&apos;s navy field. The mark and the WATTSMITH
                     wordmark reverse out so they stay legible.
@@ -163,7 +163,7 @@ export default async function BrandPage({
                   <WattsmithLockup decorative className="w-full max-w-xs" />
                 </div>
                 <figcaption className="bg-chalk border-rule border-t px-7 py-5">
-                  <p className="label-sm text-copper">Primary</p>
+                  <p className="label-sm text-datum">Primary</p>
                   <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
                     On a light field. The mark and the wordmark carry the brand
                     navy, which is the primary usage.
@@ -178,7 +178,7 @@ export default async function BrandPage({
       {/* ---------------------------------------------------------------
           BRAND COLOURS
           --------------------------------------------------------------- */}
-      <section className="bg-kraft">
+      <section className="bg-chalk">
         <Container wide>
           <Band>
             <SectionLabel>Brand colours</SectionLabel>
@@ -206,7 +206,12 @@ export default async function BrandPage({
                     <p className="label-sm">{colour.name}</p>
                     <p className="value mt-3 text-xl uppercase">{colour.hex}</p>
                   </div>
-                  <p className="bg-chalk border-rule text-steel border-t px-7 py-5 text-[0.9375rem] leading-relaxed">
+                  {/*
+                    Zinc, not chalk, because this band is chalk since kraft was
+                    retired. A chalk caption on a chalk ground would dissolve
+                    into it and the swatch card would lose its footer.
+                  */}
+                  <p className="bg-zinc border-rule text-steel border-t px-7 py-5 text-[0.9375rem] leading-relaxed">
                     {colour.role}
                   </p>
                 </li>
@@ -254,7 +259,7 @@ export default async function BrandPage({
       {/* ---------------------------------------------------------------
           SERVICE SCHEDULE
           --------------------------------------------------------------- */}
-      <section className="bg-kraft">
+      <section className="bg-chalk">
         <Container wide>
           <Band>
             <SectionLabel>Services offered</SectionLabel>
@@ -284,7 +289,7 @@ export default async function BrandPage({
                   key={service}
                   className="border-rule flex items-baseline gap-5 border-b py-4"
                 >
-                  <span className="label-sm text-copper shrink-0">
+                  <span className="label-sm text-datum shrink-0">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span className="text-graphite text-[1.0625rem]">
@@ -326,7 +331,7 @@ export default async function BrandPage({
             <div className="mt-10">
               <Link
                 href="/brands"
-                className="text-copper tap-44 inline-flex min-h-11 items-center text-[0.9375rem] font-semibold hover:underline"
+                className="text-datum tap-44 inline-flex min-h-11 items-center text-[0.9375rem] font-semibold hover:underline"
               >
                 All brands
               </Link>

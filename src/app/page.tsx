@@ -53,7 +53,7 @@ export default function HomePage() {
           <div className="relative py-24 sm:py-32 lg:py-40">
             <div className="max-w-[22rem]">
               <Rule />
-              <p className="label text-copper mt-4">
+              <p className="label text-datum mt-4">
                 Brand and franchise development
               </p>
             </div>
@@ -149,7 +149,7 @@ export default function HomePage() {
                 </p>
                 <Link
                   href="/insights/why-trade-services-suit-franchise-systems"
-                  className="text-copper tap-44 inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-semibold hover:underline"
+                  className="text-datum tap-44 inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-semibold hover:underline"
                 >
                   Read the long version
                   <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
@@ -168,7 +168,7 @@ export default function HomePage() {
           order runs from the promise to the boundary it applies within.
           See the warning on Register in src/components/section.tsx.
           --------------------------------------------------------------- */}
-      <section className="bg-kraft">
+      <section className="bg-chalk">
         <Container>
           <Band>
             <SectionLabel>The system</SectionLabel>
@@ -253,7 +253,7 @@ export default function HomePage() {
               ) : null}
 
               <div className="p-8 sm:p-12">
-                <p className="label-sm text-copper">{wattsmith.category}</p>
+                <p className="label-sm text-datum">{wattsmith.category}</p>
                 <h3 className="display-3 mt-4">{wattsmith.name}</h3>
                 <p className="text-graphite mt-5 max-w-xl leading-relaxed">
                   {wattsmith.summary}
@@ -273,7 +273,7 @@ export default function HomePage() {
                 <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
                   <Link
                     href={`/brands/${wattsmith.slug}`}
-                    className="text-copper tap-44 text-[0.9375rem] font-semibold hover:underline"
+                    className="text-datum tap-44 text-[0.9375rem] font-semibold hover:underline"
                   >
                     About this brand
                   </Link>
@@ -287,7 +287,7 @@ export default function HomePage() {
                     href={wattsmith.url}
                     target="_blank"
                     rel="noopener"
-                    className="text-steel hover:text-copper tap-44 inline-flex items-center gap-1.5 text-[0.9375rem] transition-colors"
+                    className="text-steel hover:text-datum tap-44 inline-flex items-center gap-1.5 text-[0.9375rem] transition-colors"
                   >
                     {wattsmith.url.replace("https://", "")}
                     <ArrowUpRight aria-hidden="true" className="h-4 w-4" />

@@ -72,11 +72,11 @@ export default function BrandsPage() {
                     ) : null}
 
                     <div className="p-8 sm:p-12">
-                      <p className="label-sm text-copper">{brand.category}</p>
+                      <p className="label-sm text-datum">{brand.category}</p>
                       <h2 className="display-3 mt-4">
                         <Link
                           href={`/brands/${brand.slug}`}
-                          className="hover:text-copper tap-44 transition-colors"
+                          className="hover:text-datum tap-44 transition-colors"
                         >
                           {brand.name}
                         </Link>
@@ -100,7 +100,7 @@ export default function BrandsPage() {
                       <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
                         <Link
                           href={`/brands/${brand.slug}`}
-                          className="text-copper tap-44 text-[0.9375rem] font-semibold hover:underline"
+                          className="text-datum tap-44 text-[0.9375rem] font-semibold hover:underline"
                         >
                           About this brand
                         </Link>
@@ -108,7 +108,7 @@ export default function BrandsPage() {
                           href={brand.url}
                           target="_blank"
                           rel="noopener"
-                          className="text-steel hover:text-copper tap-44 inline-flex items-center gap-1.5 text-[0.9375rem] transition-colors"
+                          className="text-steel hover:text-datum tap-44 inline-flex items-center gap-1.5 text-[0.9375rem] transition-colors"
                         >
                           {brand.url.replace("https://", "")}
                           <ArrowUpRight aria-hidden="true" className="h-4 w-4" />

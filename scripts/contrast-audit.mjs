@@ -7,13 +7,13 @@
  *
  * Contrast is the headline concern on this property and gets its own section
  * with the exact foreground, background, and ratio for every failing node. The
- * reason it matters more here than on a typical site: Craftline's bronze accent
- * is context sensitive. The bright shade passes on charcoal and fails on paper,
- * the deep shade does the reverse, and globals.css re-pins --color-bronze per
- * surface so `text-bronze` resolves correctly on whatever it sits on. That is a
- * clever mechanism, and clever mechanisms are exactly the ones that break
- * silently when someone nests a card in a section they did not expect. This
- * audit is what catches it.
+ * reason it matters more here than on a typical site: Craftline's accents are
+ * context sensitive. The dark ground values fail on light and the light ground
+ * values fail on dark, and globals.css re-pins --color-signal, --color-datum,
+ * --color-fault, and --color-control per surface so `text-datum` resolves
+ * correctly on whatever it sits on. That is a clever mechanism, and clever
+ * mechanisms are exactly the ones that break silently when someone nests a card
+ * in a section they did not expect. This audit is what catches it.
  *
  * Every other axe violation is reported beneath, so this doubles as a general
  * accessibility gate rather than a single-issue check.

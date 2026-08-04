@@ -26,7 +26,7 @@ export default function NotFound() {
         <div className="py-28 sm:py-36 lg:py-44">
           <div className="max-w-[22rem]">
             <Rule />
-            <p className="label text-copper mt-4">Error 404</p>
+            <p className="label text-datum mt-4">Error 404</p>
           </div>
           <h1 className="display-1 mt-8 max-w-3xl text-balance">
             No sheet at this address.

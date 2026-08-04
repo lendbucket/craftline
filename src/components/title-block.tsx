@@ -73,7 +73,7 @@ function Field({
 }) {
   return (
     <div className={`border-rule border-t px-5 py-4 ${className}`}>
-      <p className="label-sm text-copper">{label}</p>
+      <p className="label-sm text-datum">{label}</p>
       <div className="value text-steel mt-2">{children}</div>
     </div>
   );

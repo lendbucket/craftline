@@ -80,8 +80,9 @@ export function MaterialPlate({
           priority={false}
         />
       ) : (
+        /* datum-true, not datum: this is decorative linework, never text. */
         <SchematicField
-          className={`text-copper h-full w-full ${opacity} ${mask}`}
+          className={`text-datum-true h-full w-full ${opacity} ${mask}`}
         />
       )}
     </div>

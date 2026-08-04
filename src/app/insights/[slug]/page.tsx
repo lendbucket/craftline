@@ -62,7 +62,7 @@ export async function generateMetadata({
  * emit a heading level, which keeps the document outline correct by
  * construction rather than by review.
  *
- * Each heading carries a short copper rule above it. That is the same device
+ * Each heading carries a short datum rule above it. That is the same device
  * the section labels use, so a long article stays navigable by scanning for
  * the rule rather than by reading heading weights.
  */
@@ -78,7 +78,7 @@ function BlockView({ block }: { block: Block }) {
 
   if (block.kind === "list") {
     return (
-      <ul className="border-copper mt-7 space-y-4 border-l-2 pl-7">
+      <ul className="border-datum mt-7 space-y-4 border-l-2 pl-7">
         {block.items.map((item) => (
           <li key={item} className="text-graphite leading-relaxed">
             {item}
@@ -114,7 +114,7 @@ export default async function InsightPage({
         lead={insight.lead}
       />
 
-      <section className="bg-kraft">
+      <section className="bg-chalk">
         <Container>
           <Band>
             {/*
@@ -150,9 +150,9 @@ export default async function InsightPage({
                   <li key={other.slug}>
                     <Link
                       href={`/insights/${other.slug}`}
-                      className="border-rule bg-chalk hover:border-copper reveal block h-full border p-8 transition-colors"
+                      className="border-rule bg-chalk hover:border-datum reveal block h-full border p-8 transition-colors"
                     >
-                      <p className="label-sm text-copper">{other.eyebrow}</p>
+                      <p className="label-sm text-datum">{other.eyebrow}</p>
                       <p className="display-3 text-graphite mt-5">
                         {other.title}
                       </p>

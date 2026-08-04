@@ -56,7 +56,7 @@ export default function ContactPage() {
                   href={wattsmith.url}
                   target="_blank"
                   rel="noopener"
-                  className="tap-44 font-semibold text-copper hover:underline"
+                  className="tap-44 font-semibold text-datum hover:underline"
                 >
                   {wattsmith.url.replace("https://", "")}
                   <span className="sr-only">(opens in a new tab)</span>
@@ -73,7 +73,7 @@ export default function ContactPage() {
                   You can also write to{" "}
                   <a
                     href={`mailto:${CONTACT_EMAIL}`}
-                    className="font-semibold text-copper hover:underline"
+                    className="font-semibold text-datum hover:underline"
                   >
                     {CONTACT_EMAIL}
                   </a>

@@ -15,10 +15,14 @@
   WHERE THE PALETTE COMES FROM
   ----------------------------
   It is what you see with the dead front off an electrical panel: a galvanized
-  steel enclosure, copper conductors, and the permit packet taped inside the
-  door. Cool ground, warm metal. That pairing is the material truth of the work
-  the brands do, and it is the reason this system is not a warm cream page with
-  a terracotta accent, which is what a corporate brief usually produces.
+  steel enclosure and the conductors landed in it. Cool ground, coded lines.
+
+  The accent pair is not a taste decision. Red and blue are the delivered
+  Craftline brand colours, sampled from the logo, and they happen to be two of
+  the three hot leg colours in a US three phase panel, with graphite standing
+  in for the third. The palette is therefore literally the colour coding of the
+  subject rather than a corporate brief's warm cream page with a terracotta
+  accent.
 
   The site is LIGHT DOMINANT. Graphite appears in the header, the footer, the
   title block, and one anchor band per page. It is punctuation, not the field.
@@ -37,12 +41,25 @@
   --color-chalk: #f4f5f4;
 
   /*
-    KRAFT. The document ground: job packets, permits, printed schedules. It
-    carries the reading surfaces, which is where the warmth in this system
-    lives. Reserved for long-form and for record-like content, never used as a
-    general alternate band, or it stops meaning anything.
+    There is deliberately NO third light ground.
+
+    Kraft, a warm tan, used to sit here. It was retired with the brand colours.
+    Two reasons, and the second is the hard one.
+
+    First, it was chosen to partner copper, a warm earth accent. Pure red and a
+    cyan leaning blue on a warm tan is a different and much worse pairing.
+
+    Second, and this is the constraint any replacement runs into: every accent
+    on a light ground is pinned just above 4.5:1 on zinc, which makes zinc the
+    DARKEST light ground this system can carry. A third ground even slightly
+    darker than zinc drops signal, datum, fault, and steel all below AA at once.
+    Kraft already failed all four. If a stronger light rhythm is ever wanted,
+    the new ground needs its own full set of pins in the surface block below,
+    not just a hex here.
+
+    Bands therefore alternate zinc and chalk, and the graphite anchor carries
+    the strong step.
   */
-  --color-kraft: #dccfb8;
 
   /*
     GRAPHITE. The dark ground and the body text colour on light surfaces.
@@ -69,45 +86,106 @@
     it: a caption under a specimen, a date, a figure note, a lead paragraph
     that is deliberately a step down from the heading above it.
 
-    Surface sensitive: the base value clears AA on zinc and chalk but NOT on
-    kraft, which is lighter than it looks, so kraft re-pins it darker below.
-    Never set --color-steel directly in a component; use text-steel and let the
-    surface decide.
+    Surface sensitive. Never set --color-steel directly in a component; use
+    text-steel and let the surface decide.
   */
   --color-steel: #5a6569;
 
   /*
-    COPPER. The one accent, and the only saturated colour in the system. Flat
-    ink only: no gradient, no sheen, no glow. The cliche in this category is
-    copper used as a luxury metallic finish, and that is exactly what this is
-    not. It marks structure, rules, active state, and one button.
+    THE ACCENT PAIR
+    ---------------
+    Two brand colours, two jobs. They do not alternate and they are not
+    interchangeable. If you cannot say which job a mark is doing, it is
+    probably structure, which means datum.
 
-    Two shades, pinned per surface, because a single copper cannot clear AA on
-    both a light and a dark ground. The deep shade is the default so any
-    unpinned usage fails safe on light rather than silently failing contrast.
+      SIGNAL, brand red #CB0000.  Where you act, and the one notice you must
+      not miss. Buttons, form controls, the franchise legal notice. Nothing
+      else. Red is scarce on purpose: the moment it decorates, it stops
+      meaning "act".
+
+      DATUM, brand blue #007CCB.  Everything structural and informational. The
+      plotted rule, the whole mono label layer, the section register, links,
+      navigation, focus. A datum is the reference line a drawing is measured
+      from, which is exactly what this colour marks.
+
+    Flat ink only: no gradient, no sheen, no glow.
   */
-  --color-copper: #8a4020;
-  --color-copper-hover: #75351a;
-  --color-copper-bright: #d08a5c;
-  --color-copper-bright-hover: #c07c50;
-  /*
-    The deep copper again, under a name that is NEVER re-pinned per surface.
-    Solid fills need it. A solid button reading --color-copper would flip to
-    the bright shade inside a graphite section and put light text on a light
-    fill, which is the exact failure the surface aware mechanism exists to
-    prevent and would reintroduce through the back door. Zinc on this clears
-    AA at 6:1 regardless of what the button is sitting on.
-  */
-  --color-copper-solid: #8a4020;
-  --color-copper-solid-hover: #75351a;
 
   /*
-    OXIDE. Validation and failure. Rust rather than signal red, because a
-    corporate form should correct you, not alarm you. Surface pinned for the
-    same reason copper is.
+    SIGNAL. Surface aware. The exact brand red IS the light ground value, so
+    red is brand true wherever it carries text on zinc or chalk (4.86 and 5.43).
   */
-  --color-oxide: #7e2e22;
-  --color-oxide-bright: #e8a79b;
+  --color-signal: #cb0000;
+  /*
+    Dark ground pin. Red cannot clear AA as text on graphite at brand value
+    (2.99), and every red that does clear it is necessarily a light salmon.
+    That is why red as TEXT on a dark ground is not a design position here:
+    on graphite red appears as a solid fill and nothing else. This pin exists
+    so the mechanism fails safe if someone adds text-signal to a dark band,
+    not because the salmon is wanted.
+  */
+  --color-signal-bright: #ff8a80;
+  /*
+    The brand red again, under a name that is NEVER re-pinned per surface.
+    Solid fills need it. A solid button reading --color-signal would flip to
+    the salmon inside a graphite section and put light text on a light fill,
+    which is the exact failure the surface aware mechanism exists to prevent.
+    Zinc on this clears AA at 4.86 regardless of what the button sits on.
+  */
+  --color-signal-solid: #cb0000;
+  --color-signal-solid-hover: #a80000;
+
+  /*
+    DATUM. Surface aware, and unlike red it is pinned on EVERY surface.
+
+    Read that again before "correcting" it back to the brand value: #007CCB
+    clears 4.05:1 at its best, on chalk. It cannot carry normal text anywhere
+    on this site. The entire label layer is 12px mono, which WCAG counts as
+    normal text, so the pinned value is not a rounding of the brand blue, it is
+    a requirement. The brand blue itself lives in --color-datum-true below.
+  */
+  --color-datum: #0063a4;
+  --color-datum-bright: #58adea;
+  /*
+    The exact brand blue, never re-pinned, for NON-TEXT only: the plotted rule,
+    the material plate linework, decorative hairlines. Clears the 3:1 non-text
+    floor on every ground the site has (3.63 zinc, 4.05 chalk, 4.00 graphite).
+    Never put text in this colour.
+  */
+  --color-datum-true: #007ccb;
+  /* Selection fill: a tint of the brand blue, carrying graphite text at 12.83. */
+  --color-datum-tint: #bfe0f6;
+
+  /*
+    FAULT. Validation and failure.
+
+    NOT a red. Red now means "act", and a failure that looks like the submit
+    button is the ambiguity this whole split exists to remove. On a dark ground
+    the collision is total: every AA passing red and every AA passing red-family
+    error colour both land on salmon, separated by 1.2:1, which is nothing.
+
+    Amber instead, and the reason is the subject. On equipment red is the
+    actuator and amber is the fault lamp. That is the convention the reader
+    already has.
+
+    Hue alone can never carry this, because no hue separates reliably from red
+    for a red-green colourblind reader. So the fault treatment ALWAYS pairs the
+    colour with a mono FAULT label and role="alert". If you are adding an error
+    state and it is carrying its meaning in colour only, it is not finished.
+  */
+  --color-fault: #8a5510;
+  --color-fault-bright: #e8b84b;
+
+  /*
+    CONTROL. The outline button's border and text.
+
+    Neutral, and surface aware, so the secondary action takes the ground's own
+    foreground rather than a second red. Two different reds side by side is what
+    happens if the outline variant reads --color-signal: the solid fill stays
+    brand red while the outline flips to the salmon pin, and the pair reads as
+    a mistake. Neutral secondary is also the correct hierarchy.
+  */
+  --color-control: #14191c;
 
   /*
     TYPE. Three roles, each with a job the subject actually has.
@@ -158,7 +236,7 @@
 
   An inline background-color is INVISIBLE to this mechanism. Panels painted
   with a brand colour from config (the Wattsmith navy plate) must therefore not
-  use text-copper or text-steel inside; they set their own foreground from the
+  use text-datum or text-steel inside; they set their own foreground from the
   brand's own values.
 */
 .bg-zinc,
@@ -166,17 +244,14 @@
   --color-steel: #5a6569;
   --color-rule: #14191c26;
 }
-.bg-kraft {
-  /* Kraft is lighter than it looks. Both of these darken to hold AA on it. */
-  --color-steel: #4a5457;
-  --color-rule: #14191c33;
-}
 .bg-graphite,
 .bg-graphite-700,
 .bg-graphite-600 {
-  --color-copper: var(--color-copper-bright);
-  --color-copper-hover: var(--color-copper-bright-hover);
-  --color-oxide: var(--color-oxide-bright);
+  --color-signal: var(--color-signal-bright);
+  --color-datum: var(--color-datum-bright);
+  --color-fault: var(--color-fault-bright);
+  /* The secondary control inverts to the ground's own foreground. */
+  --color-control: var(--color-zinc);
   /*
     Lighter than the first pass, which set this to #9AA4AC. That cleared AA at
     7:1 and still looked washed out under a heavy display headline: a lead
@@ -316,7 +391,7 @@ h1, h2, h3, h4, h5, h6 {
 /*
   MOTION: THE PLOTTED RULE
   ------------------------
-  One idea, applied consistently. A section's copper rule draws from zero to
+  One idea, applied consistently. A section's datum rule draws from zero to
   full width and its content rises into place, which is a line being plotted on
   a drawing. That is the subject's own motion. There is nothing else: no
   parallax, no counters, no staggered card cascades.
@@ -393,18 +468,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /*
-  Focus ring in the accent, surface aware through --color-copper, so it stays
-  visible on graphite and on zinc alike. Offset so it never sits on top of the
-  thing it is marking.
+  Focus ring in datum, surface aware, so it stays visible on graphite and on
+  zinc alike. Offset so it never sits on top of the thing it is marking.
+
+  Blue rather than red on purpose. Focus is a structural state, not an action,
+  and a red ring would be one more thing competing with the actual button. It
+  is also the platform convention, so it is what a keyboard user expects.
 */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-copper);
+  outline: 2px solid var(--color-datum);
   outline-offset: 2px;
 }
 
-/* Bright copper with graphite text clears AA on the selection fill. */
+/* A tint of the brand blue. Graphite on it clears AA at 12.83. */
 ::selection {
-  background: var(--color-copper-bright);
+  background: var(--color-datum-tint);
   color: var(--color-graphite);
 }
 

@@ -113,7 +113,7 @@ export default function AboutPage() {
                     {capability.body}
                   </p>
                   <div className="border-rule mt-8 max-w-2xl border-l-2 pl-6">
-                    <p className="label-sm text-copper">What it does not do</p>
+                    <p className="label-sm text-datum">What it does not do</p>
                     <p className="text-graphite mt-3 leading-relaxed">
                       {LIMITS[capability.title]}
                     </p>
@@ -144,7 +144,7 @@ export default function AboutPage() {
       {/* ---------------------------------------------------------------
           STRUCTURE
           --------------------------------------------------------------- */}
-      <section className="bg-kraft">
+      <section className="bg-chalk">
         <Container>
           <Band>
             <SectionLabel>Corporate structure</SectionLabel>
@@ -172,7 +172,7 @@ export default function AboutPage() {
                     {entity.name}
                   </dt>
                   <dd className="text-graphite leading-relaxed">
-                    <span className="label-sm text-copper block">
+                    <span className="label-sm text-datum block">
                       {entity.jurisdiction} limited liability company
                     </span>
                     <span className="mt-2 block">{entity.role}</span>
@@ -211,7 +211,7 @@ export default function AboutPage() {
       {/* ---------------------------------------------------------------
           THE BRAND TODAY
           --------------------------------------------------------------- */}
-      <section className="bg-kraft">
+      <section className="bg-chalk">
         <Container>
           <Band>
             <SectionLabel>The brand today</SectionLabel>

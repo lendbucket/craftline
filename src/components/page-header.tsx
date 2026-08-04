@@ -29,7 +29,7 @@ export function PageHeader({
         <div className="py-20 sm:py-24 lg:py-28">
           <div className="max-w-[22rem]">
             <Rule />
-            <p className="label text-copper mt-4">{label}</p>
+            <p className="label text-datum mt-4">{label}</p>
           </div>
           <h1 className="display-1 mt-8 max-w-4xl text-balance">{title}</h1>
           {lead ? (

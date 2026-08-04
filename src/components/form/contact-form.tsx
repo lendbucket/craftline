@@ -6,6 +6,7 @@ import {
   ErrorSummary,
   TextAreaField,
   TextField,
+  FaultTag,
 } from "@/components/form/fields";
 import { isEmail, isPhone, required } from "@/lib/validate";
 
@@ -159,7 +160,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={pending}
-        className="label bg-copper-solid text-zinc hover:bg-copper-solid-hover inline-flex min-h-11 items-center justify-center px-7 py-3.5 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+        className="label bg-signal-solid text-zinc hover:bg-signal-solid-hover inline-flex min-h-11 items-center justify-center px-7 py-3.5 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
       >
         {pending ? "Sending" : "Send message"}
       </button>
@@ -172,9 +173,10 @@ export function ContactForm() {
         <div
           role="alert"
           data-testid="submit-failure"
-          className="rounded border border-oxide bg-chalk p-5"
+          className="border-fault bg-chalk rounded border p-5"
         >
-          <p className="text-sm font-semibold text-oxide">
+          <p className="text-fault text-sm font-semibold">
+            <FaultTag />
             Your message was not sent.
           </p>
           <p className="mt-2 text-sm leading-relaxed text-steel">{failure}</p>
