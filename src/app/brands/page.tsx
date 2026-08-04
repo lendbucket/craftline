@@ -6,7 +6,6 @@ import { Container } from "@/components/container";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { Band, SectionLabel } from "@/components/section";
-import { TitleBlock } from "@/components/title-block";
 import { BRANDS } from "@/config/company";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -48,7 +47,7 @@ export default function BrandsPage() {
             <ul className="space-y-10">
               {BRANDS.map((brand) => (
                 <li key={brand.slug}>
-                  <article className="border-rule bg-chalk reveal border lg:grid lg:grid-cols-[minmax(0,22rem)_1fr]">
+                  <article className="border-line bg-chalk reveal border lg:grid lg:grid-cols-[minmax(0,22rem)_1fr]">
                     {/*
                       The delivered lockup on the brand's own navy, from config
                       so the plate cannot drift from the palette published on
@@ -86,11 +85,11 @@ export default function BrandsPage() {
                         {brand.summary}
                       </p>
 
-                      <ul className="border-rule mt-8 grid gap-px sm:grid-cols-2">
+                      <ul className="border-line mt-8 grid gap-px sm:grid-cols-2">
                         {brand.attributes.map((attribute) => (
                           <li
                             key={attribute}
-                            className="border-rule value text-steel border-t py-3"
+                            className="border-line value text-steel border-t py-3"
                           >
                             {attribute}
                           </li>
@@ -137,7 +136,6 @@ export default function BrandsPage() {
         </Container>
       </section>
 
-      <TitleBlock sheet="Brands" />
 
       <JsonLd data={breadcrumbSchema([{ name: "Brands", path: "/brands" }])} />
     </>

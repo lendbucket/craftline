@@ -6,7 +6,6 @@ import { JsonLd } from "@/components/json-ld";
 import { MaterialPlate } from "@/components/material-plate";
 import { PageHeader } from "@/components/page-header";
 import { Band, SectionLabel } from "@/components/section";
-import { TitleBlock } from "@/components/title-block";
 import { formatPublished, ORDERED_INSIGHTS } from "@/data/insights";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -53,9 +52,9 @@ export default function InsightsPage() {
               which is the register a document index uses rather than a grid of
               cards with equal visual weight.
             */}
-            <ol className="border-rule border-t">
+            <ol className="border-line border-t">
               {ORDERED_INSIGHTS.map((insight) => (
-                <li key={insight.slug} className="border-rule border-b">
+                <li key={insight.slug} className="border-line border-b">
                   <article className="reveal grid gap-5 py-10 lg:grid-cols-[minmax(0,14rem)_1fr] lg:gap-12">
                     <div>
                       <p className="label-sm text-datum">{insight.eyebrow}</p>
@@ -127,7 +126,6 @@ export default function InsightsPage() {
         </Container>
       </section>
 
-      <TitleBlock sheet="Insights" />
 
       <JsonLd
         data={breadcrumbSchema([{ name: "Insights", path: "/insights" }])}

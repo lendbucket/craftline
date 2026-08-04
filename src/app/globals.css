@@ -3,222 +3,149 @@
 /*
   CRAFTLINE BRANDS DESIGN TOKENS
   ==============================
-  System name: PANEL INTERIOR
 
-  No designer identity exists for Craftline yet. This file is therefore the
-  entire visual system, and it is built to be replaced: every colour, face, and
-  measure the site uses is declared once here and referenced by token name
-  everywhere else. Swapping in a real identity later should be an edit to this
-  file, not a sweep through components. Do not hardcode a hex value in a
-  component.
+  The drawing set system that used to live here is retired: the title block,
+  the section register, the mono label layer, the schematic linework, the
+  plotted rule motion, the squared corners. It was distinctive and it read as
+  designed, and on this property that is a liability rather than an asset.
 
-  WHERE THE PALETTE COMES FROM
-  ----------------------------
-  It is what you see with the dead front off an electrical panel: a galvanized
-  steel enclosure and the conductors landed in it. Cool ground, coded lines.
+  WHAT THIS SITE IS NOW
+  ---------------------
+  A corporate site for a franchise holding company, read by franchise
+  prospects, their attorneys, and their lenders. Those readers are looking for
+  reasons to trust a company that has not issued an FDD yet. Anything that
+  makes a reader pause and consider the design is spending their attention on
+  the wrong thing.
 
-  The accent pair is not a taste decision. Red and blue are the delivered
-  Craftline brand colours, sampled from the logo, and they happen to be two of
-  the three hot leg colours in a US three phase panel, with graphite standing
-  in for the third. The palette is therefore literally the colour coding of the
-  subject rather than a corporate brief's warm cream page with a terracotta
-  accent.
+  So the target is familiar, not distinctive: white ground, a plain sans, a
+  standard nav, standard cards, a standard footer. If an element would make
+  someone wonder about it, it is wrong for this site.
 
-  The site is LIGHT DOMINANT. Graphite appears in the header, the footer, the
-  title block, and one anchor band per page. It is punctuation, not the field.
-  A dark site reads sparse; a dense light document reads substantial, and
-  substantial is the brief.
+  The brand colours carry over unchanged, and so do their jobs. Red is action.
+  Blue is structure and links. That split was decided on evidence and none of
+  the evidence changed.
+
+  Do not hardcode a hex value in a component.
 */
 
 @theme {
   /*
-    ZINC. The primary ground, and the colour of a galvanized enclosure. Cool
-    and very slightly green so it never reads as cream. Everything else is
-    positioned against this.
+    GROUNDS. White is the page. Mist is the only alternation, and it is a step
+    small enough to separate two sections without reading as a coloured band.
+
+    There are no dark grounds in the new system. The graphite values below are
+    retained only because the pages not yet rebuilt still use them; they go
+    when those pages do.
   */
+  --color-mist: #f5f6f7;
+  --color-line: #e3e6e9;
+
+  /* Retired grounds, still referenced by pages awaiting rebuild. */
   --color-zinc: #e7e9e8;
-  /* Elevated light surface. Cards and specimen panels sitting on zinc. */
   --color-chalk: #f4f5f4;
-
-  /*
-    There is deliberately NO third light ground.
-
-    Kraft, a warm tan, used to sit here. It was retired with the brand colours.
-    Two reasons, and the second is the hard one.
-
-    First, it was chosen to partner copper, a warm earth accent. Pure red and a
-    cyan leaning blue on a warm tan is a different and much worse pairing.
-
-    Second, and this is the constraint any replacement runs into: every accent
-    on a light ground is pinned just above 4.5:1 on zinc, which makes zinc the
-    DARKEST light ground this system can carry. A third ground even slightly
-    darker than zinc drops signal, datum, fault, and steel all below AA at once.
-    Kraft already failed all four. If a stronger light rhythm is ever wanted,
-    the new ground needs its own full set of pins in the surface block below,
-    not just a hex here.
-
-    Bands therefore alternate zinc and chalk, and the graphite anchor carries
-    the strong step.
-  */
-
-  /*
-    GRAPHITE. The dark ground and the body text colour on light surfaces.
-    Deliberately NOT near-black: it holds a cool cast so it reads as steel.
-
-    It is also pulled well clear of Wattsmith navy (#1A2634). Those two sitting
-    at similar values would make the Wattsmith lockup plate dissolve into a
-    dark section instead of reading as a distinct plate.
-  */
-  --color-graphite: #14191c;
   --color-graphite-700: #232b30;
   --color-graphite-600: #323c42;
 
   /*
-    STEEL. SECONDARY text, captions, metadata, and rules.
+    GRAPHITE. Body text, headings, and the darkest thing on the page.
+    Deliberately not pure black: near-black at large sizes on white is harsh,
+    and a slight cool cast reads as considered rather than as a default.
+  */
+  --color-graphite: #14191c;
 
-    READ THIS BEFORE USING IT. It is not the body colour. The first build set
-    every paragraph on the site in steel, including eight paragraph articles,
-    and the result was a page that cleared AA everywhere and still looked
-    washed out and thin. Grey body copy is one of the main reasons a layout
-    reads as sparse.
+  /*
+    STEEL. Secondary text only: lead paragraphs, captions, metadata, the
+    footer's small print.
 
-    Body copy on a light ground is text-graphite. Steel is for the layer below
-    it: a caption under a specimen, a date, a figure note, a lead paragraph
-    that is deliberately a step down from the heading above it.
-
-    Surface sensitive. Never set --color-steel directly in a component; use
-    text-steel and let the surface decide.
+    READ THIS BEFORE USING IT. It is not the body colour. An earlier build set
+    every paragraph in steel and the result cleared AA everywhere and still
+    looked washed out. Grey body copy is one of the main reasons a layout reads
+    as thin. Body copy is text-graphite.
   */
   --color-steel: #5a6569;
 
   /*
     THE ACCENT PAIR
     ---------------
-    Two brand colours, two jobs. They do not alternate and they are not
-    interchangeable. If you cannot say which job a mark is doing, it is
-    probably structure, which means datum.
+    Two brand colours, two jobs, carried over from the colour migration.
 
-      SIGNAL, brand red #CB0000.  Where you act, and the one notice you must
-      not miss. Buttons, form controls, the franchise legal notice. Nothing
-      else. Red is scarce on purpose: the moment it decorates, it stops
+      SIGNAL, brand red #CB0000.  Where you act. Primary buttons and form
+      submits. Red is scarce on purpose: the moment it decorates, it stops
       meaning "act".
 
-      DATUM, brand blue #007CCB.  Everything structural and informational. The
-      plotted rule, the whole mono label layer, the section register, links,
-      navigation, focus. A datum is the reference line a drawing is measured
-      from, which is exactly what this colour marks.
-
-    Flat ink only: no gradient, no sheen, no glow.
-  */
-
-  /*
-    SIGNAL. Surface aware. The exact brand red IS the light ground value, so
-    red is brand true wherever it carries text on zinc or chalk (4.86 and 5.43).
+      DATUM, brand blue.  Structure and information. Links, section eyebrows,
+      active navigation, focus.
   */
   --color-signal: #cb0000;
-  /*
-    Dark ground pin. Red cannot clear AA as text on graphite at brand value
-    (2.99), and every red that does clear it is necessarily a light salmon.
-    That is why red as TEXT on a dark ground is not a design position here:
-    on graphite red appears as a solid fill and nothing else. This pin exists
-    so the mechanism fails safe if someone adds text-signal to a dark band,
-    not because the salmon is wanted.
-  */
   --color-signal-bright: #ff8a80;
   /*
-    The brand red again, under a name that is NEVER re-pinned per surface.
-    Solid fills need it. A solid button reading --color-signal would flip to
-    the salmon inside a graphite section and put light text on a light fill,
-    which is the exact failure the surface aware mechanism exists to prevent.
-    Zinc on this clears AA at 4.86 regardless of what the button sits on.
+    Never re-pinned per surface. Solid fills need it: a fill reading the
+    surface aware --color-signal would flip to the light pin inside a dark
+    section and put light text on a light fill. White on this clears 5.93.
   */
   --color-signal-solid: #cb0000;
   --color-signal-solid-hover: #a80000;
 
   /*
-    DATUM. Surface aware, and unlike red it is pinned on EVERY surface.
-
-    Read that again before "correcting" it back to the brand value: #007CCB
-    clears 4.05:1 at its best, on chalk. It cannot carry normal text anywhere
-    on this site. The entire label layer is 12px mono, which WCAG counts as
-    normal text, so the pinned value is not a rounding of the brand blue, it is
-    a requirement. The brand blue itself lives in --color-datum-true below.
+    DATUM is pinned on every surface, and that is a requirement rather than a
+    preference. The exact brand blue #007CCB clears 4.05:1 at its best and
+    cannot carry normal text anywhere. The brand value survives as
+    --color-datum-true for non-text marks only.
   */
   --color-datum: #0063a4;
+  --color-datum-hover: #004f84;
   --color-datum-bright: #58adea;
-  /*
-    The exact brand blue, never re-pinned, for NON-TEXT only: the plotted rule,
-    the material plate linework, decorative hairlines. Clears the 3:1 non-text
-    floor on every ground the site has (3.63 zinc, 4.05 chalk, 4.00 graphite).
-    Never put text in this colour.
-  */
   --color-datum-true: #007ccb;
-  /* Selection fill: a tint of the brand blue, carrying graphite text at 12.83. */
-  --color-datum-tint: #bfe0f6;
 
   /*
-    FAULT. Validation and failure.
+    FAULT. Form validation.
 
-    NOT a red. Red now means "act", and a failure that looks like the submit
-    button is the ambiguity this whole split exists to remove. On a dark ground
-    the collision is total: every AA passing red and every AA passing red-family
-    error colour both land on salmon, separated by 1.2:1, which is nothing.
-
-    Amber instead, and the reason is the subject. On equipment red is the
-    actuator and amber is the fault lamp. That is the convention the reader
-    already has.
-
-    Hue alone can never carry this, because no hue separates reliably from red
-    for a red-green colourblind reader. So the fault treatment ALWAYS pairs the
-    colour with a mono FAULT label and role="alert". If you are adding an error
-    state and it is carrying its meaning in colour only, it is not finished.
+    Amber rather than red, because red means "act" here and an error painted
+    red looks like the submit button. The FAULT chip that used to accompany it
+    is gone with the rest of the label layer; the accessible signal is now
+    carried by role="alert", aria-invalid, aria-describedby, and the error text
+    itself naming the problem, which is the conventional treatment and reaches
+    more people than a chip did.
   */
   --color-fault: #8a5510;
   --color-fault-bright: #e8b84b;
 
-  /*
-    CONTROL. The outline button's border and text.
-
-    Neutral, and surface aware, so the secondary action takes the ground's own
-    foreground rather than a second red. Two different reds side by side is what
-    happens if the outline variant reads --color-signal: the solid fill stays
-    brand red while the outline flips to the salmon pin, and the pair reads as
-    a mistake. Neutral secondary is also the correct hierarchy.
-  */
+  /* Secondary button outline. Neutral, so a band has exactly one red control. */
   --color-control: #14191c;
 
   /*
-    TYPE. Three roles, each with a job the subject actually has.
+    TYPE. Two roles, both conventional.
 
     next/font injects the loaded families under *-family names from the root
     layout. Those names MUST differ from the theme keys below: a custom
     property that references itself is a cycle, resolves to invalid, and
     silently drops the face to a system fallback with no error anywhere.
 
-    - DISPLAY, Bricolage Grotesque. A humanist grotesque with real irregularity
-      in the letterforms, so it reads drawn rather than engineered. Display
-      sizes only; it is not a UI face.
-    - BODY, Source Serif 4. Documentary and sturdy, built for long technical
-      reading. The register of code books, permits, and specifications.
-    - MONO, IBM Plex Mono. Labels, title block fields, dates, schedules.
-      Engineering software lineage, which is exactly where it is used.
+    - SANS, Source Sans 3. Headings, navigation, buttons, and all UI. A plain
+      humanist sans with no mannerisms, chosen precisely because a reader does
+      not notice it, which is the brief for this property.
+    - SERIF, Source Serif 4. Long-form reading only: the franchising education
+      pages and article bodies. Same superfamily as the sans, so the two are
+      drawn to sit together.
+
+    There is no third face and no mono. The mono label layer was the signature
+    of the retired system and it is gone with it.
   */
-  --font-display: var(--font-display-family), "Helvetica Neue", Arial, sans-serif;
-  --font-sans: var(--font-body-family), Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-mono-family), ui-monospace, "SFMono-Regular", monospace;
+  --font-sans: var(--font-sans-family), "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-serif-family), Georgia, "Times New Roman", serif;
 
   /*
-    Squared. A drawing sheet has no rounded corners and neither does this. The
-    small radius exists only so hairline borders do not look chipped at their
-    joins on a high density display.
+    A small, ordinary radius. The previous system was squared to the pixel
+    because a drawing sheet has no rounded corners. This is not a drawing
+    sheet, and hard corners on a white corporate page read as a device.
   */
-  --radius-sm: 0px;
-  --radius: 1px;
-  --radius-lg: 2px;
+  --radius-sm: 3px;
+  --radius: 5px;
+  --radius-lg: 8px;
 }
 
 :root {
-  --background: var(--color-zinc);
+  --background: #ffffff;
   --foreground: var(--color-graphite);
 }
 
@@ -226,40 +153,22 @@
   SURFACE AWARE COLOUR
   --------------------
   Custom properties inherit, so re-pinning them on a surface class means every
-  descendant utility resolves to the value that clears AA on that background,
-  including inside nested cards and specimen panels.
+  descendant utility resolves to the value that clears AA on that background.
 
-  This is the mechanism most likely to break silently when someone nests a
-  panel in a section they did not anticipate, which is precisely why the
-  contrast audit runs on every route at two widths. If you add a surface class,
-  add it here in the same commit.
-
-  An inline background-color is INVISIBLE to this mechanism. Panels painted
-  with a brand colour from config (the Wattsmith navy plate) must therefore not
-  use text-datum or text-steel inside; they set their own foreground from the
-  brand's own values.
+  Only the retired dark grounds need this now, and only until the pages using
+  them are rebuilt. On white and mist the base values already clear AA, so
+  there is nothing to pin. When the last graphite section goes, this whole
+  block goes with it.
 */
-.bg-zinc,
-.bg-chalk {
-  --color-steel: #5a6569;
-  --color-rule: #14191c26;
-}
 .bg-graphite,
 .bg-graphite-700,
 .bg-graphite-600 {
   --color-signal: var(--color-signal-bright);
   --color-datum: var(--color-datum-bright);
   --color-fault: var(--color-fault-bright);
-  /* The secondary control inverts to the ground's own foreground. */
-  --color-control: var(--color-zinc);
-  /*
-    Lighter than the first pass, which set this to #9AA4AC. That cleared AA at
-    7:1 and still looked washed out under a heavy display headline: a lead
-    paragraph is secondary in the hierarchy, not faint. This sits at about
-    8.6:1 and reads as text rather than as a caption.
-  */
   --color-steel: #aeb6bc;
-  --color-rule: #e7e9e824;
+  --color-line: #e7e9e824;
+  --color-control: #e7e9e8;
 }
 
 html {
@@ -274,8 +183,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.75;
-  text-rendering: optimizeLegibility;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   /*
     Never allow the page itself to scroll sideways on a phone. Wide content
@@ -299,152 +207,94 @@ input, select, textarea {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* Every tappable element gets an acknowledged pressed state. */
-@media (hover: none) {
-  a:active,
-  button:active,
-  [role="button"]:active {
-    transform: scale(0.985);
-  }
-}
-
 /*
   TYPE SCALE
   ----------
-  A real scale with intentional weights, not a set of sizes chosen per page.
-  The top end is deliberately larger than a corporate site usually goes: the
-  previous system topped out at 3.5rem and the result read timid.
-
-  Bricolage is variable on weight and width. Display sizes take a slight
-  negative tracking because the face is drawn loose, and headline caps at large
-  sizes otherwise pull apart.
+  Ordinary corporate sizes. The retired system topped out at 4.5rem, which is
+  an editorial size and part of what made the page read as designed. A
+  franchisor's home page headline is a statement, not a poster.
 */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 1.06;
-  letter-spacing: -0.02em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--color-graphite);
 }
 
-.display-1 {
-  font-family: var(--font-display);
-  font-size: clamp(2.75rem, 2rem + 3.6vw, 4.5rem);
-  font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.025em;
-}
-.display-2 {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 1.6rem + 2vw, 3rem);
-  font-weight: 700;
-  line-height: 1.06;
-  letter-spacing: -0.022em;
-}
-.display-3 {
-  font-family: var(--font-display);
-  font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.625rem);
-  font-weight: 700;
-  line-height: 1.15;
+.h1 {
+  font-size: clamp(2rem, 1.5rem + 2.2vw, 3rem);
+  font-weight: 600;
+  line-height: 1.14;
   letter-spacing: -0.015em;
 }
-
-/* Long-form reading measure. Slightly larger than UI body. */
-.body-lg {
-  font-size: 1.1875rem;
-  line-height: 1.72;
+.h2 {
+  font-size: clamp(1.625rem, 1.35rem + 1.2vw, 2.125rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+.h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 /*
-  THE MONO LABEL LAYER
-  --------------------
-  Field names on a title block, section registers, dates, schedule values.
-  Tracked wide and set in caps because that is how a drawing labels itself.
+  Section eyebrow. Small, uppercase, blue, mildly tracked.
 
-  Never used for reading. If a sentence ends up in this class, it is in the
-  wrong class.
+  This is the one small-caps label left, and it is deliberately set in the body
+  sans rather than a mono face. A mono eyebrow is a design signature; a small
+  blue heading above a section title is what a corporate site does.
 */
-.label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.label-sm {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-/* Values in a title block field. Mono, but not shouted. */
-.value {
-  font-family: var(--font-mono);
+.eyebrow {
+  font-family: var(--font-sans);
   font-size: 0.8125rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0.01em;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-datum);
+}
+
+/* Lead paragraph under a heading. */
+.lead {
+  font-size: 1.1875rem;
+  line-height: 1.6;
+  color: var(--color-steel);
 }
 
 /*
-  MOTION: THE PLOTTED RULE
-  ------------------------
-  One idea, applied consistently. A section's datum rule draws from zero to
-  full width and its content rises into place, which is a line being plotted on
-  a drawing. That is the subject's own motion. There is nothing else: no
-  parallax, no counters, no staggered card cascades.
-
-  Implemented with scroll driven animations and NO JavaScript. Browsers without
-  animation-timeline get the finished state immediately, which is the correct
-  fallback and is identical to what a reduced-motion user gets. Nothing is
-  hidden behind a script that might not run, so content is never invisible
-  because of a failed observer.
+  Long-form reading, used by the franchising education pages and the articles.
+  The only place the serif appears.
 */
-@keyframes reveal-rise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.prose-body {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--color-graphite);
 }
 
-@keyframes rule-draw {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
+/*
+  Standard inline text link. Blue, underlined on hover rather than always,
+  which is the convention readers expect inside corporate body copy.
+*/
+.link {
+  color: var(--color-datum);
+  text-decoration: none;
 }
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      animation: reveal-rise linear both;
-      animation-timeline: view();
-      animation-range: entry 8% cover 26%;
-    }
-    .rule-draw {
-      transform-origin: left center;
-      animation: rule-draw linear both;
-      animation-timeline: view();
-      animation-range: entry 10% cover 30%;
-    }
-  }
+.link:hover {
+  color: var(--color-datum-hover);
+  text-decoration: underline;
 }
 
 /*
   Touch target floor for inline text links.
 
   Expands an element's hit area to 44px tall WITHOUT changing its box, so an
-  inline link on a baseline next to a heading can be tapped reliably on a phone
-  while the layout around it stays where the design put it. Discrete controls
-  use min-h-11 instead, because there the height IS the design.
+  inline link next to a heading can be tapped reliably on a phone while the
+  layout stays where the design put it. Discrete controls use min-h-11 instead,
+  because there the height IS the design.
 
   Scoped below md on purpose: an invisible 44px box is a liability on a pointer
   device, where it can swallow a click meant for a neighbour. Only ever put
@@ -468,24 +318,73 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /*
-  Focus ring in datum, surface aware, so it stays visible on graphite and on
-  zinc alike. Offset so it never sits on top of the thing it is marking.
-
-  Blue rather than red on purpose. Focus is a structural state, not an action,
-  and a red ring would be one more thing competing with the actual button. It
-  is also the platform convention, so it is what a keyboard user expects.
+  Focus ring in datum, offset so it never sits on top of the thing it marks.
+  Blue rather than red: focus is a state, not an action, and blue is what a
+  keyboard user expects.
 */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
   outline: 2px solid var(--color-datum);
   outline-offset: 2px;
 }
 
-/* A tint of the brand blue. Graphite on it clears AA at 12.83. */
 ::selection {
-  background: var(--color-datum-tint);
+  background: #bfe0f6;
   color: var(--color-graphite);
 }
 
+/*
+  ============================================================================
+  TRANSITIONAL COMPATIBILITY LAYER. DELETE AS YOU GO.
+  ============================================================================
+
+  Only the home page has been rebuilt. Every other route still references the
+  retired system's class names, and a class that does not exist fails silently:
+  it renders unstyled, passes every audit, and is caught only by eye. That is a
+  real incident on this repository, not a hypothetical.
+
+  So the old names are kept alive here and REMAPPED ONTO THE NEW SYSTEM rather
+  than onto their old values. An un-rebuilt page therefore already picks up the
+  sans face and the conventional sizes; it is behind on layout, not on brand.
+
+  When you rebuild a page, replace its old class names with the real ones above
+  and delete the corresponding rule here. This block should reach zero.
+  Remaining consumers: about, brands, brands/[slug], contact, franchising,
+  insights, insights/[slug], not-found, privacy, terms.
+*/
+@theme {
+  /* Old name for --color-line. `border-rule` is used on every un-rebuilt page. */
+  --color-rule: #e3e6e9;
+}
+
+.display-1 { font-size: clamp(2rem, 1.5rem + 2.2vw, 3rem); font-weight: 600; line-height: 1.14; letter-spacing: -0.015em; }
+.display-2 { font-size: clamp(1.625rem, 1.35rem + 1.2vw, 2.125rem); font-weight: 600; line-height: 1.2; letter-spacing: -0.012em; }
+.display-3 { font-size: 1.25rem; font-weight: 600; line-height: 1.35; }
+.body-lg { font-size: 1.1875rem; line-height: 1.6; }
+
+/* Were the mono label layer. Now the same small sans as .eyebrow, colour inherited. */
+.label,
+.label-sm {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.value { font-family: var(--font-sans); font-size: 0.875rem; line-height: 1.5; }
+
+/* Were scroll driven animation hooks. Inert: the keyframes are gone. */
+.reveal,
+.rule-draw { }
+
+/*
+  MOTION
+  ------
+  There is none beyond ordinary hover and focus transitions. The retired system
+  had a scroll driven "plotted rule" animation as its one idea; an idea is
+  exactly what this site should not have. Reduced motion is still honoured for
+  the transitions that remain.
+*/
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

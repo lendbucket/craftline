@@ -1,56 +1,62 @@
 import Link from "next/link";
 import { Container } from "@/components/container";
-import { Rule } from "@/components/section";
 import { Wordmark } from "@/components/wordmark";
 import {
   BRANDS,
   COMPANY,
   CONTACT_EMAIL,
+  FRANCHISE_DISCLAIMER,
+  LEGAL_ENTITIES,
   LEGAL_NAV,
   NAV,
 } from "@/config/company";
 
 /**
- * Site footer.
+ * Site footer. Standard corporate: navigation columns, corporate structure,
+ * legal text, copyright.
  *
- * THE DISCLAIMER MOVED, AND THAT IS THE POINT. It used to live here as small
- * grey type at the foot of the page. It now renders in the NOTES field of the
- * TitleBlock, which every page places directly above this footer. The rule
- * that every page carries FRANCHISE_DISCLAIMER verbatim is unchanged and still
- * impossible to violate by adding a page, because the title block is part of
- * the page shell rather than something an author remembers to include.
+ * THE DISCLAIMER LIVES HERE AGAIN, AND THAT IS LOAD BEARING. It used to render
+ * in the NOTES field of the TitleBlock, which every page placed above this
+ * footer. The title block is retired with the rest of the drawing set system,
+ * so the disclaimer comes back to the footer, which is where a franchisor site
+ * conventionally puts it and where an attorney will look for it.
  *
- * If you are adding a page: render TitleBlock at the end of it. If you find
- * yourself typing the disclaimer text into a component, stop. It is the one
- * piece of copy on this site that is legally load bearing and it exists in
- * exactly one place.
+ * The rule is unchanged: FRANCHISE_DISCLAIMER renders verbatim on every page of
+ * this property. It is impossible to violate by adding a page, because the
+ * footer is part of the layout shell rather than something an author remembers
+ * to include.
  *
- * The corporate structure also moved into the title block's ENTITY field,
- * where it belongs, so this footer is now navigation and nothing else.
+ * If you find yourself typing the disclaimer text into a component, stop. It is
+ * the one piece of copy on this site that is legally load bearing and it exists
+ * in exactly one place, in src/config/company.ts.
+ *
+ * White ground, because the mark sits here and the mark is only approved on
+ * white.
  */
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-graphite text-zinc">
+    <footer className="border-line border-t bg-white">
       <Container wide>
-        <div className="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <Wordmark as="plain" />
-            <p className="text-steel mt-5 max-w-xs text-[0.9375rem] leading-relaxed">
+            <p className="text-steel mt-4 max-w-xs text-[0.9375rem] leading-relaxed">
               {COMPANY.descriptor}
             </p>
           </div>
 
           <div>
-            <Rule className="max-w-[8rem]" />
-            <h2 className="label text-datum mt-4">Company</h2>
-            <ul className="mt-5 space-y-1">
+            <h2 className="text-graphite text-[0.9375rem] font-semibold">
+              Company
+            </h2>
+            <ul className="mt-4 space-y-1">
               {NAV.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-zinc hover:text-datum tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
+                    className="text-steel hover:text-datum tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -60,14 +66,15 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <Rule className="max-w-[8rem]" />
-            <h2 className="label text-datum mt-4">Brands</h2>
-            <ul className="mt-5 space-y-1">
+            <h2 className="text-graphite text-[0.9375rem] font-semibold">
+              Brands
+            </h2>
+            <ul className="mt-4 space-y-1">
               {BRANDS.map((brand) => (
                 <li key={brand.slug}>
                   <Link
                     href={`/brands/${brand.slug}`}
-                    className="text-zinc hover:text-datum tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
+                    className="text-steel hover:text-datum tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
                   >
                     {brand.name}
                   </Link>
@@ -77,14 +84,15 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <Rule className="max-w-[8rem]" />
-            <h2 className="label text-datum mt-4">Legal</h2>
-            <ul className="mt-5 space-y-1">
+            <h2 className="text-graphite text-[0.9375rem] font-semibold">
+              Legal
+            </h2>
+            <ul className="mt-4 space-y-1">
               {LEGAL_NAV.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-zinc hover:text-datum tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
+                    className="text-steel hover:text-datum tap-44 inline-block py-1 text-[0.9375rem] transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -99,7 +107,7 @@ export function SiteFooter() {
             {CONTACT_EMAIL ? (
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="text-zinc hover:text-datum tap-44 mt-5 inline-block py-1 text-[0.9375rem] transition-colors"
+                className="text-steel hover:text-datum tap-44 mt-4 inline-block py-1 text-[0.9375rem] transition-colors"
               >
                 {CONTACT_EMAIL}
               </a>
@@ -107,8 +115,27 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="border-rule border-t py-7">
-          <p className="value text-steel">
+        {/*
+          The legal block. Plain small grey text, which is what this is on every
+          franchisor site, and deliberately not a bordered callout: a box around
+          the disclaimer makes it look like marketing emphasis rather than the
+          standing legal statement it is.
+        */}
+        <div className="border-line space-y-4 border-t py-8">
+          <p className="text-steel max-w-4xl text-[0.8125rem] leading-relaxed">
+            {FRANCHISE_DISCLAIMER}
+          </p>
+          <p className="text-steel max-w-4xl text-[0.8125rem] leading-relaxed">
+            {COMPANY.name} operates through{" "}
+            {LEGAL_ENTITIES.map((entity, index) => (
+              <span key={entity.name}>
+                {index > 0 ? " and " : ""}
+                {entity.name}, a {entity.jurisdiction} limited liability company
+              </span>
+            ))}
+            .
+          </p>
+          <p className="text-steel text-[0.8125rem]">
             Copyright {year} {COMPANY.name}. All rights reserved.
           </p>
         </div>

@@ -1,351 +1,292 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { BrandLockup, hasBrandLockup } from "@/components/brand/brand-lockup";
+import { BrandRow } from "@/components/brand-row";
 import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
-import { MaterialPlate } from "@/components/material-plate";
-import { Band, Register, Rule, SectionLabel } from "@/components/section";
-import { TitleBlock } from "@/components/title-block";
+import { Band, Card, SectionHeading } from "@/components/section";
 import {
   BRANDS,
   CAPABILITIES,
-  CATEGORY_POSITIONING,
   COMPANY,
   FOUNDING_STATEMENT,
+  LEGAL_ENTITIES,
   OPERATOR_PROFILE,
 } from "@/config/company";
+import { getInsight } from "@/data/insights";
 
 /**
  * Home page.
  *
- * The full Craftline thesis, in order: what the company is, why this category
- * suits the structure, what the system consists of, the brand that proves it
- * runs, and who it is built for. Each band carries a real argument. The
- * previous version stated the positioning and stopped, which is why it read
- * sparse: there was nothing on the page for a serious reader to actually
- * engage with.
+ * WHAT THIS PAGE HAS TO DO, IN ORDER: say what the company is in one sentence a
+ * reader can repeat, show the brand it actually operates, explain franchising
+ * plainly enough that someone new to it is not bluffing their way through the
+ * rest of the site, say who it is looking for, and offer a way to make contact.
+ * It is read by prospects, their attorneys, and their lenders, and all three
+ * are looking for reasons to trust a company that has not issued an FDD.
  *
- * LEGAL. Positioning and information only. No offer language, no pricing, no
- * capital requirement, and no statement or implication about what an operator
- * might earn. Every franchise reference points at an information page rather
- * than an application. The FDD is not issued.
+ * LEGAL, SAME AS EVERY PAGE. No financial performance representation of any
+ * kind: no revenue, profit, earnings, ROI, payback, unit economics, averages,
+ * ranges, or examples. No fee, royalty, or capital figure. No "buy", "own
+ * today", "apply", "qualify", "approved", or "secure your". No statement about
+ * which markets are open, because territory availability is an offer term. The
+ * disclaimer renders in the footer of every page, including this one.
  *
- * CATEGORY LANGUAGE. The four national category phrases appear here, each
- * once, each in a sentence worth writing without it. None carries a place
- * name: a category plus a location is a statement about where a franchise is
- * available, and there is no such statement to make.
+ * CATEGORY LANGUAGE. The four national category phrases from
+ * CATEGORY_POSITIONING each appear once, in a sentence that would be worth
+ * writing without them. None carries a place name: a category plus a location
+ * is a statement about where a franchise is available, and there is no such
+ * statement to make.
+ *
+ * Every fact here traces to src/config/company.ts.
  */
-
 export default function HomePage() {
   const [wattsmith] = BRANDS;
-  const showLockup = hasBrandLockup(wattsmith.slug);
+  const primer = getInsight("how-a-franchise-brand-system-works");
 
   return (
     <>
       {/* ---------------------------------------------------------------
-          HERO. The thesis, over material. The plate is treatment ready:
-          it renders the raceway linework today and a licensed copper
-          macro the day one is bought, with no layout change either way.
+          HERO
           --------------------------------------------------------------- */}
-      <section className="bg-graphite text-zinc relative isolate overflow-hidden">
-        <MaterialPlate id="home-hero" intensity="quiet" />
+      <section className="bg-white">
         <Container>
-          <div className="relative py-24 sm:py-32 lg:py-40">
-            <div className="max-w-[22rem]">
-              <Rule />
-              <p className="label text-datum mt-4">
-                Brand and franchise development
+          <div className="py-16 sm:py-20 lg:py-28">
+            <div className="max-w-3xl">
+              <h1 className="h1">
+                A franchise development company building skilled trade service
+                brands.
+              </h1>
+              <p className="lead mt-6 max-w-2xl">
+                {COMPANY.name} owns the marks, the operating playbooks, the
+                technology, and the expansion plan behind the brands it builds.
+                An operator joins a business that already works instead of
+                assembling one.
               </p>
-            </div>
-
-            <h1 className="display-1 mt-8 max-w-4xl text-balance">
-              The trade is the easy part. The business around it is what breaks.
-            </h1>
-
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              {COMPANY.name} builds skilled trades franchise systems and the
-              brands that run on them. It owns the marks, the operating
-              playbooks, the technology, and the expansion plan, so an operator
-              inherits a business that already works instead of assembling one.
-            </p>
-
-            <div className="mt-12 flex flex-col gap-3 sm:flex-row">
-              <Cta href="/franchising">Franchise information</Cta>
-              <Cta href="/about" variant="outline">
-                How the model works
-              </Cta>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <Cta href="/franchising">Explore franchising</Cta>
+                <Cta href="/about" variant="secondary">
+                  About the company
+                </Cta>
+              </div>
             </div>
           </div>
         </Container>
-
-        {/*
-          The category strip. A title block field row, which introduces the
-          site's signature device in the first screen rather than saving it
-          for the foot of the page. These are the four categories the company
-          belongs to, stated as what it is.
-        */}
-        <div className="border-rule relative border-t">
-          <Container>
-            <ul className="grid sm:grid-cols-2 lg:grid-cols-4">
-              {CATEGORY_POSITIONING.map((category, index) => (
-                <li
-                  key={category}
-                  className={`border-rule py-5 sm:px-6 sm:first:pl-0 ${
-                    index > 0 ? "border-t sm:border-t-0 sm:border-l" : ""
-                  }`}
-                >
-                  <p className="label-sm text-steel">{category}</p>
-                </li>
-              ))}
-            </ul>
-          </Container>
-        </div>
       </section>
 
       {/* ---------------------------------------------------------------
-          WHY SKILLED TRADES
+          WHAT CRAFTLINE BUILDS
           --------------------------------------------------------------- */}
-      <section className="bg-zinc">
+      <section className="bg-mist">
         <Container>
           <Band>
-            <SectionLabel>Why skilled trades</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              This category fits the structure, and not for fashionable reasons.
-            </h2>
+            <SectionHeading
+              eyebrow="What we build"
+              title="Four things a brand needs before anyone runs it."
+              lead="A franchise system is only worth as much as what it hands an operator on the first day. These are the four parts Craftline builds and maintains at the brand level."
+            />
 
-            <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:gap-16">
-              <div className="reveal space-y-6">
-                <p className="body-lg text-steel">
-                  Franchising gets talked about as a strategy you can apply to
-                  any business. It is not. It is a structure, and structures fit
-                  some shapes and not others. Trade service work happens to have
-                  the properties the structure needs.
-                </p>
-                <p className="text-graphite">
-                  The work has to happen where the customer is, so the natural
-                  unit is one crew serving one metro area and there is no way to
-                  consolidate it into a warehouse. Demand is a problem rather
-                  than a preference: nobody shops for an electrician the way
-                  they shop for a sofa, so the business does not have to
-                  manufacture demand, it has to be findable and then show up
-                  when it said it would.
-                </p>
-              </div>
-              <div className="reveal space-y-6">
-                <p className="text-graphite">
-                  The standards already exist and somebody else wrote them.
-                  Electrical work is governed by a code, permits are pulled, and
-                  an inspector with no stake in the job signs it off. A playbook
-                  in this category does not have to invent a definition of
-                  correct. It has to define how a business consistently produces
-                  work that passes.
-                </p>
-                <p className="text-graphite">
-                  And the customer cannot check the work. Once the drywall is
-                  closed nobody can tell careful wiring from wiring that becomes
-                  someone else&apos;s problem in nine years. That is why a brand is
-                  worth something here, and why it is only worth something if
-                  there is a real method behind it.
-                </p>
-                <Link
-                  href="/insights/why-trade-services-suit-franchise-systems"
-                  className="text-datum tap-44 inline-flex min-h-11 items-center gap-2 text-[0.9375rem] font-semibold hover:underline"
-                >
-                  Read the long version
-                  <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
-                </Link>
-              </div>
-            </div>
-          </Band>
-        </Container>
-      </section>
-
-      {/* ---------------------------------------------------------------
-          THE SYSTEM. The four parts, on the register.
-
-          The register is permitted here because this is a genuinely defined
-          set: these four are the whole of what Craftline holds, and the
-          order runs from the promise to the boundary it applies within.
-          See the warning on Register in src/components/section.tsx.
-          --------------------------------------------------------------- */}
-      <section className="bg-chalk">
-        <Container>
-          <Band>
-            <SectionLabel>The system</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              Four parts, and the whole thing only works as a loop.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              That system is what a home services franchise actually is. The
-              brand is a promise to a customer who cannot verify the work. The
-              playbook is the method that makes the promise survivable. The
-              technology is how anyone can tell whether the method is being
-              followed. The territory is where one operator is accountable for
-              all of it. Remove any one and the rest degrade.
-            </p>
-
-            <div className="mt-16 space-y-12">
-              {CAPABILITIES.map((capability, index) => (
-                <Register
-                  key={capability.title}
-                  index={index + 1}
-                  label={capability.title}
-                >
-                  <h3 className="display-3 max-w-2xl">{capability.title}</h3>
-                  <p className="text-graphite mt-5 max-w-2xl leading-relaxed">
+            <ul className="mt-12 grid gap-5 sm:grid-cols-2">
+              {CAPABILITIES.map((capability) => (
+                <Card as="li" key={capability.title}>
+                  <h3 className="h3">{capability.title}</h3>
+                  <p className="text-steel mt-3 leading-relaxed">
                     {capability.body}
                   </p>
-                </Register>
-              ))}
-            </div>
-
-            <div className="mt-14">
-              <Cta href="/about" variant="outline">
-                The model in full
-              </Cta>
-            </div>
-          </Band>
-        </Container>
-      </section>
-
-      {/* ---------------------------------------------------------------
-          THE PROOF POINT
-          --------------------------------------------------------------- */}
-      <section className="bg-zinc">
-        <Container wide>
-          <Band>
-            <SectionLabel>The proof point</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              An electrician franchise has to start with an electrical company
-              that already works.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              So that is what was built first. {wattsmith.name} operates in{" "}
-              {wattsmith.city}, {wattsmith.state}, and the systems above were
-              built against it rather than designed in the abstract. A playbook
-              written by people who have not done the work is the most expensive
-              kind of document there is.
-            </p>
-
-            <article className="border-rule bg-chalk reveal mt-14 border lg:grid lg:grid-cols-[minmax(0,22rem)_1fr]">
-              {/*
-                The delivered lockup on the brand's own navy, taken from config
-                so the plate colour cannot drift from the palette published on
-                the brand page. It sits on the light ground rather than inside
-                a dark band, so the navy reads as a distinct plate instead of
-                dissolving into the section.
-
-                Decorative: the brand name is the heading beside it, and
-                labelling both makes a screen reader say it twice.
-              */}
-              {showLockup ? (
-                <div
-                  className="flex items-center justify-center px-10 py-14"
-                  style={{ backgroundColor: wattsmith.palette[0].hex }}
-                >
-                  <BrandLockup
-                    slug={wattsmith.slug}
-                    onDark
-                    decorative
-                    className="w-full max-w-[16rem]"
-                  />
-                </div>
-              ) : null}
-
-              <div className="p-8 sm:p-12">
-                <p className="label-sm text-datum">{wattsmith.category}</p>
-                <h3 className="display-3 mt-4">{wattsmith.name}</h3>
-                <p className="text-graphite mt-5 max-w-xl leading-relaxed">
-                  {wattsmith.summary}
-                </p>
-
-                <ul className="border-rule mt-8 grid gap-px sm:grid-cols-2">
-                  {wattsmith.attributes.map((attribute) => (
-                    <li
-                      key={attribute}
-                      className="border-rule value text-steel border-t py-3"
-                    >
-                      {attribute}
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
-                  <Link
-                    href={`/brands/${wattsmith.slug}`}
-                    className="text-datum tap-44 text-[0.9375rem] font-semibold hover:underline"
-                  >
-                    About this brand
-                  </Link>
-                  {/*
-                    Outbound to the operating brand's own site. rel="noopener"
-                    is the safety default for target="_blank"; no nofollow,
-                    because Craftline genuinely publishes this brand and the
-                    link is an ownership statement.
-                  */}
-                  <a
-                    href={wattsmith.url}
-                    target="_blank"
-                    rel="noopener"
-                    className="text-steel hover:text-datum tap-44 inline-flex items-center gap-1.5 text-[0.9375rem] transition-colors"
-                  >
-                    {wattsmith.url.replace("https://", "")}
-                    <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
-                    <span className="sr-only">(opens in a new tab)</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-          </Band>
-        </Container>
-      </section>
-
-      {/* ---------------------------------------------------------------
-          THE OPERATOR
-          --------------------------------------------------------------- */}
-      <section className="bg-graphite text-zinc">
-        <Container>
-          <Band>
-            <SectionLabel>The operator</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              A good market with the wrong operator is a bad outcome that takes
-              two years to become obvious.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              There is no experience requirement stated anywhere on this site,
-              because no Franchise Disclosure Document has been issued and a
-              stated threshold would be a claim about who will be accepted.
-              These are traits rather than qualifications, and each one follows
-              from the support model above.
-            </p>
-
-            <ul className="mt-14 space-y-8">
-              {OPERATOR_PROFILE.map((trait) => (
-                <li key={trait} className="reveal max-w-3xl">
-                  <Rule className="max-w-[6rem]" />
-                  <p className="body-lg mt-5">{trait}</p>
-                </li>
+                </Card>
               ))}
             </ul>
+          </Band>
+        </Container>
+      </section>
 
-            <p className="text-steel mt-14 max-w-2xl leading-relaxed">
-              {FOUNDING_STATEMENT} That makes this a veteran franchise company
-              by origin rather than by positioning, and the brand operating
-              under it is veteran owned as well. Veterans considering ownership
-              are encouraged to make contact.
+      {/* ---------------------------------------------------------------
+          OUR BRANDS
+          --------------------------------------------------------------- */}
+      <section className="bg-white">
+        <Container>
+          <Band>
+            <SectionHeading
+              eyebrow="Our brands"
+              title="The brands Craftline operates."
+              lead="One brand today, built and run before any part of it was offered to anyone else. That order is deliberate. A playbook is worth handing over only after it has been tested in a real business."
+            />
+
+            <div className="mt-12">
+              <BrandRow />
+            </div>
+
+            <p className="text-steel mt-8 max-w-3xl leading-relaxed">
+              {wattsmith.summary} It is the business the systems above were
+              built on and tested against, which is why this site describes a
+              skilled trades franchise programme rather than a plan for one.
             </p>
+          </Band>
+        </Container>
+      </section>
 
-            <div className="mt-12 flex flex-col gap-3 sm:flex-row">
-              <Cta href="/franchising">Franchise information</Cta>
-              <Cta href="/contact" variant="outline">
-                Contact Craftline
-              </Cta>
+      {/* ---------------------------------------------------------------
+          FRANCHISING EXPLAINED
+          --------------------------------------------------------------- */}
+      <section className="bg-mist">
+        <Container>
+          <Band>
+            <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
+              <div>
+                <SectionHeading
+                  eyebrow="Franchising, explained"
+                  title="Start here if franchising is new to you."
+                  lead="Most people evaluating a home services franchise for the first time are asked to make a serious decision using vocabulary nobody explained to them. This section exists to fix that before any conversation starts."
+                />
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <Cta href="/franchising">How franchising works</Cta>
+                  <Cta href="/insights" variant="secondary">
+                    Read the guides
+                  </Cta>
+                </div>
+              </div>
+
+              {/*
+                Definitions only, and each describes the structure of
+                franchising in general rather than Craftline's terms. Describing
+                the framework is permitted before an FDD is issued. Describing
+                this company's fees, royalties, or territory would be an offer
+                term, so none of them appear here or anywhere.
+              */}
+              <dl className="border-line divide-line divide-y rounded-lg border bg-white">
+                <div className="p-6">
+                  <dt className="text-graphite font-semibold">Franchisor</dt>
+                  <dd className="text-steel mt-2 leading-relaxed">
+                    The company that owns the brand and the system and licenses
+                    the right to operate under it.
+                  </dd>
+                </div>
+                <div className="p-6">
+                  <dt className="text-graphite font-semibold">Franchisee</dt>
+                  <dd className="text-steel mt-2 leading-relaxed">
+                    The independent owner who runs a business under that brand
+                    and holds to its standards.
+                  </dd>
+                </div>
+                <div className="p-6">
+                  <dt className="text-graphite font-semibold">
+                    Franchise Disclosure Document
+                  </dt>
+                  <dd className="text-steel mt-2 leading-relaxed">
+                    The document a franchisor must deliver before it can offer a
+                    franchise. It sets out the obligations on both sides.
+                    Craftline has not issued one, so there is nothing to offer
+                    yet.
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            {primer ? (
+              <p className="text-steel mt-10 leading-relaxed">
+                A longer explanation:{" "}
+                <Link href={`/insights/${primer.slug}`} className="link tap-44">
+                  {primer.title}
+                </Link>
+              </p>
+            ) : null}
+          </Band>
+        </Container>
+      </section>
+
+      {/* ---------------------------------------------------------------
+          WHO THIS IS FOR
+          --------------------------------------------------------------- */}
+      <section className="bg-white">
+        <Container>
+          <Band>
+            <SectionHeading
+              eyebrow="Who this is for"
+              title="What Craftline looks for in an operator."
+              lead="These are traits rather than qualifications. There is deliberately no experience requirement and no background requirement stated anywhere on this site, because a stated threshold is a claim about who will be accepted and no such claim can be made before disclosure."
+            />
+
+            <ul className="mt-12 grid gap-5 sm:grid-cols-3">
+              {OPERATOR_PROFILE.map((trait) => (
+                <Card as="li" key={trait}>
+                  <p className="text-graphite leading-relaxed">{trait}</p>
+                </Card>
+              ))}
+            </ul>
+          </Band>
+        </Container>
+      </section>
+
+      {/* ---------------------------------------------------------------
+          THE COMPANY
+          --------------------------------------------------------------- */}
+      <section className="bg-mist">
+        <Container>
+          <Band>
+            <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
+              <div>
+                <SectionHeading
+                  eyebrow="The company"
+                  title="Who Craftline Brands is."
+                  lead={COMPANY.descriptor}
+                />
+                <p className="text-steel mt-6 leading-relaxed">
+                  {FOUNDING_STATEMENT} The brand operating under it is veteran
+                  owned as well, which makes this a veteran franchise company by
+                  origin rather than by positioning. Veterans considering
+                  ownership are encouraged to make contact.
+                </p>
+                <div className="mt-8">
+                  <Cta href="/about" variant="secondary">
+                    How the company is structured
+                  </Cta>
+                </div>
+              </div>
+
+              <div className="border-line rounded-lg border bg-white p-7">
+                <h3 className="h3">Corporate structure</h3>
+                <dl className="mt-5 space-y-5">
+                  {LEGAL_ENTITIES.map((entity) => (
+                    <div key={entity.name}>
+                      <dt className="text-graphite font-semibold">
+                        {entity.name}
+                      </dt>
+                      <dd className="text-steel mt-1 leading-relaxed">
+                        {entity.role} Registered in {entity.jurisdiction}.
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
             </div>
           </Band>
         </Container>
       </section>
 
-      <TitleBlock sheet="Home" />
+      {/* ---------------------------------------------------------------
+          CONTACT
+          --------------------------------------------------------------- */}
+      <section className="bg-white">
+        <Container>
+          <Band>
+            <div className="border-line rounded-lg border p-8 sm:p-12">
+              <div className="max-w-2xl">
+                <h2 className="h2">Start a conversation.</h2>
+                <p className="lead mt-4">
+                  This is an inquiry, not an application. It asks for nothing
+                  sensitive, commits you to nothing, and is read by a person.
+                  Craftline runs an electrician franchise brand today and is
+                  building the programme around it.
+                </p>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <Cta href="/contact">Get in touch</Cta>
+                  <Cta href="/franchising" variant="secondary">
+                    Franchise information
+                  </Cta>
+                </div>
+              </div>
+            </div>
+          </Band>
+        </Container>
+      </section>
     </>
   );
 }

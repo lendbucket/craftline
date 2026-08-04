@@ -4,7 +4,7 @@
  * FORM PRIMITIVES
  * ===============
  *
- * Presentational controls only. Each one takes a value, an onChange, and an
+ * Presentational controls only. Each takes a value, an onChange, and an
  * optional error string; the owning form holds the state and decides what is
  * valid. Keeping validation out of here means the franchise inquiry and the
  * contact form can have completely different rules without either one growing
@@ -15,44 +15,21 @@
  *   - Every control has a real <label htmlFor>. No placeholder-as-label. A
  *     placeholder disappears the moment someone types, which is exactly when a
  *     distracted person on a phone needs to check what the field was.
- *   - Errors are wired through aria-describedby and announced with role="alert",
- *     so a screen reader user learns the field is wrong without hunting for red
- *     text they cannot see.
- *   - aria-invalid marks the control itself, because "the border went red" is
- *     not information that reaches everyone.
+ *   - Errors are wired through aria-describedby and announced with
+ *     role="alert", so a screen reader user learns the field is wrong without
+ *     hunting for coloured text they cannot see.
+ *   - aria-invalid marks the control itself, because "the border changed
+ *     colour" is not information that reaches everyone.
  *   - Radio inputs sit inside labels tall enough to tap. The native control
  *     stays native: no sr-only input with a styled proxy, because that pattern
  *     breaks focus visibility in ways that are easy to ship and hard to notice.
  *
- * Colour comes entirely from tokens. `--color-fault` is surface aware in
- * globals.css the same way the accents are, so error text passes AA wherever a
- * form ends up sitting.
- *
- * FAULT IS AMBER, NOT RED, AND IT NEVER TRAVELS ALONE. Red is the action colour
- * on this site, so an error painted red would look like the submit button. And
- * no hue separates reliably from red for a red-green colourblind reader, which
- * means colour cannot be the carrier at all. Every failure state below pairs the
- * amber with a literal mono FAULT label. If you add an error state, it gets the
- * label too.
+ * ERROR STYLING IS CONVENTIONAL AND CARRIES NO DEVICE. An earlier version put a
+ * mono FAULT chip in front of every message. It was removed with the rest of
+ * the design system vocabulary: a form error should look like a form error.
+ * What carries the meaning is the message text naming the actual problem, plus
+ * the ARIA wiring above. The amber is reinforcement and nothing depends on it.
  */
-
-/**
- * The mono FAULT tag. This is the part that actually carries the meaning; the
- * amber is reinforcement. Do not render an error without it.
- */
-export function FaultTag() {
-  return (
-    <>
-      <span className="label-sm text-fault mr-2 align-baseline">Fault</span>
-      {/*
-        A real space, not just the margin. Without it the text content runs
-        together as "Faultyour inquiry was not sent", which is what a screen
-        reader announces and what the forms audit reads. The margin is visual
-        only and does nothing for either.
-      */}{" "}
-    </>
-  );
-}
 
 /** Marks a field optional. Required is the default, so it needs no marker. */
 function OptionalTag() {
@@ -62,35 +39,29 @@ function OptionalTag() {
 function ErrorText({ id, children }: { id: string; children: React.ReactNode }) {
   return (
     <p id={id} role="alert" className="text-fault mt-2 text-sm font-medium">
-      <FaultTag />
       {children}
     </p>
   );
 }
 
 /**
- * Field labels are set in the mono label face, matching the title block and the
- * section registers. A form is a set of fields, and the rest of the site labels
- * fields in exactly one hand; leaving these in the body serif made the form
- * look like it belonged to a different design.
- *
- * Deliberately NOT the .label class: that is uppercase and tracked wide, which
- * is right for a document field name a reader scans once and wrong for a form
- * label a person reads while deciding what to type. Sentence case, mild
- * tracking, and a size that stays comfortable next to a 16px control.
+ * Field labels: the body sans at normal sentence case, which is what a form
+ * label is on every site a reader has filled in. The retired version set these
+ * in the mono label face to match the title block, which made the form part of
+ * a design system rather than part of a form.
  */
 function labelClasses() {
-  return "block font-mono text-[0.8125rem] font-medium tracking-[0.05em] text-graphite";
+  return "block text-[0.9375rem] font-semibold text-graphite";
 }
 
 function controlClasses(hasError: boolean) {
   // min-h-11 is the 44px touch floor. Font size comes from globals.css, which
   // pins form controls to 16px so iOS never zooms the viewport on focus.
   const base =
-    "mt-2 block w-full min-h-11 rounded border bg-chalk px-3 py-3 text-graphite transition-colors";
+    "mt-2 block w-full min-h-11 rounded border bg-white px-3 py-3 text-graphite transition-colors";
   return hasError
     ? `${base} border-fault`
-    : `${base} border-rule hover:border-graphite/40`;
+    : `${base} border-line hover:border-graphite/40`;
 }
 
 interface BaseProps {
@@ -295,10 +266,9 @@ export function ErrorSummary({
       ref={headingRef}
       tabIndex={-1}
       role="alert"
-      className="border-fault bg-chalk rounded border p-4"
+      className="border-fault rounded border bg-white p-4"
     >
       <p className="text-fault text-sm font-semibold">
-        <FaultTag />
         {count === 1
           ? "One field needs attention before this can be sent."
           : `${count} fields need attention before this can be sent.`}

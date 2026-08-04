@@ -2,13 +2,11 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { EffectiveDate, LegalSection, P } from "@/components/legal";
 import { PageHeader } from "@/components/page-header";
-import { TitleBlock } from "@/components/title-block";
 import {
   BRANDS,
   COMPANY,
   FRANCHISE_DISCLAIMER,
   LEGAL_ENTITIES,
-  POLICY_LAST_UPDATED,
 } from "@/config/company";
 import { pageMetadata } from "@/lib/seo";
 
@@ -152,11 +150,6 @@ export default function TermsPage() {
         </Container>
       </section>
 
-      <TitleBlock
-        sheet="Terms of use"
-        issuedFor="Terms as published."
-        revision={POLICY_LAST_UPDATED}
-      />
     </>
   );
 }

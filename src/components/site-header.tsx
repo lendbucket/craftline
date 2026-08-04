@@ -9,13 +9,19 @@ import { Wordmark } from "@/components/wordmark";
 import { NAV } from "@/config/company";
 
 /**
- * Site header. The only client component on the property, and it is a client
- * component solely because of the mobile disclosure. Everything else renders on
- * the server.
+ * Site header. A standard corporate top nav: white ground, mark at the left,
+ * destinations at the right, one primary action.
  *
- * There is no sticky behaviour and no scroll transform. A corporate site with
- * this few destinations does not need a header that follows you down the page,
- * and a static header is one less thing to get wrong on a phone in landscape.
+ * WHITE IS REQUIRED, NOT PREFERRED. The Craftline logo is only approved on a
+ * white background, so the header that carries it is white. Do not add a tint,
+ * a dark variant, or a scrolled state that changes the ground.
+ *
+ * The only client component on the property, and only because of the mobile
+ * disclosure. Everything else renders on the server.
+ *
+ * There is no sticky behaviour and no scroll transform. A site with five
+ * destinations does not need a header that follows you down the page, and a
+ * static header is one less thing to get wrong on a phone in landscape.
  */
 export function SiteHeader() {
   const pathname = usePathname();
@@ -26,8 +32,8 @@ export function SiteHeader() {
   // to trap. Locking the body would only strand a user whose nav list grew
   // taller than the viewport.
 
-  // Escape closes the panel, matching the behaviour of every other disclosure
-  // a keyboard user has met.
+  // Escape closes the panel, matching every other disclosure a keyboard user
+  // has met.
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -41,51 +47,60 @@ export function SiteHeader() {
     pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="bg-graphite text-zinc">
+    <header className="border-line border-b bg-white">
       <Container wide>
         <div className="flex h-16 items-center justify-between sm:h-20">
           <Wordmark />
 
-          <nav aria-label="Primary" className="hidden md:block">
-            {/*
-              Tighter gap at md, opening up at lg. The nav is data driven, and
-              at the md breakpoint the current five labels plus the wordmark sit
-              close enough to the container edge that gap-8 risks a wrap. Adding
-              a sixth destination means checking this again.
-            */}
-            <ul className="flex items-center gap-5 lg:gap-8">
-              {NAV.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={isActive(item.href) ? "page" : undefined}
-                    className={`label-sm inline-flex min-h-11 items-center transition-colors ${
-                      isActive(item.href)
-                        ? "text-datum"
-                        : "text-zinc hover:text-datum"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <div className="flex items-center gap-6">
+            <nav aria-label="Primary" className="hidden md:block">
+              <ul className="flex items-center gap-6 lg:gap-8">
+                {NAV.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      aria-current={isActive(item.href) ? "page" : undefined}
+                      className={`inline-flex min-h-11 items-center text-[0.9375rem] font-semibold transition-colors ${
+                        isActive(item.href)
+                          ? "text-datum"
+                          : "text-graphite hover:text-datum"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-          <button
-            type="button"
-            onClick={() => setOpen((value) => !value)}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? "Close menu" : "Open menu"}
-            className="text-zinc -mr-2 inline-flex h-11 w-11 items-center justify-center md:hidden"
-          >
-            {open ? (
-              <X aria-hidden="true" className="h-6 w-6" />
-            ) : (
-              <Menu aria-hidden="true" className="h-6 w-6" />
-            )}
-          </button>
+            {/*
+              One action in the header, and it is the one this site exists to
+              collect. It is hidden below md because the mobile panel carries
+              Contact already and a second control in a 16px bar crowds the
+              disclosure toggle.
+            */}
+            <Link
+              href="/contact"
+              className="bg-signal-solid hover:bg-signal-solid-hover hidden min-h-11 items-center justify-center rounded px-5 text-[0.9375rem] font-semibold text-white transition-colors md:inline-flex"
+            >
+              Get in touch
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              aria-label={open ? "Close menu" : "Open menu"}
+              className="text-graphite -mr-2 inline-flex h-11 w-11 items-center justify-center md:hidden"
+            >
+              {open ? (
+                <X aria-hidden="true" className="h-6 w-6" />
+              ) : (
+                <Menu aria-hidden="true" className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
       </Container>
 
@@ -104,18 +119,21 @@ export function SiteHeader() {
         <nav
           id="mobile-nav"
           aria-label="Primary"
-          className="border-rule bg-graphite border-t md:hidden"
+          className="border-line border-t bg-white md:hidden"
         >
           <Container wide>
             <ul className="flex flex-col py-2">
               {NAV.map((item) => (
-                <li key={item.href} className="border-rule border-b last:border-b-0">
+                <li
+                  key={item.href}
+                  className="border-line border-b last:border-b-0"
+                >
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
                     aria-current={isActive(item.href) ? "page" : undefined}
-                    className={`label-sm flex min-h-14 items-center ${
-                      isActive(item.href) ? "text-datum" : "text-zinc"
+                    className={`flex min-h-14 items-center text-[0.9375rem] font-semibold ${
+                      isActive(item.href) ? "text-datum" : "text-graphite"
                     }`}
                   >
                     {item.label}

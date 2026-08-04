@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
+import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { JsonLd } from "@/components/json-ld";
 import { SiteFooter } from "@/components/site-footer";
@@ -11,50 +11,39 @@ import { OG_IMAGE } from "@/lib/seo";
 import "./globals.css";
 
 /**
- * THREE TYPE ROLES, EACH WITH A JOB THE SUBJECT ACTUALLY HAS.
+ * TWO TYPE ROLES, BOTH CONVENTIONAL.
  *
- * Bricolage Grotesque carries display. It is a humanist grotesque with real
- * irregularity in its letterforms, so it reads drawn rather than engineered.
- * That is where the warmth in this system comes from, and it is why the
- * display face is not another neutral corporate sans. Display sizes only; it
- * is deliberately not used for UI.
+ * Source Sans 3 carries everything: headings, navigation, buttons, body. It is
+ * a plain humanist sans with no mannerisms, and that is the entire reason it
+ * was chosen. The retired display face read as drawn and deliberate, which is
+ * a large part of what made the site look designed rather than corporate.
  *
- * Source Serif 4 carries body. It is documentary rather than literary, built
- * for long technical reading, which is the register of code books, permits,
- * and specifications. There is a lot of copy on this site now and it has to be
- * genuinely readable at length.
+ * Source Serif 4 is retained for long-form reading only, through the
+ * .prose-body class: the franchising education pages and the article bodies.
+ * Same superfamily as the sans, so the two are drawn to sit together, and a
+ * serif reading column is the convention for substantive explanatory content
+ * on a corporate site.
  *
- * IBM Plex Mono carries the label layer: title block fields, section
- * registers, dates, schedules. It has an engineering software lineage, which
- * is exactly the vernacular being borrowed.
+ * There is no third face. The mono is gone with the label layer it existed for.
  *
- * WEIGHT BUDGET. Bricolage and Source Serif load as variable weight only. Both
- * support an optical size axis and Bricolage also supports width; neither is
- * requested, because the gain is invisible at the sizes used here and the axes
- * cost real bytes. Plex Mono is not variable on Google Fonts, so it loads the
- * two static weights actually used and no more.
+ * WEIGHT BUDGET. Both load as variable weight. Neither requests the optical
+ * size axis, because the gain is invisible at the sizes used here and the axis
+ * costs real bytes.
  *
- * All three are declared under *-family names that differ from the Tailwind
- * theme keys in globals.css. Matching the names would create a
- * self-referential custom property, which resolves to invalid and silently
- * drops the face to a system fallback with no error anywhere.
+ * Both are declared under *-family names that differ from the Tailwind theme
+ * keys in globals.css. Matching the names would create a self-referential
+ * custom property, which resolves to invalid and silently drops the face to a
+ * system fallback with no error anywhere.
  */
-const display = Bricolage_Grotesque({
+const sans = Source_Sans_3({
   subsets: ["latin"],
-  variable: "--font-display-family",
+  variable: "--font-sans-family",
   display: "swap",
 });
 
-const body = Source_Serif_4({
+const serif = Source_Serif_4({
   subsets: ["latin"],
-  variable: "--font-body-family",
-  display: "swap",
-});
-
-const mono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono-family",
+  variable: "--font-serif-family",
   display: "swap",
 });
 
@@ -138,16 +127,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${display.variable} ${body.variable} ${mono.variable}`}
+      className={`${sans.variable} ${serif.variable}`}
     >
-      <body className="bg-zinc text-graphite flex min-h-screen flex-col">
+      <body className="text-graphite flex min-h-screen flex-col bg-white">
         {/*
           First focusable element on the page. The header nav is short, but a
           keyboard user still should not have to walk it on every route.
         */}
         <a
           href="#main"
-          className="label focus:bg-graphite focus:text-zinc sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:px-4 focus:py-3"
+          className="focus:bg-graphite sr-only text-sm font-semibold focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:px-4 focus:py-3 focus:text-white"
         >
           Skip to content
         </a>

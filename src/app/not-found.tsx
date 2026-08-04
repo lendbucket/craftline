@@ -37,7 +37,7 @@ export default function NotFound() {
           </p>
           <div className="mt-12 flex flex-col gap-3 sm:flex-row">
             <Cta href="/">Return home</Cta>
-            <Cta href="/contact" variant="outline">
+            <Cta href="/contact" variant="secondary">
               Contact Craftline
             </Cta>
           </div>

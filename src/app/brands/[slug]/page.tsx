@@ -8,7 +8,6 @@ import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { Band, SectionLabel } from "@/components/section";
-import { TitleBlock } from "@/components/title-block";
 import { BRANDS, COMPANY, SITE_URL } from "@/config/company";
 import { breadcrumbSchema, ORGANIZATION_ID } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -138,7 +137,7 @@ export default async function BrandPage({
                 mechanism, so datum here would silently resolve to its light
                 ground value and fail contrast on navy.
               */}
-              <figure className="border-rule reveal border">
+              <figure className="border-line reveal border">
                 <div
                   className="flex items-center justify-center px-10 py-16 sm:py-20"
                   style={{ backgroundColor: navy.hex }}
@@ -149,7 +148,7 @@ export default async function BrandPage({
                     className="w-full max-w-xs"
                   />
                 </div>
-                <figcaption className="bg-chalk border-rule border-t px-7 py-5">
+                <figcaption className="bg-chalk border-line border-t px-7 py-5">
                   <p className="label-sm text-datum">Reversed</p>
                   <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
                     On the brand&apos;s navy field. The mark and the WATTSMITH
@@ -158,11 +157,11 @@ export default async function BrandPage({
                 </figcaption>
               </figure>
 
-              <figure className="border-rule reveal border">
+              <figure className="border-line reveal border">
                 <div className="bg-chalk flex items-center justify-center px-10 py-16 sm:py-20">
                   <WattsmithLockup decorative className="w-full max-w-xs" />
                 </div>
-                <figcaption className="bg-chalk border-rule border-t px-7 py-5">
+                <figcaption className="bg-chalk border-line border-t px-7 py-5">
                   <p className="label-sm text-datum">Primary</p>
                   <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
                     On a light field. The mark and the wordmark carry the brand
@@ -188,7 +187,7 @@ export default async function BrandPage({
 
             <ul className="mt-14 grid gap-8 sm:grid-cols-2 lg:max-w-4xl">
               {brand.palette.map((colour) => (
-                <li key={colour.hex} className="border-rule reveal border">
+                <li key={colour.hex} className="border-line reveal border">
                   {/*
                     The swatch labels itself in the colour it must be legible
                     against: reversed ink on navy, brand navy on gold. Both
@@ -211,7 +210,7 @@ export default async function BrandPage({
                     retired. A chalk caption on a chalk ground would dissolve
                     into it and the swatch card would lose its footer.
                   */}
-                  <p className="bg-zinc border-rule text-steel border-t px-7 py-5 text-[0.9375rem] leading-relaxed">
+                  <p className="bg-zinc border-line text-steel border-t px-7 py-5 text-[0.9375rem] leading-relaxed">
                     {colour.role}
                   </p>
                 </li>
@@ -242,11 +241,11 @@ export default async function BrandPage({
               superlatives, no counts, no performance claims, and nothing about
               revenue or growth.
             */}
-            <ul className="border-rule mt-12 max-w-2xl border-t">
+            <ul className="border-line mt-12 max-w-2xl border-t">
               {brand.attributes.map((attribute) => (
                 <li
                   key={attribute}
-                  className="border-rule text-graphite border-b py-5 text-[1.0625rem]"
+                  className="border-line text-graphite border-b py-5 text-[1.0625rem]"
                 >
                   {attribute}
                 </li>
@@ -283,11 +282,11 @@ export default async function BrandPage({
               keyword surface on this domain pointing at that one, which is the
               exact competition this property is built to avoid.
             */}
-            <ol className="border-rule mt-14 grid border-t sm:grid-cols-2">
+            <ol className="border-line mt-14 grid border-t sm:grid-cols-2">
               {brand.services.map((service, index) => (
                 <li
                   key={service}
-                  className="border-rule flex items-baseline gap-5 border-b py-4"
+                  className="border-line flex items-baseline gap-5 border-b py-4"
                 >
                   <span className="label-sm text-datum shrink-0">
                     {String(index + 1).padStart(2, "0")}
@@ -324,7 +323,7 @@ export default async function BrandPage({
                 <ArrowUpRight aria-hidden="true" className="ml-2 h-4 w-4" />
                 <span className="sr-only">(opens in a new tab)</span>
               </Cta>
-              <Cta href="/franchising" variant="outline">
+              <Cta href="/franchising" variant="secondary">
                 Franchise information
               </Cta>
             </div>
@@ -340,7 +339,6 @@ export default async function BrandPage({
         </Container>
       </section>
 
-      <TitleBlock sheet={brand.name} />
 
       <JsonLd data={brandSchema} />
       <JsonLd

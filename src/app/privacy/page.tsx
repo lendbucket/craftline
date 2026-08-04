@@ -2,13 +2,11 @@ import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { EffectiveDate, LegalList, LegalSection, P } from "@/components/legal";
 import { PageHeader } from "@/components/page-header";
-import { TitleBlock } from "@/components/title-block";
 import {
   BRANDS,
   COMPANY,
   CONTACT_EMAIL,
   LEGAL_ENTITIES,
-  POLICY_LAST_UPDATED,
 } from "@/config/company";
 import { pageMetadata } from "@/lib/seo";
 
@@ -272,11 +270,6 @@ export default function PrivacyPage() {
         </Container>
       </section>
 
-      <TitleBlock
-        sheet="Privacy policy"
-        issuedFor="Policy as published."
-        revision={POLICY_LAST_UPDATED}
-      />
     </>
   );
 }

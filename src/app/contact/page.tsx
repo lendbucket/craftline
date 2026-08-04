@@ -3,7 +3,6 @@ import { Container } from "@/components/container";
 import { ContactForm } from "@/components/form/contact-form";
 import { PageHeader } from "@/components/page-header";
 import { SectionLabel } from "@/components/section";
-import { TitleBlock } from "@/components/title-block";
 import { BRANDS, COMPANY, CONTACT_EMAIL } from "@/config/company";
 import { pageMetadata } from "@/lib/seo";
 
@@ -45,7 +44,7 @@ export default function ContactPage() {
               this page should leave for the brand site before filling anything
               in, not after waiting for a reply that is not coming.
             */}
-            <div className="max-w-xl rounded-lg border border-rule bg-chalk p-6">
+            <div className="max-w-xl rounded-lg border border-line bg-chalk p-6">
               <h2 className="text-base font-semibold">
                 Looking for electrical service?
               </h2>
@@ -89,7 +88,6 @@ export default function ContactPage() {
         </Container>
       </section>
 
-      <TitleBlock sheet="Contact" />
     </>
   );
 }

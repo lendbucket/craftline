@@ -2,54 +2,41 @@ import Link from "next/link";
 import { COMPANY } from "@/config/company";
 
 /**
- * The wordmark is set in type, not drawn. Craftline has no emblem and will not
- * get an invented one here: a placeholder logo is the hardest placeholder to
- * remove later, because it accumulates recognition it did not earn.
+ * The company mark in the header and footer, set in type.
  *
- * What carries the identity is the treatment. CRAFTLINE in the mono label face
- * at weight, a datum rule, then BRANDS lighter behind it. Setting the wordmark
- * in the same face as the title block fields is deliberate: the company signs
- * its documents in the same hand it labels them with.
+ * WHITE GROUND IS AN OWNER RULE, NOT A STYLE CHOICE. The mark is only approved
+ * on white. That is why the header and footer are both white and why this
+ * component sets no background of its own: it must never end up on a coloured
+ * or dark ground. If you are about to place it on one, you have found a layout
+ * bug, not an exception to the rule.
  *
- * `tone` exists because this now appears on both grounds. The old version was
- * tuned for charcoal only and put a muted grey on the second word that would
- * have failed contrast the moment anyone placed it on a light surface. Rather
- * than leave that trap set, the surface is a required decision at the call
- * site.
+ * To render artwork instead, replace the <span> below with next/image and an
+ * explicit width and height. Every call site already places this on white, so
+ * nothing else needs to change.
  */
 export function Wordmark({
   as = "link",
-  tone = "dark",
   className = "",
 }: {
   /** The footer already sits inside a landmark, so it renders the inert form. */
   as?: "link" | "plain";
-  /** Which ground this is sitting on. */
-  tone?: "dark" | "light";
   className?: string;
 }) {
-  const primary = tone === "dark" ? "text-zinc" : "text-graphite";
-
   const mark = (
-    <span className="flex items-baseline gap-2.5">
-      <span className={`label ${primary}`}>Craftline</span>
-      <span
-        aria-hidden="true"
-        className="bg-datum-true h-px w-4 shrink-0 self-center"
-      />
-      <span className="label-sm text-steel">Brands</span>
+    <span
+      className={`text-graphite text-[1.0625rem] leading-none font-bold tracking-[-0.01em] ${className}`}
+    >
+      {COMPANY.name}
     </span>
   );
 
-  if (as === "plain") {
-    return <span className={className}>{mark}</span>;
-  }
+  if (as === "plain") return mark;
 
   return (
     <Link
       href="/"
       aria-label={`${COMPANY.name} home`}
-      className={`inline-flex min-h-11 items-center transition-opacity hover:opacity-75 ${className}`}
+      className="inline-flex min-h-11 items-center transition-opacity hover:opacity-75"
     >
       {mark}
     </Link>

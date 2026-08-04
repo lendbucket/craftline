@@ -1,27 +1,26 @@
 import Link from "next/link";
 
 /**
- * The site's two button treatments, and nothing else. Restraint is the brand
- * position, so there is no ghost variant, no size scale, and no icon slot until
- * something actually needs one.
+ * The site's two button treatments, and nothing else.
  *
- * Set in the mono label face, squared, with wide tracking. A control on this
- * site should read like a switch legend on equipment rather than like a call to
- * action in an ad, which is also the honest register for a page that is
- * information and inquiry only.
+ * Set in the body sans at sentence case. The retired version was mono,
+ * uppercase, tracked wide and squared, so it read as a switch legend on
+ * equipment. That was the point then and it is the problem now: a franchise
+ * prospect should recognise a button, not notice one.
  *
- * Contrast, since these sit on every ground:
- *   - `solid` fills with the brand red and sets zinc on it, clearing AA at 4.86
- *     on every surface the site has. The fill is pinned to --color-signal-solid
- *     rather than the surface aware --color-signal, because reading the aware
- *     token would flip the fill to the salmon dark ground pin and put light
- *     text on a light fill.
- *   - `outline` is NEUTRAL, through the surface aware --color-control, which is
- *     graphite on light grounds and zinc on dark. It is not a second red. Red
- *     means the primary action, so a band gets one red control and the
- *     secondary takes the ground's own foreground. Making both red also breaks
- *     on graphite, where the solid fill stays brand red while an outline
- *     reading --color-signal flips to salmon, and the pair reads as a mistake.
+ * Contrast:
+ *   - `primary` fills with the brand red and sets white on it, which clears AA
+ *     at 5.93 on every ground this site has. The fill reads
+ *     --color-signal-solid, which is never re-pinned per surface; reading the
+ *     surface aware --color-signal would flip the fill to its light pin inside
+ *     a dark section and put light text on a light fill.
+ *   - `secondary` is neutral, through the surface aware --color-control. It is
+ *     not a second red. A band gets one red control and the secondary takes
+ *     the ground's own foreground.
+ *
+ * The old variant names were `solid` and `outline`. They are renamed on
+ * purpose: a page still passing variant="outline" will fail the type check
+ * rather than silently fall through to the primary style.
  *
  * min-h-11 is the 44px touch floor. These are discrete controls, so the height
  * IS the design and growing it is the correct fix rather than the invisible
@@ -30,24 +29,23 @@ import Link from "next/link";
 export function Cta({
   href,
   children,
-  variant = "solid",
+  variant = "primary",
   external = false,
   className = "",
 }: {
   href: string;
   children: React.ReactNode;
-  variant?: "solid" | "outline";
+  variant?: "primary" | "secondary";
   /** Renders an anchor rather than a Link, for outbound brand sites. */
   external?: boolean;
   className?: string;
 }) {
   const base =
-    "label inline-flex min-h-11 items-center justify-center px-7 py-3.5 transition-colors";
+    "inline-flex min-h-11 items-center justify-center rounded px-6 py-3 text-[0.9375rem] font-semibold transition-colors";
 
   const variants = {
-    solid:
-      "bg-signal-solid text-zinc hover:bg-signal-solid-hover",
-    outline: "border border-control text-control hover:bg-control/10",
+    primary: "bg-signal-solid hover:bg-signal-solid-hover text-white",
+    secondary: "border-control text-control hover:bg-control/5 border",
   } as const;
 
   const classes = `${base} ${variants[variant]} ${className}`;

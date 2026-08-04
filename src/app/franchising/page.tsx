@@ -5,7 +5,6 @@ import { JsonLd } from "@/components/json-ld";
 import { MaterialPlate } from "@/components/material-plate";
 import { PageHeader } from "@/components/page-header";
 import { Band, Register, Rule, SectionLabel } from "@/components/section";
-import { TitleBlock } from "@/components/title-block";
 import {
   CAPABILITIES,
   FOUNDING_STATEMENT,
@@ -229,11 +228,11 @@ export default function FranchisingPage() {
               that produces nothing, and structured data on a page this
               constrained is extra surface for a claim to hide in.
             */}
-            <dl className="border-rule mt-14 border-t">
+            <dl className="border-line mt-14 border-t">
               {FRANCHISE_FAQ.map((entry) => (
                 <div
                   key={entry.q}
-                  className="border-rule reveal grid gap-4 border-b py-8 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-12"
+                  className="border-line reveal grid gap-4 border-b py-8 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-12"
                 >
                   <dt className="display-3 text-graphite">{entry.q}</dt>
                   <dd className="text-graphite max-w-2xl leading-relaxed">
@@ -288,7 +287,6 @@ export default function FranchisingPage() {
         </Container>
       </section>
 
-      <TitleBlock sheet="Franchising" />
 
       <JsonLd
         data={breadcrumbSchema([{ name: "Franchising", path: "/franchising" }])}

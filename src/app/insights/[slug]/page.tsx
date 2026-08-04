@@ -6,7 +6,6 @@ import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { Band, Rule, SectionLabel } from "@/components/section";
-import { TitleBlock } from "@/components/title-block";
 import {
   type Block,
   formatPublished,
@@ -150,7 +149,7 @@ export default async function InsightPage({
                   <li key={other.slug}>
                     <Link
                       href={`/insights/${other.slug}`}
-                      className="border-rule bg-chalk hover:border-datum reveal block h-full border p-8 transition-colors"
+                      className="border-line bg-chalk hover:border-datum reveal block h-full border p-8 transition-colors"
                     >
                       <p className="label-sm text-datum">{other.eyebrow}</p>
                       <p className="display-3 text-graphite mt-5">
@@ -166,7 +165,7 @@ export default async function InsightPage({
 
               <div className="mt-14 flex flex-col gap-3 sm:flex-row">
                 <Cta href="/franchising">Franchise information</Cta>
-                <Cta href="/insights" variant="outline">
+                <Cta href="/insights" variant="secondary">
                   All insights
                 </Cta>
               </div>
@@ -175,7 +174,6 @@ export default async function InsightPage({
         </section>
       ) : null}
 
-      <TitleBlock sheet={insight.title} revision={insight.published} />
 
       <JsonLd
         data={articleSchema({

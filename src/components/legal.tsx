@@ -52,7 +52,7 @@ export function LegalList({ items }: { items: readonly string[] }) {
 /** Effective date line. Same treatment on both documents. */
 export function EffectiveDate() {
   return (
-    <p className="label-sm text-steel">
+    <p className="text-steel text-[0.8125rem] font-semibold">
       Last updated {POLICY_LAST_UPDATED}
     </p>
   );

@@ -4,7 +4,6 @@ import { Cta } from "@/components/cta";
 import { MaterialPlate } from "@/components/material-plate";
 import { PageHeader } from "@/components/page-header";
 import { Band, Register, Rule, SectionLabel } from "@/components/section";
-import { TitleBlock } from "@/components/title-block";
 import {
   BRANDS,
   CAPABILITIES,
@@ -112,7 +111,7 @@ export default function AboutPage() {
                   <p className="body-lg text-graphite mt-6 max-w-2xl">
                     {capability.body}
                   </p>
-                  <div className="border-rule mt-8 max-w-2xl border-l-2 pl-6">
+                  <div className="border-line mt-8 max-w-2xl border-l-2 pl-6">
                     <p className="label-sm text-datum">What it does not do</p>
                     <p className="text-graphite mt-3 leading-relaxed">
                       {LIMITS[capability.title]}
@@ -162,11 +161,11 @@ export default function AboutPage() {
               ruled two column register is the register that record data
               belongs in.
             */}
-            <dl className="border-rule mt-12 max-w-3xl border-t">
+            <dl className="border-line mt-12 max-w-3xl border-t">
               {LEGAL_ENTITIES.map((entity) => (
                 <div
                   key={entity.name}
-                  className="border-rule reveal grid gap-2 border-b py-7 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-8"
+                  className="border-line reveal grid gap-2 border-b py-7 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-8"
                 >
                   <dt className="text-graphite text-[1.0625rem] font-semibold">
                     {entity.name}
@@ -228,7 +227,7 @@ export default function AboutPage() {
               <Cta href={`/brands/${wattsmith.slug}`}>
                 About {wattsmith.name}
               </Cta>
-              <Cta href="/franchising" variant="outline">
+              <Cta href="/franchising" variant="secondary">
                 Franchise information
               </Cta>
             </div>
@@ -236,7 +235,6 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <TitleBlock sheet="About" />
 
       <JsonLd data={breadcrumbSchema([{ name: "About", path: "/about" }])} />
     </>
