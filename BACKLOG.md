@@ -53,3 +53,15 @@ linter and catches the entire class of failure that actually occurred here.
 
 **Fits into:** the audit suite in `package.json`, alongside `placeholder-audit`.
 It needs a production build first, the same as `seo-audit` does.
+
+## Infrastructure
+
+### The www redirect is a 307 and should be a 308
+
+`www.craftlinebrands.com` redirects to the apex on every route, one hop, path
+and query preserved, but it answers `307 Temporary Redirect` rather than a
+permanent `308`. Accepted for now because the canonical tags on both hosts point
+at the apex and carry the consolidation. Fix whenever convenient, either by
+setting the redirect status on the **www** domain row in Vercel, which is the
+row that performs the redirect, or with a host matched permanent redirect in
+`next.config`.
