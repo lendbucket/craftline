@@ -3,7 +3,9 @@ import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
+import { CtaBand, CtaPrompt } from "@/components/cta-band";
 import { Band, Card, SectionHeading } from "@/components/section";
+import { SectionImage } from "@/components/section-image";
 import {
   BRANDS,
   CAPABILITIES,
@@ -73,6 +75,10 @@ export default function AboutPage() {
         label="About"
         title="Craftline sits behind the brand, not in front of the customer."
         lead={`${COMPANY.name} owns the marks, the operating playbooks, the technology, and the territory plan. The operator runs the business in their own market. The standard is set once and held everywhere the brand appears.`}
+        ctaHref="/franchising#inquiry"
+        ctaLabel="Franchise inquiry"
+        secondaryHref="/franchising"
+        secondaryLabel="How franchising works"
       />
 
       {/* ---------------------------------------------------------------
@@ -147,6 +153,18 @@ export default function AboutPage() {
               lead="A capability list that only claims strengths is marketing. The limits below are what a serious operator is actually trying to work out, and stating them costs nothing for a company that means them."
             />
 
+            <SectionImage
+              slot="about-system"
+              className="mt-10 h-56 w-full sm:h-72"
+              sizes="100vw"
+            />
+
+            <CtaPrompt
+              className="mt-10 max-w-2xl"
+              title="Want to know how this would work for an operator?"
+              lead="The franchising section explains the structure in full, and an inquiry reaches a person who can answer the rest."
+            />
+
             <div className="mt-12 space-y-5">
               {CAPABILITIES.map((capability) => (
                 <Card key={capability.title}>
@@ -197,6 +215,13 @@ export default function AboutPage() {
           </Band>
         </Container>
       </section>
+
+      <CtaBand
+        title="Questions about the company?"
+        lead="Ask them before there is anything to decide. An inquiry is read by a person and commits you to nothing."
+        secondaryHref="/brands"
+        secondaryLabel="The brands Craftline operates"
+      />
 
       <JsonLd data={breadcrumbSchema([{ name: "About", path: "/about" }])} />
     </>

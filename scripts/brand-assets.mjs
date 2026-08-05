@@ -193,9 +193,10 @@ async function main() {
   );
 
   /*
-    ICON SET. 512 for home screens and app switchers, 180 for the apple touch
-    icon, 32 for the browser tab, and favicon.ico for the many clients that
-    request it without reading a single link tag.
+    ICON SET. 512 and 192 for the web app manifest, which Android reads when a
+    visitor adds the site to a home screen, 180 for the apple touch icon, 32 for
+    the browser tab, and favicon.ico for the many clients that request it
+    without reading a single link tag.
 
     The margin is deliberately small. These are viewed at sizes where the mark
     has very few pixels to work with, and padding is the first thing to give up.
@@ -203,6 +204,7 @@ async function main() {
   const MARGIN = 0.94;
   const icons = [
     { size: 512, file: "craftline-icon-512.png" },
+    { size: 192, file: "craftline-icon-192.png" },
     { size: 180, file: "craftline-icon-180.png" },
     { size: 32, file: "craftline-icon-32.png" },
   ];

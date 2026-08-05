@@ -60,11 +60,21 @@ export function startServiceStubs({ port = 3141, failInserts = false } = {}) {
 
       // --- Resend: POST /emails ------------------------------------------
       if (url.pathname === "/emails" && req.method === "POST") {
+        /*
+          Record the WHOLE message, not a summary of it. An earlier version
+          captured only to, from, subject and text, which meant the HTML part
+          and the reply-to address were invisible to every assertion: the audit
+          could not tell whether the mark was present, whether a link pointed at
+          production, or whether a reply would reach the person who wrote in.
+          A harness that cannot see a field cannot hold a rule about it.
+        */
         received.emails.push({
           to: body?.to,
           from: body?.from,
+          reply_to: body?.reply_to,
           subject: body?.subject,
           text: body?.text,
+          html: body?.html,
           authorization: req.headers.authorization || null,
         });
         res.writeHead(200, { "Content-Type": "application/json" });

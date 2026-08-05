@@ -14,7 +14,9 @@
     "contrast-audit": "node scripts/contrast-audit.mjs",
     "mobile-audit": "tsx scripts/mobile-audit.ts",
     "forms-audit": "node scripts/forms-audit.mjs",
-    "placeholder-audit": "node scripts/placeholder-audit.mjs"
+    "placeholder-audit": "node scripts/placeholder-audit.mjs",
+    "cta-audit": "node scripts/cta-audit.mjs",
+    "email-audit": "tsx scripts/email-audit.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",

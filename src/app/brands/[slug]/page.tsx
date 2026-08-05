@@ -7,6 +7,7 @@ import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
+import { CtaBand, CtaPrompt } from "@/components/cta-band";
 import { Band, Card, SectionHeading } from "@/components/section";
 import { BRANDS, COMPANY, SITE_URL } from "@/config/company";
 import { breadcrumbSchema, ORGANIZATION_ID } from "@/lib/schema";
@@ -106,6 +107,10 @@ export default async function BrandPage({
         label={brand.category}
         title={brand.name}
         lead={brand.summary}
+        ctaHref="/franchising#inquiry"
+        ctaLabel="Franchise inquiry"
+        secondaryHref={brand.url}
+        secondaryLabel="Visit the brand site"
       />
 
       {/* ---------------------------------------------------------------
@@ -213,6 +218,12 @@ export default async function BrandPage({
                 </li>
               ))}
             </ul>
+
+            <CtaPrompt
+              className="mt-10 max-w-2xl"
+              title="This is the brand the system was built on."
+              lead="Craftline is developing a franchise programme around it. Nothing has been offered yet and an inquiry commits you to nothing."
+            />
           </Band>
         </Container>
       </section>
@@ -314,6 +325,13 @@ export default async function BrandPage({
           </Band>
         </Container>
       </section>
+
+      <CtaBand
+        title="This is the brand the system was built on."
+        lead="Craftline is developing a franchise programme around it. No Franchise Disclosure Document has been issued, so an inquiry starts a conversation rather than an application."
+        secondaryHref="/franchising"
+        secondaryLabel="How franchising works"
+      />
 
       <JsonLd data={brandSchema} />
       <JsonLd

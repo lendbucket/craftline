@@ -1,37 +1,32 @@
 import "server-only";
-import {
-  NOTIFICATION_RECIPIENT,
-  NOTIFICATION_SENDER,
-  RESEND_ENDPOINT,
-} from "@/config/notifications";
+import { RESEND_ENDPOINT } from "@/config/notifications";
+import type { EmailPayload } from "@/lib/email-templates";
 
 /**
- * Notification email on a stored submission.
+ * Outbound mail.
  *
  * Uses Resend's REST endpoint through fetch rather than the SDK. Two reasons:
  * one fewer dependency in a project that has almost none, and the endpoint is
- * overridable, which is what lets the forms audit assert that exactly one
- * notification was issued without holding a real API key or sending real mail.
+ * overridable, which is what lets the forms audit assert exactly how many
+ * messages were issued without holding a real API key or sending real mail.
  *
  * SENDING IS NOT PART OF SUCCESS. The caller stores the row first and treats
- * that as the outcome. If the notification fails, the submission still happened
- * and the person who sent it is told it happened, because it did. Reporting a
+ * that as the outcome. If a message fails, the submission still happened and
+ * the person who sent it is told it happened, because it did. Reporting a
  * failure at that point would be a lie that also invites a duplicate
  * submission. A failed send is an operations problem, logged here, and the row
  * is still in the table to be found.
+ *
+ * The payload is built by src/lib/email-templates.ts and passed through
+ * untouched. Nothing composes mail in this file, which is what lets the email
+ * audit assert on the same object that reaches the wire.
  */
-
-/** Plain text only. Nothing here needs HTML, and text cannot render markup. */
-export async function sendNotification({
-  subject,
-  body,
-}: {
-  subject: string;
-  body: string;
-}): Promise<{ sent: boolean; reason?: string }> {
+export async function sendEmail(
+  payload: EmailPayload,
+): Promise<{ sent: boolean; reason?: string }> {
   const apiKey = process.env.RESEND_API_KEY?.trim();
 
-  if (!apiKey || !NOTIFICATION_SENDER) {
+  if (!apiKey || !payload.from) {
     return {
       sent: false,
       reason: "Resend is not configured (missing API key or sender address).",
@@ -46,10 +41,12 @@ export async function sendNotification({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: NOTIFICATION_SENDER,
-        to: [NOTIFICATION_RECIPIENT],
-        subject,
-        text: body,
+        from: payload.from,
+        to: payload.to,
+        ...(payload.replyTo ? { reply_to: payload.replyTo } : {}),
+        subject: payload.subject,
+        html: payload.html,
+        text: payload.text,
       }),
       // A hanging mail provider must not hold the submitter's request open.
       // The row is already stored by the time this runs.
@@ -68,12 +65,4 @@ export async function sendNotification({
   } catch (error) {
     return { sent: false, reason: (error as Error).message };
   }
-}
-
-/** Renders a submission as readable lines. Omits fields nobody filled in. */
-export function formatSubmission(fields: [string, string | null][]): string {
-  return fields
-    .filter(([, value]) => value !== null && value !== "")
-    .map(([label, value]) => `${label}: ${value}`)
-    .join("\n");
 }

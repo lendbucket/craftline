@@ -4,7 +4,9 @@ import { Container } from "@/components/container";
 import { FranchiseForm } from "@/components/form/franchise-form";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
+import { CtaPrompt } from "@/components/cta-band";
 import { Band, Card, SectionHeading } from "@/components/section";
+import { SectionImage } from "@/components/section-image";
 import {
   CAPABILITIES,
   FRANCHISE_DISCLAIMER,
@@ -79,6 +81,10 @@ export default function FranchisingPage() {
         label="Franchising"
         title="How franchising works, and what Craftline is building."
         lead="This section is written for someone evaluating a franchise for the first time. It explains the structure, the vocabulary, and the document that governs the decision, before it says anything about this company."
+        ctaHref="#inquiry"
+        ctaLabel="Make an inquiry"
+        secondaryHref="#vocabulary"
+        secondaryLabel="Start with the vocabulary"
       />
 
       {/* ---------------------------------------------------------------
@@ -173,6 +179,13 @@ export default function FranchisingPage() {
                 </Card>
               ))}
             </dl>
+
+            <CtaPrompt
+              className="mt-10 max-w-2xl"
+              title="Already know the vocabulary?"
+              lead="Then the useful next step is a conversation. An inquiry asks for nothing sensitive and commits you to nothing."
+              label="Make an inquiry"
+            />
           </Band>
         </Container>
       </section>
@@ -199,6 +212,13 @@ export default function FranchisingPage() {
                 </div>
               ))}
             </div>
+
+            <CtaPrompt
+              className="bg-mist mt-10 max-w-2xl"
+              title="No disclosure document has been issued yet."
+              lead="When one is, anyone who has made contact hears about it. An inquiry now is a conversation and nothing more: it reserves nothing and commits you to nothing."
+              label="Make an inquiry"
+            />
           </Band>
         </Container>
       </section>
@@ -242,6 +262,12 @@ export default function FranchisingPage() {
               lead="Described qualitatively and deliberately so. Saying what support exists is permitted. Quantifying what it produces would be a financial performance representation, so no sentence here carries a number."
             />
 
+            <SectionImage
+              slot="franchising-material"
+              className="mt-10 h-56 w-full sm:h-72"
+              sizes="100vw"
+            />
+
             <ul className="mt-12 grid gap-5 sm:grid-cols-2">
               {CAPABILITIES.map((capability) => (
                 <Card as="li" key={capability.title}>
@@ -252,6 +278,13 @@ export default function FranchisingPage() {
                 </Card>
               ))}
             </ul>
+
+            <CtaPrompt
+              className="bg-mist mt-10 max-w-2xl"
+              title="Want this described for your situation?"
+              lead="The support model is the same for everyone; what differs is the market and the operator. An inquiry is where that conversation starts."
+              label="Make an inquiry"
+            />
           </Band>
         </Container>
       </section>
@@ -302,6 +335,13 @@ export default function FranchisingPage() {
                 </Card>
               ))}
             </ol>
+
+            <CtaPrompt
+              className="bg-mist mt-10 max-w-2xl"
+              title="Start at step one."
+              lead="The form asks who you are, where you are interested, and roughly when. It asks for no financial documents and no signature."
+              label="Franchise inquiry"
+            />
           </Band>
         </Container>
       </section>
@@ -328,6 +368,13 @@ export default function FranchisingPage() {
                 </div>
               ))}
             </dl>
+
+            <CtaPrompt
+              className="mt-10 max-w-2xl"
+              title="Question not answered here?"
+              lead="Ask it directly. You will get a straight answer, including the answer that something cannot be discussed until a disclosure document exists."
+              label="Make an inquiry"
+            />
 
             <p className="text-steel mt-10 leading-relaxed">
               More on how these businesses work:{" "}

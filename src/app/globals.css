@@ -190,11 +190,6 @@ input, select, textarea {
   font-size: 16px;
 }
 
-/* Safe-area helper for fixed elements on notched devices. */
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
 /*
   TYPE SCALE
   ----------
@@ -338,4 +333,41 @@ h1, h2, h3, h4, h5, h6 {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+/*
+  SAFE AREA HELPERS
+  -----------------
+  The viewport is declared viewportFit: "cover" in the root layout, so the page
+  extends under the notch and the home indicator on a modern phone. That is what
+  makes a standalone launch look like an application rather than a web page in a
+  box, and it means anything anchored to a screen edge now has to inset itself
+  or it sits under the hardware.
+
+  Use these on fixed and full height elements only. Ordinary in-flow content is
+  already clear of both regions.
+*/
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+/* For a sticky bar: its own padding plus whatever the device demands. */
+.pb-safe-3 {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
+}
+
+/*
+  Momentum scrolling inside the mobile menu sheet.
+
+  A full height panel that scrolls internally stops at its own boundary rather
+  than handing the gesture to the page behind it, which is what a native sheet
+  does. Without overscroll-behavior the page scrolls underneath and the menu
+  appears to drift.
+*/
+.sheet-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }

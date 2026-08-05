@@ -37,6 +37,8 @@ import { startServiceStubs } from "./lib/service-stubs.mjs";
 const PORT = 3136;
 const STUB_PORT = 3141;
 const RECIPIENT = "audit-recipient@example-domain.test";
+/** The address the harness types into every form. The confirmation goes here. */
+const PROBE_EMAIL = "probe@example-domain.test";
 const SENDER = "audit-sender@example-domain.test";
 
 /**
@@ -349,20 +351,61 @@ try {
       }
     }
 
+    /*
+      TWO MESSAGES PER SUBMISSION, and which is which matters more than the
+      count. One notification tells the operator to read a stored row; one
+      confirmation tells the person who typed their details in that it arrived.
+      A swap sends somebody else's inquiry to the wrong inbox, so both the
+      recipient and the direction are asserted rather than just the total.
+
+      The content of each message is held to the house style and the franchise
+      gates by scripts/email-audit.ts, which builds them directly. This audit
+      cares only that the right message reached the right party.
+    */
     const emails = stubs.received.emails;
-    check(form.name, "exactly one notification sent", emails.length === 1, `${emails.length}`);
-    if (emails.length === 1) {
-      check(
-        form.name,
-        "notification went to the configured recipient",
-        Array.isArray(emails[0].to) && emails[0].to[0] === RECIPIENT,
-        JSON.stringify(emails[0].to),
-      );
-      check(form.name, "notification came from the configured sender", emails[0].from === SENDER, String(emails[0].from));
+    check(form.name, "two messages sent, notification and confirmation", emails.length === 2, `${emails.length}`);
+
+    const notification = emails.find(
+      (e) => Array.isArray(e.to) && e.to[0] === RECIPIENT,
+    );
+    const confirmation = emails.find(
+      (e) => Array.isArray(e.to) && e.to[0] === PROBE_EMAIL,
+    );
+
+    check(form.name, "a notification went to the operator", Boolean(notification), JSON.stringify(emails.map((e) => e.to)));
+    check(form.name, "a confirmation went to the submitter", Boolean(confirmation), JSON.stringify(emails.map((e) => e.to)));
+
+    if (notification) {
+      check(form.name, "notification came from the configured sender", notification.from === SENDER, String(notification.from));
       check(
         form.name,
         "notification carries the submission",
-        typeof emails[0].text === "string" && emails[0].text.includes("Audit Probe"),
+        typeof notification.text === "string" && notification.text.includes("Audit Probe"),
+      );
+      check(
+        form.name,
+        "notification replies to the person who wrote in",
+        notification.reply_to === PROBE_EMAIL,
+        String(notification.reply_to),
+      );
+    }
+    if (confirmation) {
+      check(form.name, "confirmation came from the configured sender", confirmation.from === SENDER, String(confirmation.from));
+      check(
+        form.name,
+        "confirmation carries the mark on the production host",
+        typeof confirmation.html === "string" &&
+          confirmation.html.includes("https://craftlinebrands.com/brand/craftline-logo.png"),
+      );
+      /*
+        A confirmation must never contain the operator's inbox. It goes to a
+        stranger, and leaking an internal address to every person who fills in
+        a form is how that address ends up scraped.
+      */
+      check(
+        form.name,
+        "confirmation does not print the operator address",
+        typeof confirmation.html === "string" && !confirmation.html.includes(RECIPIENT),
       );
     }
 

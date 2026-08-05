@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { ContactForm } from "@/components/form/contact-form";
+import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { Band, Card, SectionHeading } from "@/components/section";
@@ -73,6 +74,19 @@ export default function ContactPage() {
                     </a>
                     .
                   </p>
+                </Card>
+
+                <Card className="mt-6">
+                  <h3 className="text-graphite font-semibold">
+                    Asking about franchising?
+                  </h3>
+                  <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
+                    The franchise inquiry form asks the few extra questions that
+                    make a first reply useful, so it is the faster route.
+                  </p>
+                  <div className="mt-5">
+                    <Cta href="/franchising#inquiry">Franchise inquiry</Cta>
+                  </div>
                 </Card>
 
                 {CONTACT_EMAIL ? (

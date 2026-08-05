@@ -5,6 +5,7 @@ import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
+import { CtaBand, CtaPrompt } from "@/components/cta-band";
 import { Band, SectionHeading } from "@/components/section";
 import {
   type Block,
@@ -100,12 +101,24 @@ export default async function InsightPage({
     (candidate) => candidate.slug !== insight.slug,
   );
 
+  /*
+    Where the in-body prompt goes. Biased to 40% rather than the midpoint,
+    because block INDEX is not block HEIGHT: a heading is a fraction of a
+    paragraph, so a true index midpoint lands well past the visual middle. The
+    CTA audit caught exactly that on the third article.
+  */
+  const midpoint = Math.floor(insight.body.length * 0.4);
+
   return (
     <>
       <PageHeader
         label={insight.eyebrow}
         title={insight.title}
         lead={insight.lead}
+        ctaHref="/franchising#inquiry"
+        ctaLabel="Franchise inquiry"
+        secondaryHref="/franchising"
+        secondaryLabel="How franchising works"
       />
 
       <section className="bg-white">
@@ -126,9 +139,24 @@ export default async function InsightPage({
 
               <div className="mt-12">
                 {insight.body.map((block, index) => (
-                  <BlockView key={index} block={block} />
+                  <div key={index}>
+                    <BlockView block={block} />
+                    {index === midpoint ? (
+                      <CtaPrompt
+                        className="bg-mist mt-12"
+                        title="Evaluating a franchise?"
+                        lead="Craftline is developing its programme and no Franchise Disclosure Document has been issued. An inquiry starts a conversation and nothing else."
+                      />
+                    ) : null}
+                  </div>
                 ))}
               </div>
+
+              <CtaPrompt
+                className="bg-mist mt-12"
+                title="Questions this raised?"
+                lead="An inquiry is read by a person and commits you to nothing. No Franchise Disclosure Document has been issued, so there is nothing to apply for yet."
+              />
             </article>
           </Band>
         </Container>
@@ -170,6 +198,14 @@ export default async function InsightPage({
         </section>
       ) : null}
 
+
+      <CtaBand
+        ground="white"
+        title="Have a question this did not answer?"
+        lead="Ask it. An inquiry is read by a person, reserves nothing, and commits you to nothing."
+        secondaryHref="/insights"
+        secondaryLabel="All guides"
+      />
 
       <JsonLd
         data={articleSchema({

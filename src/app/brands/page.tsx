@@ -4,6 +4,7 @@ import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
+import { CtaBand } from "@/components/cta-band";
 import { Band, SectionHeading } from "@/components/section";
 import { BRANDS } from "@/config/company";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -37,6 +38,10 @@ export default function BrandsPage() {
         label="Brands"
         title="The brands Craftline builds and operates."
         lead="Craftline builds a brand to a working standard before any part of it is offered to anyone else to run. One brand is operating today."
+        ctaHref="/franchising#inquiry"
+        ctaLabel="Franchise inquiry"
+        secondaryHref="/franchising"
+        secondaryLabel="How franchising works"
       />
 
       <section className="bg-white">
@@ -62,6 +67,13 @@ export default function BrandsPage() {
           </Band>
         </Container>
       </section>
+
+      <CtaBand
+        title="Interested in operating one?"
+        lead="Craftline is developing its franchise programme. There is nothing to offer yet, and a conversation now costs you nothing."
+        secondaryHref="/about"
+        secondaryLabel="About the company"
+      />
 
       <JsonLd data={breadcrumbSchema([{ name: "Brands", path: "/brands" }])} />
     </>

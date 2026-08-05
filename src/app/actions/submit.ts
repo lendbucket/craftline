@@ -1,7 +1,13 @@
 "use server";
 
 import { TABLES } from "@/config/notifications";
-import { formatSubmission, sendNotification } from "@/lib/notify";
+import {
+  buildContactConfirmation,
+  buildContactNotification,
+  buildFranchiseConfirmation,
+  buildFranchiseNotification,
+} from "@/lib/email-templates";
+import { sendEmail } from "@/lib/notify";
 import { getSupabase } from "@/lib/supabase";
 import { isEmail, isPhone, required } from "@/lib/validate";
 
@@ -17,8 +23,12 @@ import { isEmail, isPhone, required } from "@/lib/validate";
  *   2. Insert the row. If the insert fails, the caller is told it failed. There
  *      is no path through this file that reports success without a stored row,
  *      which is the property the forms audit exists to hold.
- *   3. Notify, and do not let the outcome of that change the answer. See
- *      lib/notify.ts for why a failed send is still a successful submission.
+ *   3. Send mail, and do not let the outcome of that change the answer. Two
+ *      messages go out per submission: a notification so the operator knows to
+ *      read the row, and a confirmation so the person who typed their details
+ *      into a form knows it arrived. See lib/notify.ts for why a failed send is
+ *      still a successful submission, and lib/email-templates.ts for what each
+ *      message may and may not say.
  *
  * The service role key bypasses RLS, so these tables are reachable only through
  * these two functions, with table names taken from config and never from input.
@@ -96,19 +106,18 @@ export async function submitContactMessage(input: {
     return { ok: false, message: STORAGE_FAILED };
   }
 
-  const notification = await sendNotification({
-    subject: `Craftline contact message from ${name}`,
-    body: formatSubmission([
-      ["Name", name],
-      ["Email", email],
-      ["Phone", phone || null],
-      ["Message", message],
-    ]),
-  });
+  const notification = await sendEmail(
+    buildContactNotification({ name, email, phone: phone || null, message }),
+  );
   if (!notification.sent) {
     // Stored but not announced. Logged loudly; the submitter is still told the
     // truth, which is that their message was received.
     console.error("[contact] stored, notification failed:", notification.reason);
+  }
+
+  const confirmation = await sendEmail(buildContactConfirmation({ name, email }));
+  if (!confirmation.sent) {
+    console.error("[contact] stored, confirmation failed:", confirmation.reason);
   }
 
   return { ok: true };
@@ -166,22 +175,26 @@ export async function submitFranchiseInquiry(input: {
     return { ok: false, message: STORAGE_FAILED };
   }
 
-  const notification = await sendNotification({
-    subject: `Craftline franchise inquiry from ${name}`,
-    body: formatSubmission([
-      ["Name", name],
-      ["Email", email],
-      ["Phone", phone || null],
-      ["City of interest", city],
-      ["State of interest", state],
-      ["Liquid capital", capital || null],
-      ["Timeline", timeline || null],
-      ["Military veteran", veteran || null],
-      ["Message", message || null],
-    ]),
-  });
+  const notification = await sendEmail(
+    buildFranchiseNotification({
+      name,
+      email,
+      phone: phone || null,
+      city,
+      state,
+      capital: capital || null,
+      timeline: timeline || null,
+      veteran: veteran || null,
+      message: message || null,
+    }),
+  );
   if (!notification.sent) {
     console.error("[franchise] stored, notification failed:", notification.reason);
+  }
+
+  const confirmation = await sendEmail(buildFranchiseConfirmation({ name, email }));
+  if (!confirmation.sent) {
+    console.error("[franchise] stored, confirmation failed:", confirmation.reason);
   }
 
   return { ok: true };

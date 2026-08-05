@@ -234,12 +234,12 @@ export const IMAGE_SLOTS: ImageSlot[] = [
 
   {
     id: "home-hero",
-    location: "Home page hero, behind the thesis headline.",
+    location: "Home page, beside the opening statement.",
     intent:
-      "Macro of copper conductors landed in a panel, or copper busbar, shot close enough that it reads as material rather than as a location. The whole point is that it asserts nothing: it is copper, not our copper. Must hold large white display type across the left two thirds without the type fighting detail, so the composition needs a quiet zone or an even field on that side.",
-    aspect: "16x9, minimum 2400px wide",
+      "Circuit breakers in a distribution panel, photographed square on so the rows read as an ordered system rather than as a location. It asserts nothing about whose panel it is, which is the requirement: it is equipment, not our equipment.",
+    aspect: "2000x1125",
     orientation: "landscape",
-    tone: "Dark and low contrast, cool shadows, warm copper highlights. It will be set at low opacity over the graphite ground. Reject anything bright, saturated, orange graded, or lit like a product shot.",
+    tone: "Even light, neutral grey and white, no drama. It sits on a white page at full opacity as an ordinary photograph, so it needs to be clean rather than moody.",
     searchTerms: [
       "copper busbar macro",
       "electrical panel copper conductors close up",
@@ -247,21 +247,29 @@ export const IMAGE_SLOTS: ImageSlot[] = [
       "bare copper conductor detail low key",
     ],
     source: "stock",
-    license: null,
-    status: "pending",
-    src: null,
-    width: null,
-    height: null,
-    alt: null,
+    /*
+      Unsplash Licence: free for commercial use, no permission needed, no
+      attribution required. The photographer is credited here anyway because
+      the manifest is the record of where every asset came from, and a credit
+      costs nothing. Verified not Unsplash+ before download: that is a paid
+      licence and one candidate was rejected for it.
+    */
+    license:
+      "Unsplash Licence (free, commercial use permitted). Sergio Martins, https://unsplash.com/photos/HrPtg-HH6_k",
+    status: "ready",
+    src: "/photography/panel-breakers.jpg",
+    width: 2000,
+    height: 1125,
+    alt: "Circuit breakers arranged in two rows inside a distribution panel.",
   },
   {
     id: "about-system",
     location: "About page, beside the four part model explanation.",
     intent:
-      "A technical drawing detail. Contemporary construction drawing linework, a panel schedule, or a one line diagram, photographed flat or scanned. NOT a cyanotype blueprint: modern trade drawings are not blue, and the blue print is the most predictable image in this category. Paper grain and print texture are wanted; a crisp CAD export is not.",
-    aspect: "4x3, minimum 1800px wide",
+      "A technical drawing photographed close, with the linework reading as geometry rather than as a legible document. Nothing on the sheet can be read, because legible text in a photograph is a fact being asserted.",
+    aspect: "2000x1125",
     orientation: "landscape",
-    tone: "Neutral to slightly warm paper, black or grey linework, ideally a little pencil or red markup. Flat even light, no dramatic shadow, no shallow depth of field.",
+    tone: "Neutral paper, grey linework, flat even light. Not a cyanotype: modern trade drawings are not blue, and the blueprint is the most predictable image in this category.",
     searchTerms: [
       "electrical drawing panel schedule paper",
       "construction drawing detail linework close up",
@@ -269,21 +277,29 @@ export const IMAGE_SLOTS: ImageSlot[] = [
       "engineering drawing paper texture flat lay",
     ],
     source: "stock",
-    license: null,
-    status: "pending",
-    src: null,
-    width: null,
-    height: null,
-    alt: null,
+    /*
+      Unsplash Licence: free for commercial use, no permission needed, no
+      attribution required. The photographer is credited here anyway because
+      the manifest is the record of where every asset came from, and a credit
+      costs nothing. Verified not Unsplash+ before download: that is a paid
+      licence and one candidate was rejected for it.
+    */
+    license:
+      "Unsplash Licence (free, commercial use permitted). Daniel Miksha, https://unsplash.com/photos/28ww1dSengI",
+    status: "ready",
+    src: "/photography/drawing-detail.jpg",
+    width: 2000,
+    height: 1125,
+    alt: "A technical drawing showing radial linework and a grid.",
   },
   {
     id: "franchising-material",
-    location: "Franchising page, between the operator profile and the process.",
+    location: "Franchising page, beside the support model section.",
     intent:
-      "Brass, steel, or a precision hand tool as material. A torque driver, brass fittings, threaded conduit, or a machined surface. It stands for standards and tolerance, which is what the section beside it is about. No hands, no person, no workshop context that reads as somebody's premises.",
-    aspect: "3x2, minimum 2000px wide",
+      "Brass fittings as material. They stand for standards and tolerance, which is what the section beside them is about. No hands, no person, no workshop context that could read as somebody's premises.",
+    aspect: "2000x1500",
     orientation: "landscape",
-    tone: "Muted and mineral. Cool steel with a warm brass note, matching the palette. No dramatic rim lighting, no black backdrop product photography, nothing that looks like an advertisement for the tool.",
+    tone: "Cool light ground with a warm brass note. No rim lighting and no black backdrop product photography.",
     searchTerms: [
       "brass fittings macro muted",
       "steel conduit threaded close up",
@@ -291,21 +307,29 @@ export const IMAGE_SLOTS: ImageSlot[] = [
       "machined metal surface texture detail",
     ],
     source: "stock",
-    license: null,
-    status: "pending",
-    src: null,
-    width: null,
-    height: null,
-    alt: null,
+    /*
+      Unsplash Licence: free for commercial use, no permission needed, no
+      attribution required. The photographer is credited here anyway because
+      the manifest is the record of where every asset came from, and a credit
+      costs nothing. Verified not Unsplash+ before download: that is a paid
+      licence and one candidate was rejected for it.
+    */
+    license:
+      "Unsplash Licence (free, commercial use permitted). Vladyslav Cherkasenko, https://unsplash.com/photos/2jftyBtoqzQ",
+    status: "ready",
+    src: "/photography/brass-fittings.jpg",
+    width: 2000,
+    height: 1500,
+    alt: "Threaded brass pipe fittings.",
   },
   {
     id: "insights-texture",
-    location: "Insights hub, behind the section that explains why it exists.",
+    location: "Insights hub, beside the section explaining why it exists.",
     intent:
-      "Paper as material. Kraft stock, a manila job packet, drafting vellum, or the edge of a bound code book. It is the reading surface of the trade and it sits behind the section about publishing information. Abstract enough that no document is legible, because legible text in a photograph is a fact being asserted.",
-    aspect: "16x9, minimum 2000px wide",
+      "Paper as material: overlapping sheets, abstract enough that no document is legible. It is the reading surface of the trade and it sits with the section about publishing information.",
+    aspect: "2000x1500",
     orientation: "landscape",
-    tone: "Warm kraft and manila, soft even light, low contrast. No desk scene, no coffee cup, no pen placed for composition, nothing styled as a flat lay.",
+    tone: "Near white, soft even light, minimal contrast. Nothing styled as a flat lay and no props placed for composition.",
     searchTerms: [
       "kraft paper texture macro",
       "manila folder edge close up",
@@ -313,12 +337,20 @@ export const IMAGE_SLOTS: ImageSlot[] = [
       "bound technical manual page edges macro",
     ],
     source: "stock",
-    license: null,
-    status: "pending",
-    src: null,
-    width: null,
-    height: null,
-    alt: null,
+    /*
+      Unsplash Licence: free for commercial use, no permission needed, no
+      attribution required. The photographer is credited here anyway because
+      the manifest is the record of where every asset came from, and a credit
+      costs nothing. Verified not Unsplash+ before download: that is a paid
+      licence and one candidate was rejected for it.
+    */
+    license:
+      "Unsplash Licence (free, commercial use permitted). Annie Spratt, https://unsplash.com/photos/OZ2BNYfF_xM",
+    status: "ready",
+    src: "/photography/paper-stock.jpg",
+    width: 2000,
+    height: 1500,
+    alt: "Overlapping sheets of plain white paper.",
   },
 ];
 

@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { JsonLd } from "@/components/json-ld";
+import { MobileCta, MobileCtaSpacer } from "@/components/mobile-cta";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { COMPANY, SITE_URL } from "@/config/company";
@@ -120,6 +121,36 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false, address: false, email: false },
 };
 
+/**
+ * Viewport, which is a separate export from metadata and must stay that way.
+ *
+ * `viewportFit: "cover"` is what puts the page under the notch and the home
+ * indicator on a modern phone, and it is the half of safe area handling that
+ * lives here. The other half is the padding: once the page extends into those
+ * regions, anything anchored to an edge has to inset itself with
+ * env(safe-area-inset-*) or it sits under the hardware. See the .pb-safe and
+ * .pt-safe helpers in globals.css and the mobile menu that uses them.
+ *
+ * `themeColor` white, matching the page. On Android Chrome it paints the
+ * address bar, and in a standalone window it paints the status bar area; any
+ * other value produces a visible band above a white site. It is declared for
+ * both colour schemes on purpose. The site has no dark mode, so a device in
+ * dark mode must still get white here rather than a browser chosen dark.
+ *
+ * `maximumScale` and `userScalable` are deliberately NOT set. Blocking pinch
+ * zoom is the single most common accessibility failure on a phone, and nothing
+ * about this layout needs it.
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#ffffff" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -147,6 +178,8 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
+        <MobileCtaSpacer />
+        <MobileCta />
 
         <JsonLd data={organizationSchema()} />
         <JsonLd data={websiteSchema()} />

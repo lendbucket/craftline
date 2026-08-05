@@ -4,7 +4,9 @@ import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
+import { CtaBand } from "@/components/cta-band";
 import { Band, Card, SectionHeading } from "@/components/section";
+import { SectionImage } from "@/components/section-image";
 import { formatPublished, ORDERED_INSIGHTS } from "@/data/insights";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -39,6 +41,10 @@ export default function InsightsPage() {
         label="Insights"
         title="How trade service businesses and franchise systems actually work."
         lead="Longer guides that sit behind the franchising section. No statistics anyone cannot source, no figures about what an operator might earn, and nothing here is an offer."
+        ctaHref="/franchising#inquiry"
+        ctaLabel="Franchise inquiry"
+        secondaryHref="/franchising"
+        secondaryLabel="How franchising works"
       />
 
       <section className="bg-white">
@@ -95,9 +101,23 @@ export default function InsightsPage() {
                 About the company
               </Cta>
             </div>
+
+            <SectionImage
+              slot="insights-texture"
+              className="mt-12 h-48 w-full sm:h-64"
+              sizes="100vw"
+            />
           </Band>
         </Container>
       </section>
+
+      <CtaBand
+        ground="white"
+        title="Still working out whether this suits you?"
+        lead="That is the right question to be asking, and it is the one an inquiry is for. You will get a straight answer, including a no."
+        secondaryHref="/franchising"
+        secondaryLabel="How franchising works"
+      />
 
       <JsonLd
         data={breadcrumbSchema([{ name: "Insights", path: "/insights" }])}

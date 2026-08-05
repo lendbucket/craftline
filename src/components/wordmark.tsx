@@ -34,12 +34,14 @@ const LOGO_HEIGHT = 783;
 export function Wordmark({
   as = "link",
   /*
-    Sized against the 64px and 80px header bar. The delivered lockup stacks
-    BRANDS under the wordmark, so a given pixel height buys less apparent size
-    than a single line mark would: at h-9 it read visibly smaller than the nav
-    beside it. h-11 in an 80px bar leaves 18px of clearance either side.
+    Sized by screenshot against the nav rather than by guess. The delivered
+    lockup stacks BRANDS under the wordmark, so a given pixel height buys much
+    less apparent size than a single line mark would, and at h-9 it read as a
+    label beside the navigation rather than as the primary object in the bar.
+    The bar was grown to 80px on mobile and 96px on desktop to carry it, which
+    leaves 16px and 22px of clearance.
   */
-  className = "h-9 w-auto sm:h-11",
+  className = "h-12 w-auto sm:h-14",
 }: {
   /** The footer already sits inside a landmark, so it renders the inert form. */
   as?: "link" | "plain";
