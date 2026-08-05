@@ -262,13 +262,27 @@ h1, h2, h3, h4, h5, h6 {
   Standard inline text link. Blue, underlined on hover rather than always,
   which is the convention readers expect inside corporate body copy.
 */
+/*
+  UNDERLINED BY DEFAULT, AND THAT IS AN ACCESSIBILITY REQUIREMENT RATHER THAN A
+  TASTE DECISION.
+
+  WCAG 1.4.1 says colour cannot be the only thing distinguishing a link from the
+  text around it. Where it is, the two colours must clear 3:1 against each
+  other. Datum blue against graphite body text measures 2.8:1, so colour alone
+  is not enough and this failed on every article the moment inline links
+  appeared in prose: 48 violations across the section.
+
+  Underline is the fix, it is what a reader expects inside a paragraph, and the
+  offset keeps it clear of descenders.
+*/
 .link {
   color: var(--color-datum);
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 0.06em;
 }
 .link:hover {
   color: var(--color-datum-hover);
-  text-decoration: underline;
 }
 
 /*

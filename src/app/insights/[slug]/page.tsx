@@ -9,6 +9,7 @@ import { CtaBand, CtaPrompt } from "@/components/cta-band";
 import { Band, SectionHeading } from "@/components/section";
 import {
   type Block,
+  type Inline,
   formatPublished,
   getInsight,
   INSIGHTS,
@@ -62,28 +63,76 @@ export async function generateMetadata({
  * emit a heading level, which keeps the document outline correct by
  * construction rather than by review.
  *
- * Each heading carries a short datum rule above it. That is the same device
- * the section labels use, so a long article stays navigable by scanning for
- * the rule rather than by reading heading weights.
+ * Headings are plain. The retired system hung a blue rule above each one so a
+ * reader could scan for the device; that was the drawing set vocabulary and it
+ * is gone. Weight and spacing carry the outline now, which is what a reader of
+ * any article already knows how to follow.
  */
+
+/**
+ * Renders a run of text that may contain links.
+ *
+ * Post content is structured data rather than markup, so the anchor decision
+ * lives here rather than in fifteen files of prose. Two consequences worth
+ * knowing: an external link gets rel="noopener" and opens in a new tab while an
+ * internal one never does, and internal links go through next/link so they
+ * prefetch and navigate client side.
+ *
+ * The index key is safe because these arrays are static content, authored once
+ * and never reordered at runtime.
+ */
+function InlineRun({ content }: { content: string | Inline[] }) {
+  if (typeof content === "string") return <>{content}</>;
+  return (
+    <>
+      {content.map((part, index) => {
+        if (typeof part === "string") return <span key={index}>{part}</span>;
+        if (part.external) {
+          return (
+            <a
+              key={index}
+              href={part.href}
+              target="_blank"
+              rel="noopener"
+              className="link"
+            >
+              {part.text}
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          );
+        }
+        return (
+          <Link key={index} href={part.href} className="link">
+            {part.text}
+          </Link>
+        );
+      })}
+    </>
+  );
+}
+
 function BlockView({ block }: { block: Block }) {
   if (block.kind === "heading") {
-    return (
-      <h2 className="h2 mt-14 first:mt-0">{block.text}</h2>
-    );
+    return <h2 className="h2 mt-14 first:mt-0">{block.text}</h2>;
   }
 
   if (block.kind === "list") {
     return (
       <ul className="prose-body mt-6 list-disc space-y-3 pl-6">
-        {block.items.map((item) => (
-          <li key={item}>{item}</li>
+        {block.items.map((item, index) => (
+          <li key={index}>
+            <InlineRun content={item} />
+          </li>
         ))}
       </ul>
     );
   }
 
-  return <p className="prose-body mt-6">{block.text}</p>;
+  return (
+    <p className="prose-body mt-6">
+      <InlineRun content={block.text} />
+    </p>
+  );
 }
 
 export default async function InsightPage({

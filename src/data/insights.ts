@@ -1,20 +1,41 @@
+import { DISCLOSURE_POSTS } from "@/data/posts/disclosure";
+import { MONEY_POSTS } from "@/data/posts/money";
+import { CATEGORY_POSTS } from "@/data/posts/category";
+import { OPERATING_POSTS } from "@/data/posts/operating";
+
 /**
  * INSIGHTS
  * ========
  *
- * The written section. Three posts today, all of them category writing about
- * how trade service businesses and franchise systems work.
+ * The written section: category writing about how trade service businesses and
+ * franchise systems work.
+ *
+ * Post CONTENT lives in src/data/posts/, grouped into clusters. This file holds
+ * the types, the aggregation, and the rules. The split exists because the rules
+ * below are what a reviewer needs to read first, and they were becoming a
+ * preamble to two thousand lines of prose.
  *
  * THE RULES THESE WERE WRITTEN UNDER, WHICH ARE NOT STYLE PREFERENCES
  * -------------------------------------------------------------------
- * 1. NO STATISTICS. Not one. Not a market size, not a growth rate, not a
- *    failure rate, not a share of businesses that are owner operated. The
- *    temptation in this genre is to open with a number that sounds
+ * 1. NO UNSOURCED STATISTICS, AND THE BAR IS A LINKABLE PRIMARY SOURCE.
+ *    The temptation in this genre is to open with a number that sounds
  *    authoritative, and a number nobody can source is a fabrication whether or
- *    not it happens to be close. Every argument below is structural: it holds
- *    because of how the work is shaped, and it can be checked by anyone who has
- *    run a service call. If a claim here needed a number to stand up, it was
- *    cut instead of decorated.
+ *    not it happens to be close.
+ *
+ *    A number may appear only if it traces to a primary source a reader can
+ *    open: the SBA, the FTC, a federal register notice, or published academic
+ *    work. Trade press repeating a figure is not a source, it is a citation of
+ *    a citation.
+ *
+ *    Where a figure is widely repeated and CANNOT be traced, the post names it
+ *    as unverifiable and explains why, rather than repeating it. That is more
+ *    useful than the number would have been, and it is the required handling
+ *    for franchise failure and success rate claims, which are the most abused
+ *    figures in this category. See the sourcing note in
+ *    src/data/posts/disclosure.ts.
+ *
+ *    Most arguments here need no number at all: they hold because of how the
+ *    work is shaped, and can be checked by anyone who has run a service call.
  *
  * 2. NO FINANCIAL PERFORMANCE REPRESENTATIONS. No revenue, profit, earnings,
  *    margin, payback, or unit economics, in any form, including comparative
@@ -43,10 +64,23 @@
  * no en dashes, no hyphens used to join clauses.
  */
 
+/**
+ * A run of text, optionally a link.
+ *
+ * Inline links exist because dense internal linking with DESCRIPTIVE anchors is
+ * the point: an anchor reading "learn more" tells a reader and a crawler
+ * nothing, and a block that can only hold plain text forces every link to the
+ * end of a section where nobody follows it.
+ *
+ * `external` marks a link off this domain. The renderer adds rel and target for
+ * those and nothing else, so an internal link is never treated as outbound.
+ */
+export type Inline = string | { text: string; href: string; external?: boolean };
+
 export type Block =
-  | { kind: "paragraph"; text: string }
+  | { kind: "paragraph"; text: string | Inline[] }
   | { kind: "heading"; text: string }
-  | { kind: "list"; items: string[] };
+  | { kind: "list"; items: (string | Inline[])[] };
 
 export interface Insight {
   slug: string;
@@ -67,7 +101,7 @@ export interface Insight {
   body: Block[];
 }
 
-export const INSIGHTS: Insight[] = [
+const FOUNDING_POSTS: Insight[] = [
   {
     slug: "why-trade-services-suit-franchise-systems",
     title: "What makes skilled trade service businesses suited to franchise systems",
@@ -326,6 +360,35 @@ export const INSIGHTS: Insight[] = [
     ],
   },
 ];
+
+/**
+ * Every post, from the founding three plus the four content clusters.
+ *
+ * Order in this array is not display order. ORDERED_INSIGHTS sorts by date, so
+ * a post added to the wrong cluster file still lists correctly.
+ */
+export const INSIGHTS: Insight[] = [
+  ...FOUNDING_POSTS,
+  ...DISCLOSURE_POSTS,
+  ...MONEY_POSTS,
+  ...CATEGORY_POSTS,
+  ...OPERATING_POSTS,
+];
+
+/**
+ * Slugs must be unique: two posts sharing one would make the second
+ * unreachable, and generateStaticParams would silently emit a duplicate route.
+ * Cheap to check at module load, and it fails the build rather than shipping.
+ */
+{
+  const seen = new Set<string>();
+  for (const insight of INSIGHTS) {
+    if (seen.has(insight.slug)) {
+      throw new Error(`Duplicate insight slug: ${insight.slug}`);
+    }
+    seen.add(insight.slug);
+  }
+}
 
 export const INSIGHTS_BY_SLUG = new Map(
   INSIGHTS.map((insight) => [insight.slug, insight]),

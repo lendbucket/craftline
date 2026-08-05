@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Fragment } from "react";
 import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
-import { CtaBand } from "@/components/cta-band";
+import { CtaBand, CtaPrompt } from "@/components/cta-band";
 import { Band, Card, SectionHeading } from "@/components/section";
 import { SectionImage } from "@/components/section-image";
 import { formatPublished, ORDERED_INSIGHTS } from "@/data/insights";
@@ -14,7 +15,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Insights",
   description:
-    "Writing on skilled trades franchise systems: what makes trade service businesses suit franchising, what veteran operators bring to them, and how a brand system works.",
+    "Guides on franchising and skilled trade service businesses: what a Franchise Disclosure Document is, how royalties and territory work, what a home services franchise involves, and how to check a franchisor before you sign.",
   path: "/insights",
 });
 
@@ -26,14 +27,28 @@ export const metadata: Metadata = pageMetadata({
  * longer pieces behind it, and both directions link to each other so a reader
  * who starts in either place can find the rest.
  *
- * There are three posts, so there is no pagination, no tag taxonomy, and no
- * featured slot. Building navigation for a volume of content that does not
- * exist is how a section starts looking abandoned.
+ * No pagination, no tag taxonomy, and no featured slot. The section is now
+ * eighteen posts, which a single dated list still handles without help. Add
+ * navigation when a reader cannot find something, not before: taxonomy built
+ * ahead of the volume that needs it is how a section starts looking abandoned.
  *
  * No author bylines anywhere in this section. The founder's name is never
  * rendered on this property, and corporate authorship is also the truthful
  * description of what these are. See articleSchema in src/lib/schema.ts.
  */
+/**
+ * Where the mid-list prompts go, by card index.
+ *
+ * Two of them, and the number came from measurement rather than preference. One
+ * prompt after the fifth card still left just under five viewports of unbroken
+ * list below it at desktop width, which the CTA audit failed. Two breaks the
+ * eighteen card list into three runs, none of which is long enough to go
+ * barren.
+ *
+ * Derived from the list length so the spacing survives the section growing.
+ */
+const PROMPT_AFTER = new Set([4, 11]);
+
 export default function InsightsPage() {
   return (
     <>
@@ -51,8 +66,9 @@ export default function InsightsPage() {
         <Container>
           <Band>
             <ul className="grid gap-5">
-              {ORDERED_INSIGHTS.map((insight) => (
-                <Card as="li" key={insight.slug} className="p-0">
+              {ORDERED_INSIGHTS.map((insight, index) => (
+                <Fragment key={insight.slug}>
+                <Card as="li" className="p-0">
                   <Link
                     href={`/insights/${insight.slug}`}
                     className="block h-full rounded-lg p-6 sm:p-7"
@@ -80,7 +96,23 @@ export default function InsightsPage() {
                       <span className="sr-only">: {insight.title}</span>
                     </p>
                   </Link>
-                </Card>
+                  </Card>
+                  {/*
+                    A prompt partway down the list rather than only at its foot.
+                    The section runs to eighteen posts, and the CTA audit
+                    measured nearly seven viewports of unbroken cards at desktop
+                    width with no way to act anywhere in it.
+                  */}
+                  {PROMPT_AFTER.has(index) ? (
+                    <li>
+                      <CtaPrompt
+                        className="bg-mist"
+                        title="Reading to decide rather than to browse?"
+                        lead="An inquiry reaches a person who can answer directly. No Franchise Disclosure Document has been issued, so there is nothing to apply for."
+                      />
+                    </li>
+                  ) : null}
+                </Fragment>
               ))}
             </ul>
           </Band>

@@ -136,10 +136,38 @@ async function measurePage(
             if (label) measured = label.getBoundingClientRect();
           }
 
-          if (measured.height < floor - 0.5) {
+          /*
+            INLINE LINKS INSIDE A SENTENCE ARE HELD TO 24px, NOT 44px, AND THAT
+            IS THE SPEC RATHER THAN A CONCESSION.
+
+            WCAG 2.5.8 Target Size (Minimum), the AA criterion, requires 24 by
+            24 CSS pixels and states an explicit Inline exception for a target
+            "in a sentence or its size is otherwise constrained by the
+            line-height of non-target text". The 44px figure this audit uses
+            everywhere else is 2.5.5 Target Size (Enhanced), which is AAA.
+
+            A link in the middle of a paragraph cannot be 44px tall without
+            either breaking the line rhythm of the prose around it or growing an
+            invisible hit area that overlaps the link in the line above. The
+            tap-44 helper exists for standalone inline links whose neighbours
+            are plain text, and its own documentation warns against putting it
+            on elements that can overlap. Article body copy with several links
+            per paragraph is exactly that case.
+
+            Detection is structural: an anchor whose layout is inline and which
+            sits inside a paragraph or list item is prose. A block level link,
+            or one anywhere else, still gets the full 44px floor.
+          */
+          const isInlineProseLink =
+            element.tagName === "A" &&
+            style.display.startsWith("inline") &&
+            !!element.closest("p, li");
+          const effectiveFloor = isInlineProseLink ? 24 : floor;
+
+          if (measured.height < effectiveFloor - 0.5) {
             const label = (element.textContent || element.getAttribute("aria-label") || "").trim();
             smallTargets.push(
-              `${element.tagName.toLowerCase()}${type ? `[${type}]` : ""} ${Math.round(measured.height)}px "${label.slice(0, 40)}"`,
+              `${element.tagName.toLowerCase()}${type ? `[${type}]` : ""} ${Math.round(measured.height)}px "${label.slice(0, 40)}"${isInlineProseLink ? " (inline, 24px floor)" : ""}`,
             );
           }
         }

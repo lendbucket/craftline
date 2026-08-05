@@ -14,6 +14,49 @@
  * Filter to a subset while debugging one page:
  *   AUDIT_ONLY=franchising npm run contrast-audit
  */
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
+
+/**
+ * Every insight post, read from what the build actually prerendered.
+ *
+ * This used to be three hardcoded paths with a comment instructing whoever
+ * added a fourth post to remember this file. The section is now eighteen posts
+ * and that instruction would have been forgotten on the first one, which is the
+ * exact failure the header above warns about: a page that quietly stops being
+ * audited.
+ *
+ * Reading the build output rather than the TypeScript source is deliberate.
+ * Every audit already requires `npm run build` before it runs, so the directory
+ * is guaranteed to exist, and a slug that failed to generate is absent here for
+ * the same reason it is absent from production. Parsing the source instead
+ * would list routes that do not exist.
+ *
+ * It throws rather than returning an empty list. Silently auditing zero posts
+ * and printing ALL GREEN is worse than failing.
+ */
+function insightRoutes() {
+  const dir = join(process.cwd(), ".next", "server", "app", "insights");
+  let slugs;
+  try {
+    slugs = readdirSync(dir)
+      .filter((file) => file.endsWith(".html"))
+      .map((file) => file.replace(/\.html$/, ""))
+      .sort();
+  } catch {
+    throw new Error(
+      "No prerendered insight pages found. Run `npm run build` before an audit.",
+    );
+  }
+  if (slugs.length === 0) {
+    throw new Error("Prerendered insights directory is empty. Build failed?");
+  }
+  return slugs.map((slug) => ({
+    name: `post: ${slug.slice(0, 28)}`,
+    path: `/insights/${slug}`,
+  }));
+}
+
 const ALL_ROUTES = [
   { name: "home", path: "/" },
   { name: "about", path: "/about" },
@@ -21,17 +64,7 @@ const ALL_ROUTES = [
   { name: "brand detail", path: "/brands/wattsmith-electric" },
   { name: "franchising", path: "/franchising" },
   { name: "insights", path: "/insights" },
-  /*
-   * All three insight posts, not a sample. They share one template, so one
-   * would catch most template level problems, but the posts differ in content
-   * shape: only some contain lists, and they vary in length enough to change
-   * how the prose column behaves. Auditing all three costs seconds and removes
-   * the judgement call about which one is representative. Add the fourth post
-   * here in the commit that writes it.
-   */
-  { name: "insight 1", path: "/insights/why-trade-services-suit-franchise-systems" },
-  { name: "insight 2", path: "/insights/what-veteran-operators-bring-to-trade-services" },
-  { name: "insight 3", path: "/insights/how-a-franchise-brand-system-works" },
+  ...insightRoutes(),
   { name: "contact", path: "/contact" },
   { name: "privacy", path: "/privacy" },
   { name: "terms", path: "/terms" },
