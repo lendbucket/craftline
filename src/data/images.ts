@@ -112,6 +112,27 @@ export interface ImageSlot {
 }
 
 /**
+ * NO PHOTOGRAPHY. THIS IS A STANDING OWNER RULE, NOT A CURRENT STATE.
+ *
+ * The site runs on type, white space, the brand marks, and the brand colours,
+ * and nothing else. No stock photography from any library, under any licence,
+ * free or paid, in any role: not a hero, not section texture, not a card, not
+ * behind a heading, not at low opacity.
+ *
+ * Royalty free imagery was licensed, shipped, reviewed, and removed. The
+ * decision is settled and it is not a sourcing problem to be solved with a
+ * better search. The only photographs that may ever appear here are real
+ * Craftline photographs of Craftline's own work, and that is a conversation to
+ * have if those ever exist.
+ *
+ * THE FOUR STOCK SLOTS BELOW STAY TRACKED AND PENDING ON PURPOSE. They are the
+ * record of the decision. Do not fill them, and do not delete them either: an
+ * empty tracked slot is what stops the next person solving this from scratch.
+ *
+ * See AGENTS.md, which states the same rule as project law.
+ */
+
+/**
  * LICENCES OBTAINED AND NOT USED.
  *
  * Four royalty free photographs were licensed and briefly shipped, then removed

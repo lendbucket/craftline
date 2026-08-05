@@ -42,9 +42,27 @@ registered, nothing on this site may constitute a franchise offer.
   Hyphens only inside compound words where grammatically required.
 - No emojis.
 - No marketing cliche. Direct expert operator voice.
-- Placeholder imagery is allowed, but every slot must be tracked in
-  `src/data/images.ts`. Nothing else may be a placeholder: run
-  `npm run placeholder-audit` before shipping.
+- Every image slot must be tracked in `src/data/images.ts`. Nothing else may be
+  a placeholder: run `npm run placeholder-audit` before shipping.
+
+## No photography, standing
+
+The site runs on type, white space, the brand marks, and the brand colours.
+Nothing else.
+
+No stock photography, from any library, under any licence, free or paid. Not as
+a hero, not as section texture, not in a card, not behind a heading, and not at
+low opacity. This is not a budget constraint or a sourcing problem, and it is
+not open to being solved with a better search: royalty free imagery was added
+once, reviewed, and removed, and the decision is settled.
+
+The only photographs that may ever appear are real Craftline photographs of
+Craftline's own work. If those exist one day, they get discussed then. Nothing
+else revisits this.
+
+The four stock slots in `src/data/images.ts` stay tracked and pending as the
+record of that decision. Do not fill them. Do not delete them either: a tracked
+empty slot is what stops somebody re-solving this from scratch.
 
 ## Engineering
 
