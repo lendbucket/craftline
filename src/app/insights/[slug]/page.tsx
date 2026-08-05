@@ -5,7 +5,7 @@ import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
-import { Band, Rule, SectionLabel } from "@/components/section";
+import { Band, SectionHeading } from "@/components/section";
 import {
   type Block,
   formatPublished,
@@ -68,26 +68,21 @@ export async function generateMetadata({
 function BlockView({ block }: { block: Block }) {
   if (block.kind === "heading") {
     return (
-      <div className="mt-16 first:mt-0">
-        <Rule className="max-w-[4rem]" />
-        <h2 className="display-3 mt-5">{block.text}</h2>
-      </div>
+      <h2 className="h2 mt-14 first:mt-0">{block.text}</h2>
     );
   }
 
   if (block.kind === "list") {
     return (
-      <ul className="border-datum mt-7 space-y-4 border-l-2 pl-7">
+      <ul className="prose-body mt-6 list-disc space-y-3 pl-6">
         {block.items.map((item) => (
-          <li key={item} className="text-graphite leading-relaxed">
-            {item}
-          </li>
+          <li key={item}>{item}</li>
         ))}
       </ul>
     );
   }
 
-  return <p className="body-lg text-graphite mt-7">{block.text}</p>;
+  return <p className="prose-body mt-6">{block.text}</p>;
 }
 
 export default async function InsightPage({
@@ -113,7 +108,7 @@ export default async function InsightPage({
         lead={insight.lead}
       />
 
-      <section className="bg-chalk">
+      <section className="bg-white">
         <Container>
           <Band>
             {/*
@@ -122,7 +117,7 @@ export default async function InsightPage({
               continuous text for that to matter.
             */}
             <article className="max-w-[38rem]">
-              <p className="value text-steel">
+              <p className="text-steel text-[0.9375rem]">
                 Published{" "}
                 <time dateTime={insight.published}>
                   {formatPublished(insight.published)}
@@ -140,22 +135,23 @@ export default async function InsightPage({
       </section>
 
       {others.length > 0 ? (
-        <section className="bg-zinc">
-          <Container wide>
+        <section className="bg-mist">
+          <Container>
             <Band>
-              <SectionLabel>More from Insights</SectionLabel>
-              <ul className="mt-12 grid gap-8 sm:grid-cols-2">
+              <SectionHeading
+                eyebrow="More reading"
+                title="Other guides in this section."
+              />
+              <ul className="mt-10 grid gap-5 sm:grid-cols-2">
                 {others.map((other) => (
                   <li key={other.slug}>
                     <Link
                       href={`/insights/${other.slug}`}
-                      className="border-line bg-chalk hover:border-datum reveal block h-full border p-8 transition-colors"
+                      className="border-line hover:border-datum block h-full rounded-lg border bg-white p-6 transition-colors"
                     >
-                      <p className="label-sm text-datum">{other.eyebrow}</p>
-                      <p className="display-3 text-graphite mt-5">
-                        {other.title}
-                      </p>
-                      <p className="text-steel mt-4 text-[0.9375rem] leading-relaxed">
+                      <p className="eyebrow">{other.eyebrow}</p>
+                      <p className="h3 text-graphite mt-3">{other.title}</p>
+                      <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
                         {other.description}
                       </p>
                     </Link>
@@ -163,8 +159,8 @@ export default async function InsightPage({
                 ))}
               </ul>
 
-              <div className="mt-14 flex flex-col gap-3 sm:flex-row">
-                <Cta href="/franchising">Franchise information</Cta>
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                <Cta href="/franchising">How franchising works</Cta>
                 <Cta href="/insights" variant="secondary">
                   All insights
                 </Cta>

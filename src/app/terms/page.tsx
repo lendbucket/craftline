@@ -56,7 +56,7 @@ export default function TermsPage() {
         lead="The terms that apply when you use this website."
       />
 
-      <section className="bg-zinc">
+      <section className="bg-white">
         <Container>
           <div className="py-16 sm:py-20">
             <div className="max-w-2xl space-y-12">

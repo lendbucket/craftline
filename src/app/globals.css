@@ -33,18 +33,12 @@
     GROUNDS. White is the page. Mist is the only alternation, and it is a step
     small enough to separate two sections without reading as a coloured band.
 
-    There are no dark grounds in the new system. The graphite values below are
-    retained only because the pages not yet rebuilt still use them; they go
-    when those pages do.
+    There are no dark grounds. Every retired ground is deleted rather than left
+    defined: an unused colour token is an invitation to reintroduce a dark band
+    without anyone deciding to.
   */
   --color-mist: #f5f6f7;
   --color-line: #e3e6e9;
-
-  /* Retired grounds, still referenced by pages awaiting rebuild. */
-  --color-zinc: #e7e9e8;
-  --color-chalk: #f4f5f4;
-  --color-graphite-700: #232b30;
-  --color-graphite-600: #323c42;
 
   /*
     GRAPHITE. Body text, headings, and the darkest thing on the page.
@@ -77,25 +71,27 @@
       active navigation, focus.
   */
   --color-signal: #cb0000;
-  --color-signal-bright: #ff8a80;
   /*
-    Never re-pinned per surface. Solid fills need it: a fill reading the
-    surface aware --color-signal would flip to the light pin inside a dark
-    section and put light text on a light fill. White on this clears 5.93.
+    The same value under a name reserved for solid fills. The two are equal
+    today because there are no dark grounds left to re-pin against, and they
+    stay separate because the distinction is what stopped a fill from flipping
+    to a light pin and putting light text on a light background. White on this
+    clears 5.93.
   */
   --color-signal-solid: #cb0000;
   --color-signal-solid-hover: #a80000;
 
   /*
-    DATUM is pinned on every surface, and that is a requirement rather than a
-    preference. The exact brand blue #007CCB clears 4.05:1 at its best and
-    cannot carry normal text anywhere. The brand value survives as
-    --color-datum-true for non-text marks only.
+    DATUM IS NOT THE EXACT BRAND BLUE, AND THAT IS A REQUIREMENT.
+
+    Read this before "correcting" it. The delivered brand blue is #007CCB. It
+    clears 4.05:1 at its best, on white, which fails AA for normal text. Every
+    blue on this site carries text, so the value below is the brand hue
+    darkened until it passes. There is no longer any non-text use of blue, so
+    the exact brand value is not defined here at all.
   */
   --color-datum: #0063a4;
   --color-datum-hover: #004f84;
-  --color-datum-bright: #58adea;
-  --color-datum-true: #007ccb;
 
   /*
     FAULT. Form validation.
@@ -108,7 +104,6 @@
     more people than a chip did.
   */
   --color-fault: #8a5510;
-  --color-fault-bright: #e8b84b;
 
   /* Secondary button outline. Neutral, so a band has exactly one red control. */
   --color-control: #14191c;
@@ -150,26 +145,19 @@
 }
 
 /*
-  SURFACE AWARE COLOUR
-  --------------------
-  Custom properties inherit, so re-pinning them on a surface class means every
-  descendant utility resolves to the value that clears AA on that background.
+  There is no surface aware colour block any more, and its absence is the point.
 
-  Only the retired dark grounds need this now, and only until the pages using
-  them are rebuilt. On white and mist the base values already clear AA, so
-  there is nothing to pin. When the last graphite section goes, this whole
-  block goes with it.
+  The retired system re-pinned --color-signal, --color-datum, --color-fault and
+  --color-steel on every dark ground class, because each accent needed a second
+  value to clear AA on graphite. It was the cleverest thing in the stylesheet
+  and the most fragile: nesting a card in an unexpected section silently
+  changed what its text resolved to.
+
+  White and mist are close enough in luminance that one value per token clears
+  AA on both, so every colour above is now unconditional. If you are about to
+  add a dark ground, you are also signing up to bring that mechanism back, and
+  the contrast audit is what will tell you whether you did it correctly.
 */
-.bg-graphite,
-.bg-graphite-700,
-.bg-graphite-600 {
-  --color-signal: var(--color-signal-bright);
-  --color-datum: var(--color-datum-bright);
-  --color-fault: var(--color-fault-bright);
-  --color-steel: #aeb6bc;
-  --color-line: #e7e9e824;
-  --color-control: #e7e9e8;
-}
 
 html {
   scroll-behavior: smooth;
@@ -331,51 +319,6 @@ h1, h2, h3, h4, h5, h6 {
   background: #bfe0f6;
   color: var(--color-graphite);
 }
-
-/*
-  ============================================================================
-  TRANSITIONAL COMPATIBILITY LAYER. DELETE AS YOU GO.
-  ============================================================================
-
-  Only the home page has been rebuilt. Every other route still references the
-  retired system's class names, and a class that does not exist fails silently:
-  it renders unstyled, passes every audit, and is caught only by eye. That is a
-  real incident on this repository, not a hypothetical.
-
-  So the old names are kept alive here and REMAPPED ONTO THE NEW SYSTEM rather
-  than onto their old values. An un-rebuilt page therefore already picks up the
-  sans face and the conventional sizes; it is behind on layout, not on brand.
-
-  When you rebuild a page, replace its old class names with the real ones above
-  and delete the corresponding rule here. This block should reach zero.
-  Remaining consumers: about, brands, brands/[slug], contact, franchising,
-  insights, insights/[slug], not-found, privacy, terms.
-*/
-@theme {
-  /* Old name for --color-line. `border-rule` is used on every un-rebuilt page. */
-  --color-rule: #e3e6e9;
-}
-
-.display-1 { font-size: clamp(2rem, 1.5rem + 2.2vw, 3rem); font-weight: 600; line-height: 1.14; letter-spacing: -0.015em; }
-.display-2 { font-size: clamp(1.625rem, 1.35rem + 1.2vw, 2.125rem); font-weight: 600; line-height: 1.2; letter-spacing: -0.012em; }
-.display-3 { font-size: 1.25rem; font-weight: 600; line-height: 1.35; }
-.body-lg { font-size: 1.1875rem; line-height: 1.6; }
-
-/* Were the mono label layer. Now the same small sans as .eyebrow, colour inherited. */
-.label,
-.label-sm {
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.value { font-family: var(--font-sans); font-size: 0.875rem; line-height: 1.5; }
-
-/* Were scroll driven animation hooks. Inert: the keyframes are gone. */
-.reveal,
-.rule-draw { }
 
 /*
   MOTION

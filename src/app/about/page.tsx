@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
-import { MaterialPlate } from "@/components/material-plate";
+import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
-import { Band, Register, Rule, SectionLabel } from "@/components/section";
+import { Band, Card, SectionHeading } from "@/components/section";
 import {
   BRANDS,
   CAPABILITIES,
@@ -12,40 +12,46 @@ import {
   LEGAL_ENTITIES,
 } from "@/config/company";
 import { breadcrumbSchema } from "@/lib/schema";
-import { JsonLd } from "@/components/json-ld";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: "About",
   description:
-    "Craftline Brands is a holding company for skilled trade service brands and the skilled trades franchise system behind them. It owns the marks, the operating playbooks, the technology, and the territory plan that its brands run on.",
+    "Craftline Brands is a franchise development company that owns the marks, the operating playbooks, and the technology behind the skilled trade service brands it builds. Veteran founded, held through two Wyoming entities.",
   path: "/about",
 });
 
 /**
- * About page.
+ * About.
  *
- * The holding company model, developed properly. Each of the four parts gets
- * its own section with what it is, what it covers, and what it does not do.
- * The previous version rendered the same four strings as a description list,
- * which stated the model without explaining it.
+ * WHAT THIS PAGE IS FOR: a franchise prospect, an attorney, or a lender
+ * working out who they would actually be dealing with. That means the
+ * corporate structure in plain language, what the company does and does not
+ * do, and how it thinks about the work. It is not a story page and there is no
+ * origin narrative, because most of what one would contain is not established.
  *
- * The four sections read from CAPABILITIES, the same array the home page uses,
- * and then develop it. The config string stays the single source for the
- * summary; the development around it is written here because it is page copy
- * rather than an assertable fact.
+ * THE FOUNDER'S NAME NEVER RENDERS, here or anywhere: not in copy, metadata,
+ * schema, image alt text, or the sitemap. FOUNDING_STATEMENT is the only
+ * permitted reference and it carries no name by design.
  *
- * Everything on this page traces to src/config/company.ts. The founder's name
- * does not appear, and FOUNDING_STATEMENT is the only permitted reference.
+ * NO TEAM SECTION, no headcount, no offices, no history timeline, no
+ * testimonials, no press. None of those are established, and a corporate about
+ * page that invents them is the exact failure this property exists to avoid.
+ *
+ * Every fact traces to src/config/company.ts.
  */
 
 /**
- * What each part does NOT do. Written here rather than in config because these
- * are honest limits on a support model, not claims about the company, and
- * stating limits is what separates a description from a pitch.
+ * What each part of the model does NOT do.
  *
- * Keyed by capability title so a config edit that renames one fails loudly at
- * the type level instead of silently dropping the paragraph.
+ * This is the most useful content on the page and the least common. A
+ * capability list that only claims strengths reads as marketing; the limits
+ * are what a serious operator is actually trying to work out, and stating them
+ * is cheap for a company that means them.
+ *
+ * Keyed by capability title so it cannot silently drift out of step with
+ * CAPABILITIES. A new capability added to config without an entry here renders
+ * nothing rather than the wrong text.
  */
 const LIMITS: Record<string, string> = {
   "Brand systems":
@@ -70,139 +76,101 @@ export default function AboutPage() {
       />
 
       {/* ---------------------------------------------------------------
-          THE MODEL
+          WHAT THE COMPANY IS
           --------------------------------------------------------------- */}
-      <section className="bg-zinc">
+      <section className="bg-white">
         <Container>
           <Band>
-            <SectionLabel>The model</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              A trade business is not hard to start. It is hard to run well
-              twice.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              One good shop is a person. A brand that works in several markets
-              is a method. What separates them is whether the standard survives
-              being handed to somebody else, and these are the four pieces
-              Craftline holds so that it can. Together they are the skilled
-              trades franchise system its brands run on.
-            </p>
-
-            {/*
-              The register is permitted here for the same reason it is on the
-              home page: this is a genuinely defined set, and the order runs
-              from the promise to the boundary it applies within. Each entry
-              develops the config summary and then states its own limits.
-            */}
-            <div className="mt-16 space-y-14">
-              {CAPABILITIES.map((capability, index) => (
-                <Register
-                  key={capability.title}
-                  index={index + 1}
-                  label={capability.title}
-                >
-                  <h3 className="display-3 max-w-2xl">{capability.title}</h3>
-                  {/*
-                    Graphite, not steel. This is the primary description of the
-                    part; the limits block beneath it is the commentary. Setting
-                    this in the secondary colour put the two the wrong way round
-                    and made the main paragraph read as the footnote.
-                  */}
-                  <p className="body-lg text-graphite mt-6 max-w-2xl">
-                    {capability.body}
+            <div className="grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
+              <div>
+                <SectionHeading eyebrow="The company" title="What Craftline is." />
+                <div className="prose-body mt-6 space-y-5">
+                  <p>
+                    Craftline Brands is a holding company. It does not perform
+                    electrical work, it does not take service calls, and it has
+                    no customers in the ordinary sense. What it owns is the
+                    intangible half of a trade services business: the
+                    trademarks, the documented way of operating, the software
+                    stack, and the plan for where a brand goes next.
                   </p>
-                  <div className="border-line mt-8 max-w-2xl border-l-2 pl-6">
-                    <p className="label-sm text-datum">What it does not do</p>
-                    <p className="text-graphite mt-3 leading-relaxed">
-                      {LIMITS[capability.title]}
-                    </p>
-                  </div>
-                </Register>
-              ))}
+                  <p>
+                    That separation is the point of the structure. An operating
+                    business is consumed by the day: the calls, the scheduling,
+                    the hiring, the collections. Work on the system itself loses
+                    to work in the business every single time, which is why most
+                    independent trade companies never build one. Putting the
+                    system in a separate company, with its own responsibility
+                    for it, is how the system gets built at all.
+                  </p>
+                  <p>
+                    {FOUNDING_STATEMENT} The brand operating under it is veteran
+                    owned as well, which makes this veteran founded by origin
+                    rather than by positioning.
+                  </p>
+                </div>
+              </div>
+
+              <Card className="h-fit">
+                <h3 className="h3">Corporate structure</h3>
+                <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
+                  Two entities, both registered in{" "}
+                  {LEGAL_ENTITIES[0].jurisdiction}. A prospective operator is
+                  entitled to know which one holds what, and it is verifiable.
+                </p>
+                <dl className="mt-6 space-y-5">
+                  {LEGAL_ENTITIES.map((entity) => (
+                    <div key={entity.name}>
+                      <dt className="text-graphite font-semibold">
+                        {entity.name}
+                      </dt>
+                      <dd className="text-steel mt-1 leading-relaxed">
+                        {entity.role}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </Card>
             </div>
           </Band>
         </Container>
       </section>
 
       {/* ---------------------------------------------------------------
-          MATERIAL BREAK. Treatment ready: raceway linework today, a
-          licensed drawing detail when one is bought.
+          THE MODEL, WITH ITS LIMITS
           --------------------------------------------------------------- */}
-      <section className="bg-graphite text-zinc relative isolate overflow-hidden">
-        <MaterialPlate id="about-system" intensity="quiet" />
-        <Container>
-          <div className="relative py-20 sm:py-24">
-            <p className="display-3 max-w-3xl text-balance">
-              Everything above is documented. That is the whole difference
-              between a business and a job that owns you.
-            </p>
-          </div>
-        </Container>
-      </section>
-
-      {/* ---------------------------------------------------------------
-          STRUCTURE
-          --------------------------------------------------------------- */}
-      <section className="bg-chalk">
+      <section className="bg-mist">
         <Container>
           <Band>
-            <SectionLabel>Corporate structure</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              Two entities, each with one job.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              Anyone considering running one of these brands is entitled to know
-              which entity holds what, so it is stated here rather than left to
-              be discovered in a document later.
-            </p>
+            <SectionHeading
+              eyebrow="The model"
+              title="Four parts, and what each one does not do."
+              lead="A capability list that only claims strengths is marketing. The limits below are what a serious operator is actually trying to work out, and stating them costs nothing for a company that means them."
+            />
 
-            {/*
-              A schedule rather than cards. Entity facts are record data, and a
-              ruled two column register is the register that record data
-              belongs in.
-            */}
-            <dl className="border-line mt-12 max-w-3xl border-t">
-              {LEGAL_ENTITIES.map((entity) => (
-                <div
-                  key={entity.name}
-                  className="border-line reveal grid gap-2 border-b py-7 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-8"
-                >
-                  <dt className="text-graphite text-[1.0625rem] font-semibold">
-                    {entity.name}
-                  </dt>
-                  <dd className="text-graphite leading-relaxed">
-                    <span className="label-sm text-datum block">
-                      {entity.jurisdiction} limited liability company
-                    </span>
-                    <span className="mt-2 block">{entity.role}</span>
-                  </dd>
-                </div>
+            <div className="mt-12 space-y-5">
+              {CAPABILITIES.map((capability) => (
+                <Card key={capability.title}>
+                  <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
+                    <div>
+                      <h3 className="h3">{capability.title}</h3>
+                      <p className="mt-3 leading-relaxed text-graphite">
+                        {capability.body}
+                      </p>
+                    </div>
+                    {LIMITS[capability.title] ? (
+                      <div className="border-line border-l-2 pl-5">
+                        <p className="text-graphite text-[0.9375rem] font-semibold">
+                          What it does not do
+                        </p>
+                        <p className="text-steel mt-2 leading-relaxed">
+                          {LIMITS[capability.title]}
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                </Card>
               ))}
-            </dl>
-          </Band>
-        </Container>
-      </section>
-
-      {/* ---------------------------------------------------------------
-          FOUNDING
-          --------------------------------------------------------------- */}
-      <section className="bg-zinc">
-        <Container>
-          <Band>
-            <SectionLabel>Founding</SectionLabel>
-            {/*
-              FOUNDING_STATEMENT is the only permitted reference to the founder
-              and it carries no name. Do not add one here, in an image alt, or
-              in schema.
-            */}
-            <p className="display-2 mt-8 max-w-3xl text-balance">
-              {FOUNDING_STATEMENT}
-            </p>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              Veterans considering ownership are encouraged to make contact. It
-              is an invitation rather than a requirement, and nothing about this
-              company is limited to people who served.
-            </p>
+            </div>
           </Band>
         </Container>
       </section>
@@ -210,31 +178,25 @@ export default function AboutPage() {
       {/* ---------------------------------------------------------------
           THE BRAND TODAY
           --------------------------------------------------------------- */}
-      <section className="bg-chalk">
+      <section className="bg-white">
         <Container>
           <Band>
-            <SectionLabel>The brand today</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              One operating brand, built first on purpose.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              {wattsmith.summary} It is the brand the systems above were built
-              on and tested against, which is the only order that produces a
-              playbook worth handing to somebody.
-            </p>
-            <Rule className="mt-10 max-w-[8rem]" />
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+            <SectionHeading
+              eyebrow="The brand today"
+              title="One operating brand, built first on purpose."
+              lead={`${wattsmith.summary} It is the brand the systems above were built on and tested against, which is the only order that produces a playbook worth handing to somebody.`}
+            />
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Cta href={`/brands/${wattsmith.slug}`}>
                 About {wattsmith.name}
               </Cta>
               <Cta href="/franchising" variant="secondary">
-                Franchise information
+                How franchising works
               </Cta>
             </div>
           </Band>
         </Container>
       </section>
-
 
       <JsonLd data={breadcrumbSchema([{ name: "About", path: "/about" }])} />
     </>

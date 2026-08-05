@@ -7,7 +7,7 @@ import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
-import { Band, SectionLabel } from "@/components/section";
+import { Band, Card, SectionHeading } from "@/components/section";
 import { BRANDS, COMPANY, SITE_URL } from "@/config/company";
 import { breadcrumbSchema, ORGANIZATION_ID } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -29,7 +29,7 @@ import { pageMetadata } from "@/lib/seo";
  *
  * It is NOT a second front door for the operating brand's customers. Craftline
  * does not compete with wattsmithelectric.com for service keywords and never
- * targets city plus service queries. Concretely: the service schedule below is
+ * targets city plus service queries. Concretely: the service list below is
  * plain unlinked category names with no city attached, no service page exists
  * on this property and none may be added, and the outbound link is prominent
  * because sending a customer to the brand's own site is the correct outcome
@@ -111,33 +111,28 @@ export default async function BrandPage({
       {/* ---------------------------------------------------------------
           THE LOCKUP, ON BOTH APPROVED SURFACES
           --------------------------------------------------------------- */}
-      <section className="bg-zinc">
-        <Container wide>
+      <section className="bg-white">
+        <Container>
           <Band>
-            <SectionLabel>The brand system</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              One mark, two surfaces, no third version.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              The lockup is approved on the brand&apos;s navy field and on a
-              light field. The bolt and the ELECTRIC banner stay gold on both.
-              What changes between them is only the navy artwork, which reverses
-              so it stays visible.
-            </p>
+            <SectionHeading
+              eyebrow="The brand system"
+              title="One mark, two surfaces, no third version."
+              lead="The lockup is approved on the brand's navy field and on a light field. The bolt and the ELECTRIC banner stay gold on both. What changes between them is only the navy artwork, which reverses so it stays visible."
+            />
 
-            <div className="mt-14 grid gap-8 lg:grid-cols-2">
+            <div className="mt-12 grid gap-5 lg:grid-cols-2">
               {/*
                 Reversed usage. The background is the brand's own navy, taken
                 from config rather than typed in, so it cannot drift from the
                 value the schedule below publishes.
 
-                No text-datum and no SectionLabel inside this panel. The
-                surface aware colour in globals.css is pinned by the ground
-                class names, and an inline background is invisible to that
-                mechanism, so datum here would silently resolve to its light
-                ground value and fail contrast on navy.
+                No token driven text colour inside this panel. The surface aware
+                colours in globals.css are pinned by ground class names, and an
+                inline background is invisible to that mechanism, so a token
+                here would resolve to its light ground value and fail contrast
+                on navy. The caption sits outside the painted area instead.
               */}
-              <figure className="border-line reveal border">
+              <figure className="border-line overflow-hidden rounded-lg border">
                 <div
                   className="flex items-center justify-center px-10 py-16 sm:py-20"
                   style={{ backgroundColor: navy.hex }}
@@ -148,22 +143,22 @@ export default async function BrandPage({
                     className="w-full max-w-xs"
                   />
                 </div>
-                <figcaption className="bg-chalk border-line border-t px-7 py-5">
-                  <p className="label-sm text-datum">Reversed</p>
-                  <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
+                <figcaption className="border-line border-t bg-white px-6 py-5">
+                  <p className="text-graphite font-semibold">Reversed</p>
+                  <p className="text-steel mt-2 text-[0.9375rem] leading-relaxed">
                     On the brand&apos;s navy field. The mark and the WATTSMITH
                     wordmark reverse out so they stay legible.
                   </p>
                 </figcaption>
               </figure>
 
-              <figure className="border-line reveal border">
-                <div className="bg-chalk flex items-center justify-center px-10 py-16 sm:py-20">
+              <figure className="border-line overflow-hidden rounded-lg border">
+                <div className="bg-mist flex items-center justify-center px-10 py-16 sm:py-20">
                   <WattsmithLockup decorative className="w-full max-w-xs" />
                 </div>
-                <figcaption className="bg-chalk border-line border-t px-7 py-5">
-                  <p className="label-sm text-datum">Primary</p>
-                  <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
+                <figcaption className="border-line border-t bg-white px-6 py-5">
+                  <p className="text-graphite font-semibold">Primary</p>
+                  <p className="text-steel mt-2 text-[0.9375rem] leading-relaxed">
                     On a light field. The mark and the wordmark carry the brand
                     navy, which is the primary usage.
                   </p>
@@ -177,17 +172,20 @@ export default async function BrandPage({
       {/* ---------------------------------------------------------------
           BRAND COLOURS
           --------------------------------------------------------------- */}
-      <section className="bg-chalk">
-        <Container wide>
+      <section className="bg-mist">
+        <Container>
           <Band>
-            <SectionLabel>Brand colours</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              Two colours, and the discipline is that there is no third.
-            </h2>
+            <SectionHeading
+              eyebrow="Brand colours"
+              title="Two colours, and the discipline is that there is no third."
+            />
 
-            <ul className="mt-14 grid gap-8 sm:grid-cols-2 lg:max-w-4xl">
+            <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:max-w-4xl">
               {brand.palette.map((colour) => (
-                <li key={colour.hex} className="border-line reveal border">
+                <li
+                  key={colour.hex}
+                  className="border-line overflow-hidden rounded-lg border"
+                >
                   {/*
                     The swatch labels itself in the colour it must be legible
                     against: reversed ink on navy, brand navy on gold. Both
@@ -195,22 +193,21 @@ export default async function BrandPage({
                     the swatch demonstrates the rule as well as stating it.
                   */}
                   <div
-                    className="px-7 py-12"
+                    className="px-6 py-12"
                     style={{
                       backgroundColor: colour.hex,
                       color:
                         colour.hex === gold.hex ? navy.hex : brand.reversedInk,
                     }}
                   >
-                    <p className="label-sm">{colour.name}</p>
-                    <p className="value mt-3 text-xl uppercase">{colour.hex}</p>
+                    <p className="text-[0.9375rem] font-semibold">
+                      {colour.name}
+                    </p>
+                    <p className="mt-2 text-xl font-semibold uppercase">
+                      {colour.hex}
+                    </p>
                   </div>
-                  {/*
-                    Zinc, not chalk, because this band is chalk since kraft was
-                    retired. A chalk caption on a chalk ground would dissolve
-                    into it and the swatch card would lose its footer.
-                  */}
-                  <p className="bg-zinc border-line text-steel border-t px-7 py-5 text-[0.9375rem] leading-relaxed">
+                  <p className="border-line text-steel border-t bg-white px-6 py-5 text-[0.9375rem] leading-relaxed">
                     {colour.role}
                   </p>
                 </li>
@@ -223,19 +220,14 @@ export default async function BrandPage({
       {/* ---------------------------------------------------------------
           THE FACTUAL STORY
           --------------------------------------------------------------- */}
-      <section className="bg-zinc">
+      <section className="bg-white">
         <Container>
           <Band>
-            <SectionLabel>What is established</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              The facts about this brand.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              {brand.name} is a licensed and insured, veteran owned electrical
-              contractor operating in {brand.city}, {brand.state}. It serves
-              residential and light commercial customers. That is the whole of
-              what is established, and nothing beyond it is claimed here.
-            </p>
+            <SectionHeading
+              eyebrow="What is established"
+              title="The facts about this brand."
+              lead={`${brand.name} is a licensed and insured, veteran owned electrical contractor operating in ${brand.city}, ${brand.state}. It serves residential and light commercial customers. That is the whole of what is established, and nothing beyond it is claimed here.`}
+            />
             {/*
               Every item is something the brand can evidence on request. No
               superlatives, no counts, no performance claims, and nothing about
@@ -245,7 +237,7 @@ export default async function BrandPage({
               {brand.attributes.map((attribute) => (
                 <li
                   key={attribute}
-                  className="border-line text-graphite border-b py-5 text-[1.0625rem]"
+                  className="border-line text-graphite border-b py-4"
                 >
                   {attribute}
                 </li>
@@ -256,47 +248,33 @@ export default async function BrandPage({
       </section>
 
       {/* ---------------------------------------------------------------
-          SERVICE SCHEDULE
+          SERVICE CATEGORIES
           --------------------------------------------------------------- */}
-      <section className="bg-chalk">
-        <Container wide>
+      <section className="bg-mist">
+        <Container>
           <Band>
-            <SectionLabel>Services offered</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              The categories of work the business does.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              Listed so you can see what kind of trade business this is. For
-              scope, coverage, and anything resembling a quote, go to the
-              brand&apos;s own site. Craftline does not take service calls and
-              does not publish service pages.
-            </p>
+            <SectionHeading
+              eyebrow="Services offered"
+              title="The categories of work the business does."
+              lead="Listed so you can see what kind of trade business this is. For scope, coverage, and anything resembling a quote, go to the brand's own site. Craftline does not take service calls and does not publish service pages."
+            />
 
             {/*
-              A schedule: numbered rows, mono, ruled. That is what a service
-              list in this trade actually looks like on a document, and the
-              numbering is a row index rather than a ranking.
-
               Plain text, deliberately not links. Linking each category to the
               operating brand's matching service page would build a service
               keyword surface on this domain pointing at that one, which is the
               exact competition this property is built to avoid.
             */}
-            <ol className="border-line mt-14 grid border-t sm:grid-cols-2">
-              {brand.services.map((service, index) => (
+            <ul className="border-line mt-12 grid rounded-lg border bg-white sm:grid-cols-2">
+              {brand.services.map((service) => (
                 <li
                   key={service}
-                  className="border-line flex items-baseline gap-5 border-b py-4"
+                  className="border-line text-graphite border-b px-6 py-4 last:border-b-0 sm:[&:nth-last-child(2)]:border-b-0"
                 >
-                  <span className="label-sm text-datum shrink-0">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-graphite text-[1.0625rem]">
-                    {service}
-                  </span>
+                  {service}
                 </li>
               ))}
-            </ol>
+            </ul>
           </Band>
         </Container>
       </section>
@@ -304,41 +282,38 @@ export default async function BrandPage({
       {/* ---------------------------------------------------------------
           PROMINENT OUTBOUND LINK
           --------------------------------------------------------------- */}
-      <section className="bg-graphite text-zinc">
+      <section className="bg-white">
         <Container>
           <Band>
-            <SectionLabel>Visit the brand</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              {brand.name} publishes its own site.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              Service details, coverage, pricing, and contact for electrical
-              work in {brand.city} live there, and that site is the authority on
-              all of it. If you are looking for an electrician rather than for{" "}
-              {COMPANY.name}, this is the link you want.
-            </p>
-            <div className="mt-12 flex flex-col gap-3 sm:flex-row">
-              <Cta href={brand.url} external>
-                {domain}
-                <ArrowUpRight aria-hidden="true" className="ml-2 h-4 w-4" />
-                <span className="sr-only">(opens in a new tab)</span>
-              </Cta>
-              <Cta href="/franchising" variant="secondary">
-                Franchise information
-              </Cta>
-            </div>
-            <div className="mt-10">
-              <Link
-                href="/brands"
-                className="text-datum tap-44 inline-flex min-h-11 items-center text-[0.9375rem] font-semibold hover:underline"
-              >
-                All brands
-              </Link>
-            </div>
+            <Card className="p-8 sm:p-12">
+              <div className="max-w-2xl">
+                <h2 className="h2">{brand.name} publishes its own site.</h2>
+                <p className="lead mt-4">
+                  Service details, coverage, pricing, and contact for electrical
+                  work in {brand.city} live there, and that site is the
+                  authority on all of it. If you are looking for an electrician
+                  rather than for {COMPANY.name}, this is the link you want.
+                </p>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                  <Cta href={brand.url} external>
+                    {domain}
+                    <ArrowUpRight aria-hidden="true" className="ml-2 h-4 w-4" />
+                    <span className="sr-only">(opens in a new tab)</span>
+                  </Cta>
+                  <Cta href="/franchising" variant="secondary">
+                    How franchising works
+                  </Cta>
+                </div>
+                <p className="mt-8">
+                  <Link href="/brands" className="link tap-44 font-semibold">
+                    All brands
+                  </Link>
+                </p>
+              </div>
+            </Card>
           </Band>
         </Container>
       </section>
-
 
       <JsonLd data={brandSchema} />
       <JsonLd

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
-import { Rule } from "@/components/section";
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -12,34 +11,27 @@ export const metadata: Metadata = {
 /**
  * 404.
  *
- * Deliberately does NOT render the title block. A title block is the signature
- * of a controlled document, and a 404 is the absence of one. Signing a page
- * that does not exist would make the device decorative, which is the one thing
- * it must never become.
- *
- * The footer still carries navigation, so someone landing here has a way out.
+ * Short, plain, and useful. The header and footer still carry navigation, so
+ * someone landing here has a way out without this page inventing one.
  */
 export default function NotFound() {
   return (
-    <section className="bg-graphite text-zinc">
+    <section className="bg-white">
       <Container>
-        <div className="py-28 sm:py-36 lg:py-44">
-          <div className="max-w-[22rem]">
-            <Rule />
-            <p className="label text-datum mt-4">Error 404</p>
-          </div>
-          <h1 className="display-1 mt-8 max-w-3xl text-balance">
-            No sheet at this address.
-          </h1>
-          <p className="body-lg text-steel mt-8 max-w-xl">
-            The address may be mistyped, or the page may have moved. Nothing has
-            gone wrong on your end.
-          </p>
-          <div className="mt-12 flex flex-col gap-3 sm:flex-row">
-            <Cta href="/">Return home</Cta>
-            <Cta href="/contact" variant="secondary">
-              Contact Craftline
-            </Cta>
+        <div className="py-20 sm:py-28 lg:py-32">
+          <div className="max-w-xl">
+            <p className="eyebrow">Error 404</p>
+            <h1 className="h1 mt-3">This page does not exist.</h1>
+            <p className="lead mt-5">
+              The address may be mistyped, or the page may have moved. Nothing
+              has gone wrong on your end.
+            </p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Cta href="/">Return home</Cta>
+              <Cta href="/contact" variant="secondary">
+                Contact Craftline
+              </Cta>
+            </div>
           </div>
         </div>
       </Container>

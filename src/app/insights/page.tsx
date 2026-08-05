@@ -3,9 +3,8 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
-import { MaterialPlate } from "@/components/material-plate";
 import { PageHeader } from "@/components/page-header";
-import { Band, SectionLabel } from "@/components/section";
+import { Band, Card, SectionHeading } from "@/components/section";
 import { formatPublished, ORDERED_INSIGHTS } from "@/data/insights";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -20,16 +19,14 @@ export const metadata: Metadata = pageMetadata({
 /**
  * Insights hub.
  *
- * A schedule of pieces, not a magazine. There are three posts, so there is no
- * pagination, no tag taxonomy, and no featured slot: building navigation for a
- * volume of content that does not exist is how a section starts looking
- * abandoned.
+ * Part of the franchising education section rather than a separate magazine.
+ * The franchising page explains the structure and the vocabulary; these are the
+ * longer pieces behind it, and both directions link to each other so a reader
+ * who starts in either place can find the rest.
  *
- * Chalk ground, because this is a reading surface and chalk is the lightest of
- * the two light grounds. Kraft, the warm tan that used to carry this band, was
- * retired with the brand colours: it could not hold any accent at AA, and a
- * pure red and a cyan leaning blue on warm tan is a worse pairing than the
- * copper it was chosen for. See globals.css.
+ * There are three posts, so there is no pagination, no tag taxonomy, and no
+ * featured slot. Building navigation for a volume of content that does not
+ * exist is how a section starts looking abandoned.
  *
  * No author bylines anywhere in this section. The founder's name is never
  * rendered on this property, and corporate authorship is also the truthful
@@ -41,23 +38,21 @@ export default function InsightsPage() {
       <PageHeader
         label="Insights"
         title="How trade service businesses and franchise systems actually work."
-        lead="Category writing for people evaluating this kind of business. No statistics anyone cannot source, no figures about what an operator might earn, and nothing here is an offer."
+        lead="Longer guides that sit behind the franchising section. No statistics anyone cannot source, no figures about what an operator might earn, and nothing here is an offer."
       />
 
-      <section className="bg-chalk">
+      <section className="bg-white">
         <Container>
           <Band>
-            {/*
-              A ruled schedule. Each row is date, category, title, summary,
-              which is the register a document index uses rather than a grid of
-              cards with equal visual weight.
-            */}
-            <ol className="border-line border-t">
+            <ul className="grid gap-5">
               {ORDERED_INSIGHTS.map((insight) => (
-                <li key={insight.slug} className="border-line border-b">
-                  <article className="reveal grid gap-5 py-10 lg:grid-cols-[minmax(0,14rem)_1fr] lg:gap-12">
-                    <div>
-                      <p className="label-sm text-datum">{insight.eyebrow}</p>
+                <Card as="li" key={insight.slug} className="p-0">
+                  <Link
+                    href={`/insights/${insight.slug}`}
+                    className="block h-full rounded-lg p-6 sm:p-7"
+                  >
+                    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                      <p className="eyebrow">{insight.eyebrow}</p>
                       {/*
                         A real date, hardcoded in the post data. It is the one
                         piece of metadata a reader can use to judge whether a
@@ -65,67 +60,44 @@ export default function InsightsPage() {
                       */}
                       <time
                         dateTime={insight.published}
-                        className="value text-steel mt-3 block"
+                        className="text-steel text-[0.8125rem]"
                       >
                         {formatPublished(insight.published)}
                       </time>
                     </div>
-
-                    <div>
-                      <h2 className="display-3 max-w-3xl">
-                        <Link
-                          href={`/insights/${insight.slug}`}
-                          className="hover:text-datum tap-44 transition-colors"
-                        >
-                          {insight.title}
-                        </Link>
-                      </h2>
-                      <p className="text-graphite mt-5 max-w-2xl leading-relaxed">
-                        {insight.description}
-                      </p>
-                      <Link
-                        href={`/insights/${insight.slug}`}
-                        className="text-datum tap-44 mt-6 inline-flex min-h-11 items-center text-[0.9375rem] font-semibold hover:underline"
-                      >
-                        Read this
-                        <span className="sr-only">: {insight.title}</span>
-                      </Link>
-                    </div>
-                  </article>
-                </li>
+                    <h2 className="h3 mt-3 max-w-3xl">{insight.title}</h2>
+                    <p className="text-steel mt-3 max-w-3xl leading-relaxed">
+                      {insight.description}
+                    </p>
+                    <p className="text-datum mt-4 text-[0.9375rem] font-semibold">
+                      Read this
+                      <span className="sr-only">: {insight.title}</span>
+                    </p>
+                  </Link>
+                </Card>
               ))}
-            </ol>
+            </ul>
           </Band>
         </Container>
       </section>
 
-      {/* ---------------------------------------------------------------
-          WHY THIS SECTION EXISTS
-          --------------------------------------------------------------- */}
-      <section className="bg-graphite text-zinc relative isolate overflow-hidden">
-        <MaterialPlate id="insights-texture" intensity="quiet" />
+      <section className="bg-mist">
         <Container>
-          <Band className="relative">
-            <SectionLabel>Why this section exists</SectionLabel>
-            <h2 className="display-2 mt-8 max-w-3xl text-balance">
-              Information, published before there is anything to sell.
-            </h2>
-            <p className="body-lg text-steel mt-8 max-w-2xl">
-              Craftline is developing its franchise programme and no Franchise
-              Disclosure Document has been issued. Until one is, there is
-              nothing to offer and no terms to discuss. What can be done
-              honestly in the meantime is to set out how this kind of business
-              works, so that anyone who eventually reads a real disclosure
-              document arrives already understanding the structure and can tell
-              a good one from a bad one.
-            </p>
-            <div className="mt-12">
-              <Cta href="/franchising">Franchise information</Cta>
+          <Band>
+            <SectionHeading
+              eyebrow="Why this section exists"
+              title="Information, published before there is anything to sell."
+              lead="Craftline is developing its franchise programme and no Franchise Disclosure Document has been issued. Until one is, there is nothing to offer and no terms to discuss. What can be done honestly in the meantime is to set out how this kind of business works, so that anyone who eventually reads a real disclosure document arrives already understanding the structure and can tell a good one from a bad one."
+            />
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Cta href="/franchising">How franchising works</Cta>
+              <Cta href="/about" variant="secondary">
+                About the company
+              </Cta>
             </div>
           </Band>
         </Container>
       </section>
-
 
       <JsonLd
         data={breadcrumbSchema([{ name: "Insights", path: "/insights" }])}

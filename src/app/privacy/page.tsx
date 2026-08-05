@@ -65,7 +65,7 @@ export default function PrivacyPage() {
         lead="What this site collects, which is very little, and what it does with it."
       />
 
-      <section className="bg-zinc">
+      <section className="bg-white">
         <Container>
           <div className="py-16 sm:py-20">
             <div className="max-w-2xl space-y-12">

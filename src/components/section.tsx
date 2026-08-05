@@ -11,9 +11,9 @@
  * optional small blue eyebrow, which is what a franchisor site does and what a
  * reader passes over without noticing.
  *
- * The retired pieces are kept at the bottom of this file as transitional
- * shims, restyled onto the new system, because only the home page has been
- * rebuilt so far. Delete each one as its last consumer is rewritten.
+ * The retired pieces are gone: no Rule, no SectionLabel, no Register. If you
+ * are looking for them, they were the drawing set vocabulary and every page
+ * that used them has been rebuilt.
  */
 
 /**
@@ -87,67 +87,5 @@ export function Card({
     >
       {children}
     </Tag>
-  );
-}
-
-/* ==========================================================================
-   TRANSITIONAL SHIMS. DELETE AS YOU GO.
-   ==========================================================================
-
-   Only the home page has been rebuilt. Every other route still imports these
-   three, and removing them now would break the build rather than surface a
-   design problem. So they stay, RESTYLED ONTO THE NEW SYSTEM rather than
-   preserved as they were: an un-rebuilt page picks up the plain sans and the
-   conventional spacing immediately, and is behind on layout only.
-
-   What changed inside them, and why it matters: Rule no longer animates on
-   scroll and is no longer blue, SectionLabel is no longer a mono chip, and
-   Register no longer numbers itself in a margin column. Those three devices
-   were the drawing set system. They are gone even where the page around them
-   has not been rewritten yet.
-
-   Remaining consumers: about, brands, brands/[slug], contact, franchising,
-   insights, insights/[slug], not-found.
-   ========================================================================== */
-
-/** Was the plotted rule. Now an ordinary hairline divider. */
-export function Rule({ className = "" }: { className?: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`bg-line block h-px w-full ${className}`}
-    />
-  );
-}
-
-/** Was a mono chip over an animated rule. Now the standard section eyebrow. */
-export function SectionLabel({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return <p className={`eyebrow ${className}`}>{children}</p>;
-}
-
-/**
- * Was the numbered margin register. Now a plain bordered row: the number is
- * gone entirely, because a decorative sequence number is exactly the kind of
- * element a reader stops and wonders about.
- */
-export function Register({
-  label,
-  children,
-}: {
-  index: number;
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="border-line grid gap-4 border-t pt-8 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-10">
-      <p className="text-steel text-[0.9375rem] font-semibold">{label}</p>
-      <div>{children}</div>
-    </div>
   );
 }
