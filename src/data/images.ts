@@ -29,10 +29,12 @@
  *   - Original SVG line illustration in the design system.
  *
  * Rules:
- *   - A slot with status "pending" has NO asset. Components render the designed
- *     treatment for it, which on this site is the schematic linework on
- *     graphite. Not a grey box, not a stock photo, and not an <img> pointing at
- *     a file that does not exist. A missing image is honest; a fake one is not.
+ *   - A slot with status "pending" has NO asset and RENDERS NOTHING. Not a grey
+ *     box, not a placeholder graphic, and not an <img> pointing at a file that
+ *     does not exist. The sections that would carry photography are designed to
+ *     stand without it: white ground, type, and the brand marks. A missing
+ *     image is honest, a fake one is not, and a section that only works with a
+ *     picture in it was not finished.
  *   - A slot only moves to "ready" in the same commit that adds the real file
  *     under /public and fills in `src`, `width`, `height`, `alt`, and `license`.
  *   - `license` is not optional bookkeeping. An unlicensed or unattributed
@@ -109,6 +111,27 @@ export interface ImageSlot {
   alt: string | null;
 }
 
+/**
+ * LICENCES OBTAINED AND NOT USED.
+ *
+ * Four royalty free photographs were licensed and briefly shipped, then removed
+ * on the owner's instruction. The files are deleted and the slots below are
+ * pending again. The entitlements are recorded here rather than dropped,
+ * because a licence that exists and is invisible gets bought a second time.
+ *
+ * All four are Unsplash Licence: free for commercial use, no attribution
+ * required, and no expiry. They can be re-downloaded from these URLs if
+ * photography is ever reinstated.
+ *
+ *   home-hero            Sergio Martins          https://unsplash.com/photos/HrPtg-HH6_k
+ *   about-system         Daniel Miksha           https://unsplash.com/photos/28ww1dSengI
+ *   franchising-material Vladyslav Cherkasenko   https://unsplash.com/photos/2jftyBtoqzQ
+ *   insights-texture     Annie Spratt            https://unsplash.com/photos/OZ2BNYfF_xM
+ *
+ * A fifth candidate was rejected before use because it was Unsplash+, a paid
+ * licence rather than the free one. It was never shipped and is not recorded as
+ * an entitlement.
+ */
 export const IMAGE_SLOTS: ImageSlot[] = [
   {
     id: "craftline-lockup",
@@ -247,20 +270,12 @@ export const IMAGE_SLOTS: ImageSlot[] = [
       "bare copper conductor detail low key",
     ],
     source: "stock",
-    /*
-      Unsplash Licence: free for commercial use, no permission needed, no
-      attribution required. The photographer is credited here anyway because
-      the manifest is the record of where every asset came from, and a credit
-      costs nothing. Verified not Unsplash+ before download: that is a paid
-      licence and one candidate was rejected for it.
-    */
-    license:
-      "Unsplash Licence (free, commercial use permitted). Sergio Martins, https://unsplash.com/photos/HrPtg-HH6_k",
-    status: "ready",
-    src: "/photography/panel-breakers.jpg",
-    width: 2000,
-    height: 1125,
-    alt: "Circuit breakers arranged in two rows inside a distribution panel.",
+    license: null,
+    status: "pending",
+    src: null,
+    width: null,
+    height: null,
+    alt: null,
   },
   {
     id: "about-system",
@@ -277,20 +292,12 @@ export const IMAGE_SLOTS: ImageSlot[] = [
       "engineering drawing paper texture flat lay",
     ],
     source: "stock",
-    /*
-      Unsplash Licence: free for commercial use, no permission needed, no
-      attribution required. The photographer is credited here anyway because
-      the manifest is the record of where every asset came from, and a credit
-      costs nothing. Verified not Unsplash+ before download: that is a paid
-      licence and one candidate was rejected for it.
-    */
-    license:
-      "Unsplash Licence (free, commercial use permitted). Daniel Miksha, https://unsplash.com/photos/28ww1dSengI",
-    status: "ready",
-    src: "/photography/drawing-detail.jpg",
-    width: 2000,
-    height: 1125,
-    alt: "A technical drawing showing radial linework and a grid.",
+    license: null,
+    status: "pending",
+    src: null,
+    width: null,
+    height: null,
+    alt: null,
   },
   {
     id: "franchising-material",
@@ -307,20 +314,12 @@ export const IMAGE_SLOTS: ImageSlot[] = [
       "machined metal surface texture detail",
     ],
     source: "stock",
-    /*
-      Unsplash Licence: free for commercial use, no permission needed, no
-      attribution required. The photographer is credited here anyway because
-      the manifest is the record of where every asset came from, and a credit
-      costs nothing. Verified not Unsplash+ before download: that is a paid
-      licence and one candidate was rejected for it.
-    */
-    license:
-      "Unsplash Licence (free, commercial use permitted). Vladyslav Cherkasenko, https://unsplash.com/photos/2jftyBtoqzQ",
-    status: "ready",
-    src: "/photography/brass-fittings.jpg",
-    width: 2000,
-    height: 1500,
-    alt: "Threaded brass pipe fittings.",
+    license: null,
+    status: "pending",
+    src: null,
+    width: null,
+    height: null,
+    alt: null,
   },
   {
     id: "insights-texture",
@@ -337,20 +336,12 @@ export const IMAGE_SLOTS: ImageSlot[] = [
       "bound technical manual page edges macro",
     ],
     source: "stock",
-    /*
-      Unsplash Licence: free for commercial use, no permission needed, no
-      attribution required. The photographer is credited here anyway because
-      the manifest is the record of where every asset came from, and a credit
-      costs nothing. Verified not Unsplash+ before download: that is a paid
-      licence and one candidate was rejected for it.
-    */
-    license:
-      "Unsplash Licence (free, commercial use permitted). Annie Spratt, https://unsplash.com/photos/OZ2BNYfF_xM",
-    status: "ready",
-    src: "/photography/paper-stock.jpg",
-    width: 2000,
-    height: 1500,
-    alt: "Overlapping sheets of plain white paper.",
+    license: null,
+    status: "pending",
+    src: null,
+    width: null,
+    height: null,
+    alt: null,
   },
 ];
 

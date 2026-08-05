@@ -3,7 +3,6 @@ import { BrandRow } from "@/components/brand-row";
 import { Container } from "@/components/container";
 import { Cta } from "@/components/cta";
 import { Band, Card, SectionHeading } from "@/components/section";
-import { SectionImage } from "@/components/section-image";
 import {
   BRANDS,
   CAPABILITIES,
@@ -50,9 +49,8 @@ export default function HomePage() {
           --------------------------------------------------------------- */}
       <section className="bg-white">
         <Container>
-          <div className="py-16 sm:py-20 lg:py-24">
-            <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-16">
-              <div>
+          <div className="py-16 sm:py-20 lg:py-28">
+            <div className="max-w-3xl">
               <h1 className="h1">
                 A franchise development company building skilled trade service
                 brands.
@@ -69,14 +67,6 @@ export default function HomePage() {
                   About the company
                 </Cta>
               </div>
-              </div>
-
-              <SectionImage
-                slot="home-hero"
-                priority
-                className="h-64 w-full sm:h-80 lg:h-[26rem]"
-                sizes="(min-width: 1024px) 45vw, 100vw"
-              />
             </div>
           </div>
         </Container>

@@ -7,7 +7,6 @@ import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { CtaBand, CtaPrompt } from "@/components/cta-band";
 import { Band, Card, SectionHeading } from "@/components/section";
-import { SectionImage } from "@/components/section-image";
 import { formatPublished, ORDERED_INSIGHTS } from "@/data/insights";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -133,12 +132,6 @@ export default function InsightsPage() {
                 About the company
               </Cta>
             </div>
-
-            <SectionImage
-              slot="insights-texture"
-              className="mt-12 h-48 w-full sm:h-64"
-              sizes="100vw"
-            />
           </Band>
         </Container>
       </section>

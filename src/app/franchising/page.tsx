@@ -6,7 +6,6 @@ import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { CtaPrompt } from "@/components/cta-band";
 import { Band, Card, SectionHeading } from "@/components/section";
-import { SectionImage } from "@/components/section-image";
 import {
   CAPABILITIES,
   FRANCHISE_DISCLAIMER,
@@ -260,12 +259,6 @@ export default function FranchisingPage() {
               eyebrow="What Craftline provides"
               title="What an operator would inherit."
               lead="Described qualitatively and deliberately so. Saying what support exists is permitted. Quantifying what it produces would be a financial performance representation, so no sentence here carries a number."
-            />
-
-            <SectionImage
-              slot="franchising-material"
-              className="mt-10 h-56 w-full sm:h-72"
-              sizes="100vw"
             />
 
             <ul className="mt-12 grid gap-5 sm:grid-cols-2">

@@ -5,7 +5,6 @@ import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { CtaBand, CtaPrompt } from "@/components/cta-band";
 import { Band, Card, SectionHeading } from "@/components/section";
-import { SectionImage } from "@/components/section-image";
 import {
   BRANDS,
   CAPABILITIES,
@@ -151,12 +150,6 @@ export default function AboutPage() {
               eyebrow="The model"
               title="Four parts, and what each one does not do."
               lead="A capability list that only claims strengths is marketing. The limits below are what a serious operator is actually trying to work out, and stating them costs nothing for a company that means them."
-            />
-
-            <SectionImage
-              slot="about-system"
-              className="mt-10 h-56 w-full sm:h-72"
-              sizes="100vw"
             />
 
             <CtaPrompt
