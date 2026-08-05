@@ -41,7 +41,7 @@ export function SiteFooter() {
       <Container wide>
         <div className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
-            <Wordmark as="plain" />
+            <Wordmark as="plain" className="h-10 w-auto" />
             <p className="text-steel mt-4 max-w-xs text-[0.9375rem] leading-relaxed">
               {COMPANY.descriptor}
             </p>

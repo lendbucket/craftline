@@ -45,9 +45,16 @@ export const WEBSITE_ID = `${SITE_URL}/#website`;
 /**
  * The Craftline logo, as an absolute URL. Google will not resolve a relative
  * one, and an Organization without a logo forfeits the knowledge panel image
- * for no reason. Generated from the wordmark by scripts/brand-assets.mjs.
+ * for no reason.
+ *
+ * This points at the delivered lockup rather than the square app icon. The two
+ * are different assets for different jobs: the icon is the mark cut down to a
+ * tile that survives at 32 pixels, while Organization.logo is what appears
+ * beside the company name in a knowledge panel, where the full lockup is the
+ * recognisable thing and reads correctly at a wide aspect. It sits on white,
+ * which is what Google asks for and what the artwork requires anyway.
  */
-export const ORGANIZATION_LOGO = `${SITE_URL}/brand/craftline-icon-512.png`;
+export const ORGANIZATION_LOGO = `${SITE_URL}/brand/craftline-logo.png`;
 
 export function organizationSchema() {
   return {

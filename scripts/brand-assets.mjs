@@ -3,297 +3,234 @@
  * BRAND ASSET GENERATOR
  * =====================
  *
- * Renders the Craftline wordmark into the raster assets the site cannot express
- * as markup: the Open Graph card and the app icons.
+ * Produces the raster assets the site cannot express as markup, from the
+ * delivered Craftline artwork: the Open Graph card, the app icon set, the
+ * apple touch icon, and favicon.ico.
  *
  *   npm run brand-assets
  *
  * THIS IS NOT A BUILD STEP, AND MUST NOT BECOME ONE. It is run by hand and its
- * output is committed. Two reasons. It fetches the typeface over the network,
- * and a build that can fail because Google Fonts is slow is a worse build. And
- * these are brand assets: they should change when someone decides to change
- * them, in a reviewable commit, not silently on a deploy.
+ * output is committed. These are brand assets: they should change when someone
+ * decides to change them, in a reviewable commit, rather than silently on a
+ * deploy.
  *
- * WHAT IT DRAWS, AND WHY IT IS NOT AN EMBLEM
- * ------------------------------------------
- * Craftline has no designer identity yet, and src/data/images.ts has said from
- * the start that inventing an emblem now would create a mark the real identity
- * later has to fight. That reasoning still holds, so nothing here is invented.
- * Every asset is built from the wordmark that already ships in
- * src/components/wordmark.tsx: CRAFTLINE in tracked Archivo caps, one bronze
- * rule, BRANDS set lighter. The icon is the same treatment reduced to the
- * letterform and the rule, which is exactly what the app-icon slot specified.
+ * WHAT CHANGED WHEN THE REAL MARK ARRIVED
+ * ---------------------------------------
+ * Every asset used to be drawn here from type, because Craftline had no
+ * delivered identity and inventing an emblem would have created a mark the real
+ * identity later had to fight. That is over. The two files below are the
+ * delivered artwork and everything is now composed from them. Nothing is drawn,
+ * nothing is recoloured, and no typeface is fetched, which also means this
+ * script no longer touches the network and cannot fail because a font CDN is
+ * slow or unreachable.
  *
- * When a real identity arrives, rerun this file with the new artwork and the
- * committed assets are replaced. Nothing else in the codebase needs to change,
- * because every consumer reads the paths from src/data/images.ts.
+ * NO ALPHA, AND THAT IS INTENDED. The delivered PNGs are RGB with no
+ * transparency, because the mark is only approved on white. Every surface that
+ * carries it is white by rule, and every canvas composed here is filled white
+ * before the artwork is placed, so the output matches the approval condition
+ * rather than working around it.
  *
- * COLOURS ARE MIRRORED FROM globals.css, WHICH IS A COMPROMISE
- * ------------------------------------------------------------
- * These are raster files. They cannot read a CSS custom property, so the token
- * values are restated below with the token name beside each one. This is the
- * one place in the codebase where a Craftline hex appears outside globals.css,
- * and it is confined to a generator that produces static files rather than to a
- * component. If a token changes, change it here and rerun.
+ * NOTHING IS EVER UPSCALED. Each target asserts that it fits inside the source
+ * before rendering, and the script fails loudly rather than producing a soft
+ * enlargement of somebody's logo. See assertNoUpscale.
  */
 
 import { Buffer } from "node:buffer";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 // "next/og.js", not "next/og". The package exports map resolves the bare
 // specifier only through the bundler; plain node needs the file.
 import { ImageResponse } from "next/og.js";
 
 const ROOT = process.cwd();
-const OUT_DIR = join(ROOT, "public", "brand");
+const BRAND_DIR = join(ROOT, "public", "brand");
+const PUBLIC_DIR = join(ROOT, "public");
 
-/** Mirrored from src/app/globals.css. Token name in the comment. */
-const GRAPHITE = "#14191c"; // --color-graphite
-const ZINC = "#e7e9e8"; // --color-zinc
-const STEEL_ON_DARK = "#9aa4ac"; // --color-steel as pinned on graphite
-const COPPER_BRIGHT = "#d08a5c"; // --color-copper-bright, AA on graphite
+/** The delivered artwork. Sources of truth; never written to by this script. */
+const LOGO = join(BRAND_DIR, "craftline-logo.png");
+const ICON = join(BRAND_DIR, "craftline-icon.png");
+
+/** Reads a PNG's intrinsic size straight out of the IHDR chunk. */
+function pngSize(buffer) {
+  const signature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  if (!buffer.subarray(0, 8).equals(signature)) {
+    throw new Error("Not a PNG");
+  }
+  return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
+}
+
+const dataUri = (buffer) => `data:image/png;base64,${buffer.toString("base64")}`;
 
 /**
- * Pulls a TTF Google serves.
+ * Fits a source box inside a target box without ever growing it.
  *
- * IBM Plex Mono is the label face, and the rendered wordmark in
- * src/components/wordmark.tsx is set in it. Generating these assets in the same
- * face means the browser tab, a shared link, and the site header all carry the
- * same mark rather than three near misses.
- *
- * The CSS endpoint is asked for TTF by sending an old desktop user agent. Sent
- * a modern one, Google returns WOFF2, which satori cannot decompress.
+ * Returns the rendered size. Throws if the fit would require scaling up, which
+ * is the whole point: a favicon set quietly upscaled from a small source looks
+ * fine in a code review and terrible in a browser tab.
  */
-async function loadFont(family, weight) {
-  const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&display=swap`;
-  const cssResponse = await fetch(cssUrl, {
-    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" },
-  });
-  if (!cssResponse.ok) {
+function assertNoUpscale(label, source, boxWidth, boxHeight) {
+  const scale = Math.min(boxWidth / source.width, boxHeight / source.height);
+  if (scale > 1) {
     throw new Error(
-      `Google Fonts returned ${cssResponse.status} for ${family} ${weight}. ` +
-        "This script needs network access. Nothing was written.",
+      `${label}: target ${Math.round(boxWidth)}x${Math.round(boxHeight)} exceeds ` +
+        `source ${source.width}x${source.height}. Refusing to upscale the ` +
+        `delivered artwork. Supply a larger source or reduce the target.`,
     );
   }
-  const css = await cssResponse.text();
-  const match = css.match(/src:\s*url\((https:[^)]+\.ttf)\)/);
-  if (!match) {
-    throw new Error(
-      `No TTF source found in the ${family} ${weight} stylesheet. Google may have ` +
-        "changed its response format. Nothing was written.",
-    );
-  }
-  const fontResponse = await fetch(match[1]);
-  if (!fontResponse.ok) {
-    throw new Error(`${family} ${weight} TTF returned ${fontResponse.status}.`);
-  }
-  return fontResponse.arrayBuffer();
+  return {
+    width: Math.round(source.width * scale),
+    height: Math.round(source.height * scale),
+  };
 }
 
-/** satori takes plain element objects, so no JSX and no build step for this file. */
-function el(type, props, ...children) {
-  return { type, props: { ...props, children: children.flat() } };
-}
-
-async function render(node, { width, height, fonts }) {
-  const response = new ImageResponse(node, { width, height, fonts });
-  return Buffer.from(await response.arrayBuffer());
+async function render(element, width, height, outPath) {
+  const response = new ImageResponse(element, { width, height });
+  const buffer = Buffer.from(await response.arrayBuffer());
+  await writeFile(outPath, buffer);
+  return buffer;
 }
 
 /**
- * The Open Graph card.
+ * Wraps a PNG in a single entry ICO container.
  *
- * Per the og-default slot: the wordmark set in type on a charcoal field with
- * generous margin, and deliberately no photograph, no emblem, and no tagline.
- * It is the horizontal wordmark lockup from src/components/wordmark.tsx scaled
- * up and centred, so a shared link and the site header carry the same mark.
+ * Every browser still in use reads PNG data inside an ICO, so there is no need
+ * to encode a BMP. The 16 byte directory entry stores each dimension in one
+ * byte, where 0 means 256; the size used here is well under that.
  */
-function ogCard() {
-  return el(
-    "div",
-    {
-      style: {
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        background: GRAPHITE,
-        alignItems: "center",
-        justifyContent: "center",
-        // Generous margin is the whole composition. Nothing fills this space.
-        padding: "0 140px",
-      },
-    },
-    el(
-      "div",
-      { style: { display: "flex", alignItems: "center", gap: 36 } },
-      el(
-        "div",
-        {
-          style: {
-            display: "flex",
-            fontFamily: "IBM Plex Mono",
-            fontWeight: 500,
-            fontSize: 88,
-            letterSpacing: "0.12em",
-            color: ZINC,
-            // Tracking adds space after the final letter too. Pulling it back
-            // keeps the rule optically centred between the two words.
-            marginRight: -11,
-          },
-        },
-        "CRAFTLINE",
-      ),
-      // The copper rule. The one accent, and the only non type element here.
-      el("div", {
-        style: { display: "flex", width: 52, height: 2, background: COPPER_BRIGHT },
-      }),
-      el(
-        "div",
-        {
-          style: {
-            display: "flex",
-            fontFamily: "IBM Plex Mono",
-            fontWeight: 400,
-            fontSize: 40,
-            letterSpacing: "0.1em",
-            color: STEEL_ON_DARK,
-            marginRight: -4,
-          },
-        },
-        "BRANDS",
-      ),
-    ),
-  );
-}
-
-/**
- * The app icon.
- *
- * The wordmark reduced to what survives at 16 pixels: the C, and the bronze
- * rule as a bar along the foot of the tile. Geometry is expressed as a fraction
- * of the tile so the same description renders correctly at 512 and at 32
- * instead of being downscaled, which would thin the rule away to nothing.
- */
-function icon(size) {
-  return el(
-    "div",
-    {
-      style: {
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        background: GRAPHITE,
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-      },
-    },
-    el(
-      "div",
-      {
-        style: {
-          display: "flex",
-          fontFamily: "IBM Plex Mono",
-          fontWeight: 500,
-          // Set large on purpose. At 16 and 32 pixels a favicon is competing
-          // with a row of other tabs, so the letterform has to reach the edges
-          // of the tile to be identifiable at a glance. Anything smaller reads
-          // as a dark square with something in the middle.
-          fontSize: size * 0.72,
-          color: ZINC,
-          // Lifted off centre so the optical middle accounts for the foot bar.
-          marginTop: -size * 0.04,
-        },
-      },
-      "C",
-    ),
-    el("div", {
-      style: {
-        display: "flex",
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        width: `${size}px`,
-        height: `${Math.max(2, Math.round(size * 0.1))}px`,
-        background: COPPER_BRIGHT,
-      },
-    }),
-  );
-}
-
-/**
- * Wraps a PNG in an ICO container.
- *
- * /favicon.ico is still requested unprompted by crawlers, feed readers, and
- * link unfurlers that never look at a <link rel="icon">, and answering it with
- * a 404 on every one of those requests is noise for no reason. Since Vista an
- * ICO entry may hold a PNG verbatim, so this is a 22 byte header in front of
- * bytes sharp already produced rather than a second encoder.
- */
-function pngToIco(png, size) {
+function icoFromPng(png, size) {
   const header = Buffer.alloc(6);
   header.writeUInt16LE(0, 0); // reserved
-  header.writeUInt16LE(1, 2); // type 1 is icon
+  header.writeUInt16LE(1, 2); // type 1 = icon
   header.writeUInt16LE(1, 4); // one image
 
   const entry = Buffer.alloc(16);
-  // 0 means 256 in this field. Nothing here is that large, but be correct.
-  entry.writeUInt8(size >= 256 ? 0 : size, 0);
-  entry.writeUInt8(size >= 256 ? 0 : size, 1);
-  entry.writeUInt8(0, 2); // palette size, 0 for truecolour
+  entry.writeUInt8(size === 256 ? 0 : size, 0); // width
+  entry.writeUInt8(size === 256 ? 0 : size, 1); // height
+  entry.writeUInt8(0, 2); // palette size, 0 for non palette
   entry.writeUInt8(0, 3); // reserved
   entry.writeUInt16LE(1, 4); // colour planes
   entry.writeUInt16LE(32, 6); // bits per pixel
-  entry.writeUInt32LE(png.length, 8);
-  entry.writeUInt32LE(22, 12); // offset: 6 header + 16 entry
+  entry.writeUInt32LE(png.length, 8); // data size
+  entry.writeUInt32LE(header.length + entry.length, 12); // data offset
 
   return Buffer.concat([header, entry, png]);
 }
 
+/**
+ * A square icon tile.
+ *
+ * The delivered icon is not square, so it is centred on a white square rather
+ * than cropped. Cropping a mark to fit a tile is a decision for whoever drew
+ * it, not for a build script.
+ */
+function iconTile(src, size, fitted) {
+  return {
+    type: "div",
+    props: {
+      style: {
+        width: size,
+        height: size,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#ffffff",
+      },
+      children: {
+        type: "img",
+        props: { src, width: fitted.width, height: fitted.height },
+      },
+    },
+  };
+}
+
 async function main() {
-  console.log("brand-assets: fetching IBM Plex Mono from Google Fonts ...");
-  const [regular, medium] = await Promise.all([
-    loadFont("IBM+Plex+Mono", 400),
-    loadFont("IBM+Plex+Mono", 500),
-  ]);
-  const fonts = [
-    { name: "IBM Plex Mono", data: regular, weight: 400, style: "normal" },
-    { name: "IBM Plex Mono", data: medium, weight: 500, style: "normal" },
+  await mkdir(BRAND_DIR, { recursive: true });
+
+  const [logoBuf, iconBuf] = await Promise.all([readFile(LOGO), readFile(ICON)]);
+  const logoSize = pngSize(logoBuf);
+  const iconSize = pngSize(iconBuf);
+  const logoUri = dataUri(logoBuf);
+  const iconUri = dataUri(iconBuf);
+
+  console.log(`source logo  ${logoSize.width}x${logoSize.height}`);
+  console.log(`source icon  ${iconSize.width}x${iconSize.height}`);
+  console.log("");
+
+  /*
+    OPEN GRAPH CARD, 1200x630.
+
+    The mark on white with generous margin, and nothing else. No tagline and no
+    strapline: this card is the fallback for every page on the site, so any
+    words on it would be wrong on most of them. The mark is held to 58% of the
+    card width, which stays legible in a feed thumbnail without filling the
+    frame edge to edge.
+  */
+  const ogInner = assertNoUpscale("og-default", logoSize, 1200 * 0.58, 630 * 0.6);
+  await render(
+    {
+      type: "div",
+      props: {
+        style: {
+          width: 1200,
+          height: 630,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#ffffff",
+        },
+        children: {
+          type: "img",
+          props: { src: logoUri, width: ogInner.width, height: ogInner.height },
+        },
+      },
+    },
+    1200,
+    630,
+    join(BRAND_DIR, "craftline-og-default.png"),
+  );
+  console.log(
+    `  craftline-og-default.png    1200x630    mark at ${ogInner.width}x${ogInner.height}`,
+  );
+
+  /*
+    ICON SET. 512 for home screens and app switchers, 180 for the apple touch
+    icon, 32 for the browser tab, and favicon.ico for the many clients that
+    request it without reading a single link tag.
+
+    The margin is deliberately small. These are viewed at sizes where the mark
+    has very few pixels to work with, and padding is the first thing to give up.
+  */
+  const MARGIN = 0.94;
+  const icons = [
+    { size: 512, file: "craftline-icon-512.png" },
+    { size: 180, file: "craftline-icon-180.png" },
+    { size: 32, file: "craftline-icon-32.png" },
   ];
 
-  await mkdir(OUT_DIR, { recursive: true });
-
-  const written = [];
-
-  const og = await render(ogCard(), { width: 1200, height: 630, fonts });
-  await writeFile(join(OUT_DIR, "craftline-og-default.png"), og);
-  written.push(["public/brand/craftline-og-default.png", og.length]);
-
-  // 512 doubles as the Organization schema logo and the home screen icon.
-  const icon512 = await render(icon(512), { width: 512, height: 512, fonts });
-  await writeFile(join(OUT_DIR, "craftline-icon-512.png"), icon512);
-  written.push(["public/brand/craftline-icon-512.png", icon512.length]);
-
-  // Rendered at its own size, not downscaled, so the foot bar stays crisp.
-  const icon32 = await render(icon(32), { width: 32, height: 32, fonts });
-  await writeFile(join(OUT_DIR, "craftline-icon-32.png"), icon32);
-  written.push(["public/brand/craftline-icon-32.png", icon32.length]);
-
-  const ico = pngToIco(icon32, 32);
-  await writeFile(join(ROOT, "public", "favicon.ico"), ico);
-  written.push(["public/favicon.ico", ico.length]);
-
-  console.log("brand-assets: wrote");
-  for (const [path, bytes] of written) {
-    console.log(`  ${path}  ${bytes} bytes`);
+  let png32 = null;
+  for (const { size, file } of icons) {
+    const fitted = assertNoUpscale(file, iconSize, size * MARGIN, size * MARGIN);
+    const buffer = await render(
+      iconTile(iconUri, size, fitted),
+      size,
+      size,
+      join(BRAND_DIR, file),
+    );
+    if (size === 32) png32 = buffer;
+    console.log(
+      `  ${file.padEnd(27)} ${`${size}x${size}`.padEnd(11)} mark at ${fitted.width}x${fitted.height}`,
+    );
   }
+
+  await writeFile(join(PUBLIC_DIR, "favicon.ico"), icoFromPng(png32, 32));
   console.log(
-    "\nbrand-assets: these are committed artefacts. Commit them with the change " +
-      "that made you regenerate them.",
+    "  favicon.ico                 32x32       PNG inside an ICO container",
   );
+
+  console.log("\nbrand-assets: done. Commit the output.");
 }
 
 main().catch((error) => {
-  console.error(`brand-assets: ${error.message}`);
+  console.error(`\nbrand-assets FAILED: ${error.message}`);
   process.exit(1);
 });

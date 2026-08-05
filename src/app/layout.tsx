@@ -92,9 +92,10 @@ export const metadata: Metadata = {
    * every manifest path resolves under /public. Keeping the files in /public
    * keeps the manifest load bearing instead of decorative.
    *
-   * The SVG-first ordering the file convention would give us is not available
-   * for a generated raster icon, so the set is: a 32px PNG for the tab, a
-   * 512px PNG for home screens and app switchers, and favicon.ico at the root
+   * All of these are composed from the delivered mark by
+   * scripts/brand-assets.mjs. The set is: a 32px PNG for the tab, a 512px PNG
+   * for home screens and app switchers, a 180px apple touch icon because iOS
+   * downsamples a 512 badly when it is asked to, and favicon.ico at the root
    * for the many clients that request it without reading these tags at all.
    */
   icons: {
@@ -104,7 +105,7 @@ export const metadata: Metadata = {
     ],
     shortcut: "/favicon.ico",
     apple: [
-      { url: getImageSlot("app-icon").src as string, sizes: "512x512", type: "image/png" },
+      { url: "/brand/craftline-icon-180.png", sizes: "180x180", type: "image/png" },
     ],
   },
   robots: {
