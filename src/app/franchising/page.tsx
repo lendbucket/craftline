@@ -4,7 +4,7 @@ import { FranchiseForm } from "@/components/form/franchise-form";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { CtaPrompt } from "@/components/cta-band";
-import { Cell, HairlineGrid } from "@/components/system/grid";
+import { NumberedGrid, NumberedStatements } from "@/components/system/grid";
 import {
   RuledItem,
   RuledRow,
@@ -114,6 +114,7 @@ export default function FranchisingPage() {
           <div>
             <SectionHead
               eyebrow="The basics"
+              tone="signal"
               title="What a franchise actually is."
               compact
             />
@@ -183,6 +184,7 @@ export default function FranchisingPage() {
       <Section id="vocabulary" ground="mist" edge>
         <SectionHead
           eyebrow="The vocabulary"
+          tone="datum"
           title="The words you are expected to already know."
           aside="Every term below describes how franchising works generally. Where a term normally carries a number, the number belongs in a disclosure document rather than on a website, so this explains the mechanism instead."
         />
@@ -209,6 +211,7 @@ export default function FranchisingPage() {
       <Section id="fdd" ground="white">
         <SectionHead
           eyebrow="Disclosure"
+          tone="signal"
           title="What a Franchise Disclosure Document is, and why it exists."
           lead="This is the single most important document in the decision, and most people evaluating a franchise have never seen one. Craftline has not issued one, so there is nothing to offer yet. Understanding it now is what makes the eventual reading useful."
         />
@@ -239,6 +242,7 @@ export default function FranchisingPage() {
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:gap-20">
           <SectionHead
             eyebrow="Due diligence"
+            tone="datum"
             title="How to check any franchise system, including this one."
             lead="This advice is against a franchisor's short term interest and it is here anyway. A system does not benefit from operators who joined without understanding what they joined."
           />
@@ -256,20 +260,12 @@ export default function FranchisingPage() {
       <Section id="support" ground="white">
         <SectionHead
           eyebrow="What Craftline provides"
+          tone="signal"
           title="What an operator would inherit."
           aside="Described qualitatively and deliberately so. Saying what support exists is permitted. Quantifying what it produces would be a financial performance representation, so no sentence here carries a number."
         />
 
-        <HairlineGrid as="ul" cols={2} className="mt-14">
-          {CAPABILITIES.map((capability) => (
-            <Cell as="li" edge key={capability.title}>
-              <h3 className="d3">{capability.title}</h3>
-              <p className="text-steel mt-4 leading-relaxed">
-                {capability.body}
-              </p>
-            </Cell>
-          ))}
-        </HairlineGrid>
+        <NumberedGrid items={CAPABILITIES} cols={2} ground="white" className="mt-16" />
 
         <CtaPrompt
           className="mt-14 max-w-3xl"
@@ -285,17 +281,17 @@ export default function FranchisingPage() {
       <Section id="operators" ground="mist" density="tight" edge>
         <SectionHead
           eyebrow="Who this is for"
+          tone="datum"
           title="What Craftline looks for in an operator."
           aside="Traits rather than qualifications. There is no experience requirement and no background requirement stated anywhere on this site, because a stated threshold is a claim about who will be accepted and no such claim can be made before disclosure."
         />
 
-        <HairlineGrid as="ul" cols={3} className="mt-12">
-          {OPERATOR_PROFILE.map((trait) => (
-            <Cell as="li" key={trait}>
-              <p className="text-graphite leading-relaxed">{trait}</p>
-            </Cell>
-          ))}
-        </HairlineGrid>
+        <NumberedStatements
+          items={OPERATOR_PROFILE}
+          cols={3}
+          ground="mist"
+          className="mt-14"
+        />
       </Section>
 
       {/* ---------------------------------------------------------------
@@ -306,6 +302,7 @@ export default function FranchisingPage() {
       <Section id="process" ground="white">
         <SectionHead
           eyebrow="The process"
+          tone="signal"
           title="From an inquiry to an opening."
           lead="Four steps, and the fourth one has not happened yet. No Franchise Disclosure Document has been issued and no date is being committed to."
         />
@@ -329,6 +326,7 @@ export default function FranchisingPage() {
       <Section id="faq" ground="mist" edge>
         <SectionHead
           eyebrow="Questions"
+          tone="datum"
           title="The questions a serious operator asks."
           aside="Including the two that cannot be answered yet, and why."
         />
@@ -336,7 +334,7 @@ export default function FranchisingPage() {
         <dl data-faq className="border-graphite mt-14 border-t-2">
           {FRANCHISE_FAQ.map((entry) => (
             <div key={entry.q} className="border-line border-b py-7">
-              <dt className="d3 max-w-[54ch]">{entry.q}</dt>
+              <dt className="d3-sentence max-w-[54ch]">{entry.q}</dt>
               <dd className="text-steel mt-4 max-w-[72ch] leading-relaxed">
                 {entry.a}
               </dd>
@@ -373,6 +371,7 @@ export default function FranchisingPage() {
           <div>
             <SectionHead
               eyebrow="Make an inquiry"
+              tone="signal"
               title="Start a conversation."
               lead="This is an inquiry, not an application. It asks for nothing sensitive, commits you to nothing, and is read by a person."
             />

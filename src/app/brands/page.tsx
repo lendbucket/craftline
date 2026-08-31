@@ -63,6 +63,7 @@ export default function BrandsPage() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
           <SectionHead
             eyebrow="Why only one"
+            tone="signal"
             title="A system is worth handing over only after it has been run."
             compact
           />
@@ -86,7 +87,7 @@ export default function BrandsPage() {
       </Section>
 
       <CtaBand
-        ground="white"
+
         title="Interested in operating one?"
         lead="Craftline is developing its franchise programme. There is nothing to offer yet, and a conversation now costs you nothing."
         secondaryHref="/about"

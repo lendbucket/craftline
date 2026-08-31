@@ -97,7 +97,12 @@ export default function AboutPage() {
       <Section ground="white">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-20">
           <div>
-            <SectionHead eyebrow="The company" title="What Craftline is." compact />
+            <SectionHead
+              eyebrow="The company"
+              tone="signal"
+              title="What Craftline is."
+              compact
+            />
             <div className="prose-body mt-8 max-w-[62ch] space-y-5">
               <p>
                 Craftline Brands is a holding company. It does not perform
@@ -131,9 +136,22 @@ export default function AboutPage() {
               A prospective operator is entitled to know which one holds what,
               and it is verifiable.
             </p>
+            {/*
+              The entity names take the two brand colours, which is the import's
+              treatment of this block. Red measures 5.93 on white and blue 6.32,
+              both AA for normal text. The colour marks that these are two
+              distinct legal persons rather than one company described twice,
+              which is the single thing this panel exists to say.
+            */}
             <RuledRows className="mt-7">
-              {LEGAL_ENTITIES.map((entity) => (
-                <RuledRow key={entity.name} term={entity.name}>
+              {LEGAL_ENTITIES.map((entity, index) => (
+                <RuledRow
+                  key={entity.name}
+                  term={entity.name}
+                  termClassName={
+                    "d3 " + (index % 2 === 0 ? "text-signal" : "text-datum")
+                  }
+                >
                   {entity.role}
                 </RuledRow>
               ))}
@@ -148,6 +166,7 @@ export default function AboutPage() {
       <Section ground="mist" edge>
         <SectionHead
           eyebrow="The model"
+          tone="datum"
           title="Four parts, and what each one does not do."
           aside="A capability list that only claims strengths is marketing. The limits below are what a serious operator is actually trying to work out, and stating them costs nothing for a company that means them."
         />
@@ -159,13 +178,27 @@ export default function AboutPage() {
           who takes this page seriously is here for the right hand column.
         */}
         <div className="border-graphite mt-14 border-t-2">
-          {CAPABILITIES.map((capability) => (
+          {CAPABILITIES.map((capability, index) => (
             <div
               key={capability.title}
               className="border-line grid gap-x-12 gap-y-6 border-b py-9 lg:grid-cols-2"
             >
               <div>
-                <h3 className="d3">{capability.title}</h3>
+                {/*
+                  The numeral runs down the left of the model, alternating red
+                  and blue. Inline here rather than knocked out of a rule,
+                  because these are rows in a table rather than bounded blocks.
+                */}
+                <span
+                  aria-hidden="true"
+                  className={
+                    "font-display block text-4xl leading-none font-extrabold tabular-nums " +
+                    (index % 2 === 0 ? "text-signal" : "text-datum")
+                  }
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="d3 mt-4">{capability.title}</h3>
                 <p className="text-graphite mt-4 max-w-[58ch] leading-relaxed">
                   {capability.body}
                 </p>
@@ -197,6 +230,7 @@ export default function AboutPage() {
       <Section ground="white" density="tight">
         <SectionHead
           eyebrow="The brand today"
+          tone="signal"
           title="One operating brand, built first on purpose."
           lead={`${wattsmith.summary} It is the brand the systems above were built on and tested against, which is the only order that produces a playbook worth handing to somebody.`}
         />

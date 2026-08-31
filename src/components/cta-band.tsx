@@ -1,5 +1,5 @@
 import { Cta, CtaRow } from "@/components/cta";
-import { Section } from "@/components/system/section";
+import { Container } from "@/components/container";
 
 /**
  * The end of page conversion block, and the inline mid page variant.
@@ -19,13 +19,22 @@ import { Section } from "@/components/system/section";
  * second conversion path. Somebody who is not ready to make contact should be
  * given something to read, not asked twice.
  *
- * THE IMPORT SETS THIS AS A FULL BLEED RED FIELD AND THAT WAS DECLINED. It is
- * the same objection as the dark grounds: on #CB0000 only white clears AA,
- * while graphite, steel and datum all fail, so a red band is a dark ground in
- * the brand's colour and would need the identical re-pinning mechanism. What
- * carries the emphasis instead is the heavy graphite edge above it, the display
- * face at section size, and the fact that this is the only band on the page
- * with nothing in it but a statement and two controls.
+ * A FULL BLEED SIGNAL RED FIELD WITH REVERSED TYPE, which is the import's
+ * treatment and which an earlier version of this file declined on a bad
+ * argument. I called it "a dark ground wearing the brand's colour" needing the
+ * same re-pinning mechanism the dark grounds would have needed. That conflated
+ * two different problems. A dark PAGE ground has to carry many tokens: body
+ * copy, secondary copy, links, rules, section markers. This band carries two:
+ *
+ *   white            5.93 on #CB0000, for the heading and both controls
+ *   --color-onred    4.90 on #CB0000, for the one supporting paragraph
+ *
+ * A surface with a two value palette does not need a mechanism, it needs a
+ * rule, and the rule is that nothing else goes on it. Graphite measures 2.99
+ * there and datum blue 1.07, so there is no third thing to be tempted by.
+ *
+ * It is the loudest object on the site and there is exactly one per page, at
+ * the end, which is what keeps it meaning "this is where you act".
  */
 export function CtaBand({
   title,
@@ -34,7 +43,6 @@ export function CtaBand({
   primaryLabel = "Franchise inquiry",
   secondaryHref = "/franchising",
   secondaryLabel = "How franchising works",
-  ground = "mist",
 }: {
   title: string;
   lead: string;
@@ -42,22 +50,30 @@ export function CtaBand({
   primaryLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
-  /** Pick the one that alternates against the section above it. */
-  ground?: "white" | "mist";
 }) {
   return (
-    <Section ground={ground} density="normal" edge>
-      <div className="max-w-3xl">
-        <h2 className="d2">{title}</h2>
-        <p className="lead mt-6">{lead}</p>
-        <CtaRow className="mt-9">
-          <Cta href={primaryHref}>{primaryLabel}</Cta>
-          <Cta href={secondaryHref} variant="secondary">
-            {secondaryLabel}
-          </Cta>
-        </CtaRow>
-      </div>
-    </Section>
+    <section className="bg-signal-solid">
+      <Container>
+        <div className="band">
+          <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-9">
+            <div className="max-w-2xl">
+              <h2 className="d2 text-white">{title}</h2>
+              <p className="text-onred mt-6 max-w-[52ch] leading-relaxed">
+                {lead}
+              </p>
+            </div>
+            <CtaRow>
+              <Cta href={primaryHref} variant="mark">
+                {primaryLabel}
+              </Cta>
+              <Cta href={secondaryHref} variant="markOutline">
+                {secondaryLabel}
+              </Cta>
+            </CtaRow>
+          </div>
+        </div>
+      </Container>
+    </section>
   );
 }
 
@@ -91,7 +107,7 @@ export function CtaPrompt({
     <div
       className={`border-graphite border-y-2 py-7 ${className}`}
     >
-      <h3 className="d3">{title}</h3>
+      <h3 className="d3-sentence">{title}</h3>
       <p className="text-steel mt-3 max-w-[62ch] leading-relaxed">{lead}</p>
       <div className="mt-6">
         <Cta href={href}>{label}</Cta>

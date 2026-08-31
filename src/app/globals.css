@@ -28,10 +28,20 @@
   colour block stays retired. If you are about to add a dark section, you are
   also signing up to break the mark's alignment with its own artwork.
 
-  NO FULL BLEED RED BAND EITHER, and it is the same reason rather than a
-  separate one. On #CB0000 only white clears AA; graphite, steel and datum all
-  fail. A red field is a dark ground wearing the brand's colour, and it would
-  need the identical re-pinning mechanism. Red stays scarce and stays action.
+  THE FULL BLEED RED BAND IS BACK, AND MY ARGUMENT AGAINST IT WAS WRONG. I
+  declined it as "a dark ground wearing the brand's colour" needing the same
+  re-pinning mechanism. That conflated two different things. The dark ground
+  problem is that a page needs MANY tokens on it: body text, secondary text,
+  links, section rules. The closing band needs exactly two: white for the
+  heading and the controls at 5.93, and --color-onred for one paragraph at 4.90.
+  A surface with a two value palette does not need a mechanism, it needs a rule,
+  and the rule is written on --color-onred below.
+
+  DECLINING DARK GROUNDS NEVER IMPLIED DECLINING COLOUR, and for a while this
+  build behaved as though it had. Both brand values clear AA for normal text on
+  both grounds: red 5.93 on white and 5.48 on mist, blue 6.32 and 5.84. Colour
+  is deployed structurally throughout, and every placement is listed with its
+  measured ratio in the Phase 2A report.
 
   NO IMPORT COLOURS. The import invents #C4161C and #1A82C6. The delivered red
   and the AA-corrected blue below are unchanged and remain the only two.
@@ -133,6 +143,21 @@
 
   /* Secondary button outline. Neutral, so a band has exactly one red control. */
   --color-control: #14191c;
+
+  /*
+    ON-RED. Secondary text inside the closing action band.
+
+    The band is a solid signal red field with reversed type. White clears 5.93
+    on it and carries the heading and the controls. This tint carries the
+    supporting paragraph, at 4.90, which is AA for normal text.
+
+    NOTHING ELSE MAY GO ON RED. Graphite measures 2.99 there and datum blue
+    1.07. If you find yourself wanting a token inside the band, the answer is
+    white or this, and there is no third option. That is why the band carries a
+    heading, one paragraph and two controls and nothing more: it is the one
+    surface on the site where the palette is two values wide.
+  */
+  --color-onred: #ffe3e4;
 
   /*
     TYPE. Three roles.
@@ -315,16 +340,33 @@ textarea {
   place the type treatment departs from it, and the reason is the article
   template.
 */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 1.05;
-  color: var(--color-graphite);
+/*
+  IN @layer base, AND THAT IS LOAD BEARING RATHER THAN TIDINESS.
+
+  Unlayered CSS beats every cascade layer, including Tailwind's utilities. When
+  this rule sat outside a layer it silently defeated `text-white` on every
+  heading on the site, which is how the closing red band shipped with a graphite
+  headline on red at 2.98:1 across 23 routes. The class was in the markup, the
+  utility was in the stylesheet, and the colour was still wrong.
+
+  The contrast audit caught it, which is the whole reason that audit exists.
+
+  Every base element rule that sets a property a utility might need to override
+  belongs in this layer. If you add one outside it, you are building the same
+  trap again.
+*/
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--color-graphite);
+  }
 }
 
 /*
@@ -335,14 +377,16 @@ h6 {
   enough that 5.5rem occupies roughly the horizontal space a 3.25rem grotesque
   would, so this is a change in presence rather than in footprint.
 */
-.d1 {
-  font-family: var(--font-display);
-  font-size: clamp(2.625rem, 1.55rem + 5.4vw, 5.5rem);
-  font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: 0.005em;
-  text-transform: uppercase;
-  text-wrap: balance;
+@layer components {
+  .d1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.625rem, 1.55rem + 5.4vw, 5.5rem);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
 }
 
 /*
@@ -360,48 +404,121 @@ h6 {
   and it stays large enough to own the top of the page. What it does not do is
   shout at somebody who came to read.
 */
-.d1-prose {
-  font-family: var(--font-display);
-  font-size: clamp(2.25rem, 1.6rem + 3.2vw, 3.75rem);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: 0.005em;
-  text-wrap: balance;
-  color: var(--color-graphite);
+@layer components {
+  .d1-prose {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 1.6rem + 3.2vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+    color: var(--color-graphite);
+  }
 }
 
 /* SECTION TITLE. */
-.d2 {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 1.45rem + 2.75vw, 3.25rem);
-  font-weight: 800;
-  line-height: 0.96;
-  letter-spacing: 0.005em;
-  text-transform: uppercase;
-  text-wrap: balance;
+@layer components {
+  .d2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.45rem + 2.75vw, 3.25rem);
+    font-weight: 800;
+    line-height: 0.96;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
 }
 
 /*
   ITEM TITLE. Card headings, FAQ questions, glossary terms, article subheads.
   Display face for the family resemblance, sentence case for reading.
 */
-.d3 {
-  font-family: var(--font-display);
-  font-size: 1.375rem;
-  font-weight: 700;
-  line-height: 1.12;
-  letter-spacing: 0.005em;
-  color: var(--color-graphite);
+@layer components {
+  .d3 {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+  }
+}
+
+/*
+  THE SENTENCE CASE EXCEPTION, AND IT IS NARROW.
+
+  Card headings, glossary terms and fact values are uppercase, because they are
+  labels a reader scans. Two things are not, and both are language a reader
+  reads at length:
+
+    FAQ questions. "Is Craftline offering franchises right now?" set in capitals
+    is harder to read and the question mark loses its shape.
+
+    Article subheads, which have their own class below.
+
+  If you are adding a heading and cannot decide, ask whether someone scans it or
+  reads it. Scanned is .d3, read is this.
+*/
+@layer components {
+  .d3-sentence {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: 0.005em;
+    color: var(--color-graphite);
+  }
+}
+
+/*
+  THE DISPLAY NUMERAL.
+
+  Large, in one of the two brand colours, knocked out of the top rule of the
+  block it numbers. It is the import's most recognisable device after the split
+  bar and it is what makes an enumerated group read as authored rather than as
+  a grid of boxes.
+
+  WHAT IT CLAIMS, AND WHAT IT DOES NOT. It enumerates, it does not sequence.
+  Four capabilities numbered 01 to 04 is a true statement that there are four of
+  them; it is not a claim that brand systems precedes operating playbooks. So
+  the markup stays an unordered list, the numeral is aria-hidden, and no
+  assistive technology is told there is an order. A reader sees a counted set,
+  which is what it is. The one genuinely sequential list on the site, the
+  inquiry process, uses <ol> and says so in the markup.
+*/
+@layer components {
+  .numeral {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    /* Sits on the block's top rule with the ground knocked out behind it. */
+    display: inline-block;
+    position: relative;
+    left: -0.625rem;
+    margin-top: -1.125rem;
+    padding: 0 0.625rem;
+  }
+}
+@media (min-width: 640px) {
+  .numeral {
+    font-size: 4rem;
+  }
 }
 
 /* Article subheads sit inside a serif column and take a size that matches it. */
-.d3-prose {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 1.3rem + 0.9vw, 1.875rem);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: 0.005em;
-  color: var(--color-graphite);
+@layer components {
+  .d3-prose {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.3rem + 0.9vw, 1.875rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.005em;
+    color: var(--color-graphite);
+  }
 }
 
 /*
@@ -409,14 +526,16 @@ h6 {
   brand fact, a corporate entity name. Uppercase, because it is a value being
   presented rather than a sentence being read.
 */
-.d4 {
-  font-family: var(--font-display);
-  font-size: 1.3125rem;
-  font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  color: var(--color-graphite);
+@layer components {
+  .d4 {
+    font-family: var(--font-display);
+    font-size: 1.3125rem;
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+  }
 }
 
 /*
@@ -426,14 +545,16 @@ h6 {
   src/components/system/rule.tsx: an eyebrow without the bar is a loose end
   rather than a variant.
 */
-.eyebrow {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-datum);
+@layer components {
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-datum);
+  }
 }
 
 /*
@@ -441,32 +562,38 @@ h6 {
   face, because at 11px a condensed uppercase gothic loses its counters and
   turns into texture.
 */
-.label-sm {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-steel);
+@layer components {
+  .label-sm {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-steel);
+  }
 }
 
 /* Lead paragraph under a heading. */
-.lead {
-  font-size: 1.1875rem;
-  line-height: 1.6;
-  color: var(--color-steel);
+@layer components {
+  .lead {
+    font-size: 1.1875rem;
+    line-height: 1.6;
+    color: var(--color-steel);
+  }
 }
 
 /*
   Long-form reading. The franchising education prose, the articles, and the two
   legal documents. The only place the serif appears.
 */
-.prose-body {
-  font-family: var(--font-serif);
-  font-size: 1.125rem;
-  line-height: 1.75;
-  color: var(--color-graphite);
+@layer components {
+  .prose-body {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--color-graphite);
+  }
 }
 
 /*

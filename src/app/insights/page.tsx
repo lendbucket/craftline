@@ -99,7 +99,7 @@ export default function InsightsPage() {
                     </time>
                   </div>
                   <div>
-                    <h2 className="d3 group-hover:text-datum max-w-[52ch] transition-colors">
+                    <h2 className="d3-sentence group-hover:text-datum max-w-[52ch] transition-colors">
                       {insight.title}
                     </h2>
                     <p className="text-steel mt-3 max-w-[68ch] leading-relaxed">
@@ -136,6 +136,7 @@ export default function InsightsPage() {
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-20">
           <SectionHead
             eyebrow="Why this section exists"
+            tone="signal"
             title="Information, published before there is anything to sell."
             compact
           />
@@ -160,7 +161,7 @@ export default function InsightsPage() {
       </Section>
 
       <CtaBand
-        ground="white"
+
         title="Still working out whether this suits you?"
         lead="That is the right question to be asking, and it is the one an inquiry is for. You will get a straight answer, including a no."
         secondaryHref="/franchising"

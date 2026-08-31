@@ -40,6 +40,7 @@ import { Eyebrow } from "@/components/system/rule";
  */
 export function SectionHead({
   eyebrow,
+  tone = "datum",
   title,
   lead,
   aside,
@@ -49,6 +50,13 @@ export function SectionHead({
   className = "",
 }: {
   eyebrow?: string;
+  /**
+   * Which brand colour the eyebrow takes. Alternate it down a page: the colour
+   * change tells a reader a new section has started before they read the label,
+   * which is what stops a ten section document reading as one run. Both values
+   * clear AA for normal text on white and on mist.
+   */
+  tone?: "datum" | "signal";
   title: string;
   /** Introductory paragraph, set beneath the title. */
   lead?: string;
@@ -81,7 +89,7 @@ export function SectionHead({
         className={`flex flex-wrap items-end justify-between gap-x-12 gap-y-6 ${className}`}
       >
         <div className="max-w-2xl">
-          {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
+          {eyebrow ? <Eyebrow tone={tone}>{eyebrow}</Eyebrow> : null}
           {titleNode}
         </div>
         <p className="text-steel max-w-[38ch] text-[0.9375rem] leading-relaxed">
@@ -93,7 +101,7 @@ export function SectionHead({
 
   return (
     <div className={`max-w-3xl ${className}`}>
-      {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
+      {eyebrow ? <Eyebrow tone={tone}>{eyebrow}</Eyebrow> : null}
       {titleNode}
       {!compact && lead ? <p className="lead mt-5 max-w-2xl">{lead}</p> : null}
     </div>

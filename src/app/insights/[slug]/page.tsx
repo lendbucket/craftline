@@ -255,6 +255,7 @@ export default async function InsightPage({
         <Section ground="mist" edge>
           <SectionHead
             eyebrow="More reading"
+            tone="signal"
             title="Other guides in this section."
             compact
           />
@@ -266,7 +267,7 @@ export default async function InsightPage({
                   className="hover:bg-mist block h-full p-6 transition-colors sm:p-7"
                 >
                   <p className="label-sm">{other.eyebrow}</p>
-                  <p className="d3 mt-3">{other.title}</p>
+                  <p className="d3-sentence mt-3">{other.title}</p>
                   <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
                     {other.description}
                   </p>
@@ -285,7 +286,7 @@ export default async function InsightPage({
       ) : null}
 
       <CtaBand
-        ground="white"
+
         title="Have a question this did not answer?"
         lead="Ask it. An inquiry is read by a person, reserves nothing, and commits you to nothing."
         secondaryHref="/insights"

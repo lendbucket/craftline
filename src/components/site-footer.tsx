@@ -55,7 +55,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h2 className="font-display text-graphite text-lg font-bold tracking-[0.14em] uppercase">
+            <h2 className="font-display text-signal text-lg font-bold tracking-[0.14em] uppercase">
               Company
             </h2>
             <ul className="mt-5 space-y-1">
@@ -73,7 +73,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h2 className="font-display text-graphite text-lg font-bold tracking-[0.14em] uppercase">
+            <h2 className="font-display text-datum text-lg font-bold tracking-[0.14em] uppercase">
               Brands
             </h2>
             <ul className="mt-5 space-y-1">

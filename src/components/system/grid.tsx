@@ -62,6 +62,97 @@ export function HairlineGrid({
  * alternates red and blue by array position, which is decoration dressed as
  * meaning and would spend the one colour reserved for action.
  */
+/**
+ * NUMBERED BLOCKS. The import's signature device and the one this build
+ * dropped.
+ *
+ * Each block is bounded by its own 2px graphite rule with a gap between it and
+ * its neighbours, and its numeral sits knocked out of the top rule in one of
+ * the two brand colours, alternating down the group. That knockout is the whole
+ * effect: the number is not inside the box and not above it, it is cut into its
+ * edge, which is what makes the group read as drawn rather than as a table.
+ *
+ * A gapped grid rather than the hairline grid, because the knockout needs a
+ * top rule of its own to sit on and a hairline grid shares its rules between
+ * cells.
+ *
+ * ON THE NUMERALS THEMSELVES: they enumerate, they do not sequence. See the
+ * note on .numeral in globals.css. The list stays unordered and the numeral is
+ * aria-hidden, so nothing tells a screen reader there is an order that the
+ * content does not have.
+ */
+export function NumberedGrid({
+  items,
+  cols = 2,
+  ground = "white",
+  className = "",
+}: {
+  items: readonly { title: string; body: string }[];
+  cols?: Cols;
+  /** The knockout has to be filled with the ground the block sits on. */
+  ground?: "white" | "mist";
+  className?: string;
+}) {
+  const knockout = ground === "mist" ? "bg-mist" : "bg-white";
+  return (
+    <ul className={`grid gap-6 ${COLUMNS[cols]} ${className}`}>
+      {items.map((item, index) => (
+        <li
+          key={item.title}
+          className="border-graphite border-2 px-7 pb-8 sm:px-8"
+        >
+          <span
+            aria-hidden="true"
+            className={`numeral ${knockout} ${index % 2 === 0 ? "text-signal" : "text-datum"}`}
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <h3 className="d3 mt-3">{item.title}</h3>
+          <p className="text-steel mt-4 leading-relaxed">{item.body}</p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/**
+ * The same device carrying a single statement rather than a title and body.
+ * Used for the operator traits, which are one sentence each.
+ */
+export function NumberedStatements({
+  items,
+  cols = 3,
+  ground = "white",
+  className = "",
+}: {
+  items: readonly string[];
+  cols?: Cols;
+  ground?: "white" | "mist";
+  className?: string;
+}) {
+  const knockout = ground === "mist" ? "bg-mist" : "bg-white";
+  return (
+    <ul className={`grid gap-6 ${COLUMNS[cols]} ${className}`}>
+      {items.map((item, index) => (
+        <li
+          key={item}
+          className="border-graphite border-2 px-7 pb-8 sm:px-8"
+        >
+          <span
+            aria-hidden="true"
+            className={`numeral ${knockout} ${index % 2 === 0 ? "text-signal" : "text-datum"}`}
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+          <p className="text-graphite mt-3 text-[1.0625rem] leading-relaxed font-semibold">
+            {item}
+          </p>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function Cell({
   children,
   edge = false,

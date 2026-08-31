@@ -54,6 +54,7 @@ export default function ContactPage() {
           <div>
             <SectionHead
               eyebrow="Send a message"
+              tone="signal"
               title="Get in touch."
               lead="An inquiry commits you to nothing and is read by a person."
             />
@@ -65,7 +66,7 @@ export default function ContactPage() {
               reply that is not coming.
             */}
             <div className="border-graphite mt-12 border-t-2 pt-7">
-              <h3 className="d3">Looking for electrical service?</h3>
+              <h3 className="d3-sentence">Looking for electrical service?</h3>
               <p className="text-steel mt-3 max-w-[58ch] leading-relaxed">
                 Craftline does not take service calls. {wattsmith.name} handles
                 work in {wattsmith.state} and is reachable at{" "}
@@ -83,7 +84,7 @@ export default function ContactPage() {
             </div>
 
             <div className="border-line mt-8 border-t pt-7">
-              <h3 className="d3">Asking about franchising?</h3>
+              <h3 className="d3-sentence">Asking about franchising?</h3>
               <p className="text-steel mt-3 max-w-[58ch] leading-relaxed">
                 The franchise inquiry form asks the few extra questions that make
                 a first reply useful, so it is the faster route.

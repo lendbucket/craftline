@@ -2,8 +2,10 @@ import Link from "next/link";
 import { BrandRow } from "@/components/brand-row";
 import { Container } from "@/components/container";
 import { Cta, CtaRow } from "@/components/cta";
-import { Cell, HairlineGrid } from "@/components/system/grid";
-import { RuledRow, RuledRows } from "@/components/system/ruled-list";
+import { CtaBand } from "@/components/cta-band";
+import { NumberedGrid, NumberedStatements } from "@/components/system/grid";
+import { FactStrip, RuledRow, RuledRows } from "@/components/system/ruled-list";
+import { Eyebrow, OffsetFrames } from "@/components/system/rule";
 import { Section } from "@/components/system/section";
 import { SectionHead } from "@/components/system/section-head";
 import {
@@ -41,17 +43,17 @@ import { getInsight } from "@/data/insights";
  *
  * Every fact here traces to src/config/company.ts.
  *
- * PHASE 2A, WHAT CHANGED AND WHAT DID NOT. Every string on this page is the
- * string that was here before, in the same order. What changed is the type
- * scale, the containers, and the density: the hero is the only loose band, the
- * operator traits sit in a tight one, and the closing block is tight and ruled.
+ * PHASE 2A. Every string on this page is the string that was here before, in
+ * the same order, with two additions the owner directed: the hero eyebrow,
+ * which is the metadata title suffix rendered in the body, and the label
+ * "Veteran founded" in the fact strip. Both are named in the report.
  *
- * THERE IS NO HERO EYEBROW AND NO HERO STATISTICS BAND. The import adds both.
- * The eyebrow would put the metadata title suffix into the body as new visible
- * copy, and the statistics band was declined outright: a four cell figure strip
- * under a franchisor's hero is where system statistics live, and a reader gives
- * whatever is in it the weight of one. Interior pages carry an eyebrow because
- * they are a part of something; the home page is the thing.
+ * THE COLOUR AND THE DEVICES ARE THE POINT OF THIS PAGE. Tricolour headline,
+ * offset frames, a two item fact strip, numbered blocks with the numeral
+ * knocked out of the top rule, the filled brand block, alternating eyebrow
+ * colour, and a full red closing band. An earlier version of this build took
+ * the import's structure and left all of that behind, which produced a page
+ * with the right bones and none of the system.
  */
 export default function HomePage() {
   const [wattsmith] = BRANDS;
@@ -63,12 +65,28 @@ export default function HomePage() {
           HERO
           The only loose band on the page, and the largest type on the site.
           --------------------------------------------------------------- */}
-      <section className="border-graphite border-b-2 bg-white">
-        <Container>
+      <section className="border-graphite relative border-b-2 bg-white">
+        <OffsetFrames />
+        <Container className="relative">
           <div className="band-loose">
-            <h1 className="d1 max-w-[16ch]">
-              A franchise development company building skilled trade service
-              brands.
+            <Eyebrow tone="datum">
+              Skilled trade brand and franchise development
+            </Eyebrow>
+            {/*
+              THE TRICOLOUR HEADLINE. Graphite, then blue, then red, which is
+              the import's treatment restored on white. Measured on this ground:
+              graphite 17.71, datum blue 6.32, signal red 5.93, all AA for
+              normal text and all far clear of the 3:1 large text minimum this
+              actually needs at 88px.
+
+              The colour is not decoration. It splits the sentence at its two
+              real joints: what the company is, what it builds, and what it
+              builds them into.
+            */}
+            <h1 className="d1 mt-7 max-w-[16ch]">
+              A franchise development company building{" "}
+              <span className="text-datum">skilled trade</span>{" "}
+              <span className="text-signal">service brands.</span>
             </h1>
             <p className="lead mt-8 max-w-2xl">
               {COMPANY.name} owns the marks, the operating playbooks, the
@@ -84,6 +102,37 @@ export default function HomePage() {
             </CtaRow>
           </div>
         </Container>
+
+        {/*
+          THE FACT STRIP, REBUILT WITH THE TWO ITEMS THAT STAND.
+
+          The import ships four. Two were declined in Phase 1 and stay declined:
+          "1 operating brand", because a unit count in a figure strip under a
+          franchisor's hero is read as a system statistic, and "flagship
+          market", because it asserts a sequenced expansion plan as present
+          fact. Neither is in company.ts.
+
+          The two here do trace. Wyoming is LEGAL_ENTITIES[].jurisdiction, and
+          the veteran line is FOUNDING_STATEMENT reduced to a label and its
+          qualifier. "Veteran founded" is a label written for this strip rather
+          than a string lifted from config, and it is the one composed value on
+          the page.
+        */}
+        <div className="border-graphite border-t-2">
+          <Container>
+            <FactStrip
+              cols="two"
+              bordered={false}
+              facts={[
+                { label: "State of registration", value: "Wyoming" },
+                {
+                  label: "Service disabled veteran",
+                  value: "Veteran founded",
+                },
+              ]}
+            />
+          </Container>
+        </div>
       </section>
 
       {/* ---------------------------------------------------------------
@@ -100,22 +149,12 @@ export default function HomePage() {
         />
 
         {/*
-          A hairline grid rather than four gapped cards. These are the parts of
-          one model, and a ruled table says that where separated tiles say the
-          opposite. They are NOT numbered: brand systems does not precede
-          operating playbooks, and numbering an unordered list tells a reader
-          something untrue about it. See Steps in system/ruled-list.tsx.
+          Numbered blocks, alternating red and blue, each numeral knocked out of
+          its top rule. They enumerate rather than sequence: the markup stays an
+          unordered list and the numerals are aria-hidden, so nothing tells a
+          screen reader that brand systems precedes operating playbooks.
         */}
-        <HairlineGrid as="ul" cols={2} className="mt-14">
-          {CAPABILITIES.map((capability) => (
-            <Cell as="li" edge key={capability.title}>
-              <h3 className="d3">{capability.title}</h3>
-              <p className="text-steel mt-4 leading-relaxed">
-                {capability.body}
-              </p>
-            </Cell>
-          ))}
-        </HairlineGrid>
+        <NumberedGrid items={CAPABILITIES} cols={2} ground="mist" className="mt-16" />
       </Section>
 
       {/* ---------------------------------------------------------------
@@ -124,6 +163,7 @@ export default function HomePage() {
       <Section ground="white">
         <SectionHead
           eyebrow="Our brands"
+          tone="signal"
           title="The brands Craftline operates."
           lead="One brand today, built and run before any part of it was offered to anyone else. That order is deliberate. A playbook is worth handing over only after it has been tested in a real business."
         />
@@ -147,6 +187,7 @@ export default function HomePage() {
           <div>
             <SectionHead
               eyebrow="Franchising, explained"
+              tone="datum"
               title="Start here if franchising is new to you."
               lead="Most people evaluating a home services franchise for the first time are asked to make a serious decision using vocabulary nobody explained to them. This section exists to fix that before any conversation starts."
             />
@@ -205,17 +246,17 @@ export default function HomePage() {
       <Section ground="white" density="tight">
         <SectionHead
           eyebrow="Who this is for"
+          tone="signal"
           title="What Craftline looks for in an operator."
           aside="These are traits rather than qualifications. There is deliberately no experience requirement and no background requirement stated anywhere on this site, because a stated threshold is a claim about who will be accepted and no such claim can be made before disclosure."
         />
 
-        <HairlineGrid as="ul" cols={3} className="mt-12">
-          {OPERATOR_PROFILE.map((trait) => (
-            <Cell as="li" key={trait}>
-              <p className="text-graphite leading-relaxed">{trait}</p>
-            </Cell>
-          ))}
-        </HairlineGrid>
+        <NumberedStatements
+          items={OPERATOR_PROFILE}
+          cols={3}
+          ground="white"
+          className="mt-14"
+        />
       </Section>
 
       {/* ---------------------------------------------------------------
@@ -226,6 +267,7 @@ export default function HomePage() {
           <div>
             <SectionHead
               eyebrow="The company"
+              tone="datum"
               title="Who Craftline Brands is."
               lead={COMPANY.descriptor}
             />
@@ -245,8 +287,14 @@ export default function HomePage() {
           <div>
             <h3 className="label-sm">Corporate structure</h3>
             <RuledRows className="mt-4">
-              {LEGAL_ENTITIES.map((entity) => (
-                <RuledRow key={entity.name} term={entity.name}>
+              {LEGAL_ENTITIES.map((entity, index) => (
+                <RuledRow
+                  key={entity.name}
+                  term={entity.name}
+                  termClassName={
+                    "d3 " + (index % 2 === 0 ? "text-signal" : "text-datum")
+                  }
+                >
                   {entity.role} Registered in {entity.jurisdiction}.
                 </RuledRow>
               ))}
@@ -258,23 +306,14 @@ export default function HomePage() {
       {/* ---------------------------------------------------------------
           CONTACT
           --------------------------------------------------------------- */}
-      <Section ground="white" density="tight" edge>
-        <div className="max-w-3xl">
-          <h2 className="d2">Start a conversation.</h2>
-          <p className="lead mt-6">
-            This is an inquiry, not an application. It asks for nothing
-            sensitive, commits you to nothing, and is read by a person. Craftline
-            runs an electrician franchise brand today and is building the
-            programme around it.
-          </p>
-          <CtaRow className="mt-9">
-            <Cta href="/contact">Get in touch</Cta>
-            <Cta href="/franchising" variant="secondary">
-              Franchise information
-            </Cta>
-          </CtaRow>
-        </div>
-      </Section>
+      <CtaBand
+        title="Start a conversation."
+        lead="This is an inquiry, not an application. It asks for nothing sensitive, commits you to nothing, and is read by a person. Craftline runs an electrician franchise brand today and is building the programme around it."
+        primaryHref="/contact"
+        primaryLabel="Get in touch"
+        secondaryHref="/franchising"
+        secondaryLabel="Franchise information"
+      />
     </>
   );
 }

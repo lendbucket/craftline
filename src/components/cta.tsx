@@ -39,7 +39,7 @@ export function Cta({
 }: {
   href: string;
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "mark" | "markOutline";
   /** Renders an anchor rather than a Link, for outbound brand sites. */
   external?: boolean;
   className?: string;
@@ -47,9 +47,22 @@ export function Cta({
   const base =
     "font-display inline-flex min-h-12 items-center justify-center px-7 text-[1.0625rem] font-bold tracking-[0.07em] uppercase transition-colors";
 
+  /*
+    Four treatments, and the last two exist only inside the closing red band.
+
+    On the signal red field the ordinary pair is unusable: a red fill on red is
+    invisible and a graphite outline measures 2.99 against it. So the primary
+    inverts to a white fill with red text, which is the same 5.93 ratio read the
+    other way round, and the secondary becomes a white outline with white text.
+
+    They are not general purpose. If you reach for `mark` outside the band, the
+    ground underneath it is wrong.
+  */
   const variants = {
     primary: "bg-signal-solid hover:bg-signal-solid-hover text-white",
     secondary: "border-control text-control hover:bg-control/5 border-2",
+    mark: "bg-white text-signal hover:bg-onred",
+    markOutline: "border-2 border-white text-white hover:bg-white/12",
   } as const;
 
   const classes = `${base} ${variants[variant]} ${className}`;

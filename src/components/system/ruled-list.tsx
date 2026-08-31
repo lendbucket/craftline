@@ -99,17 +99,30 @@ export function FactStrip({
   facts,
   className = "",
   cols = "four",
+  bordered = true,
 }: {
   facts: readonly { label: string; value: string }[];
   className?: string;
   cols?: "two" | "four";
+  /**
+   * Off when the strip is already bounded by the band it sits in.
+   *
+   * The hero strip sits directly under the section's own closing rule, and a
+   * bordered grid there draws a second rule a few pixels below the first, which
+   * reads as a printing fault rather than as structure. Unbordered, the cells
+   * keep their single hairline divider and the band's rule does the bounding.
+   */
+  bordered?: boolean;
 }) {
   const columns =
     cols === "two" ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-4";
+  const frame = bordered
+    ? "hairline-grid"
+    : "grid gap-px bg-line [&>*]:bg-white";
   return (
-    <dl className={`hairline-grid ${columns} ${className}`}>
+    <dl className={`${frame} ${columns} ${className}`}>
       {facts.map((fact) => (
-        <div key={fact.label} className="px-6 py-5 sm:px-7 sm:py-6">
+        <div key={fact.label} className="px-6 py-6 sm:px-7 sm:py-7">
           <dt className="label-sm">{fact.label}</dt>
           <dd className="d4 mt-2">{fact.value}</dd>
         </div>

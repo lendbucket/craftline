@@ -129,6 +129,7 @@ export default async function BrandPage({
       <Section ground="white">
         <SectionHead
           eyebrow="The brand system"
+          tone="signal"
           title="One mark, two surfaces, no third version."
           aside="The lockup is approved on the brand's navy field and on a light field. The bolt and the ELECTRIC banner stay gold on both. What changes between them is only the navy artwork, which reverses so it stays visible."
         />
@@ -182,6 +183,7 @@ export default async function BrandPage({
       <Section ground="mist" density="tight" edge>
         <SectionHead
           eyebrow="Brand colours"
+          tone="datum"
           title="Two colours, and the discipline is that there is no third."
           compact
         />
@@ -232,6 +234,7 @@ export default async function BrandPage({
       <Section ground="white" density="tight">
         <SectionHead
           eyebrow="What is established"
+          tone="signal"
           title="The facts about this brand."
           aside={`${brand.name} is a licensed and insured, veteran owned electrical contractor operating in ${brand.city}, ${brand.state}. It serves residential and light commercial customers. That is the whole of what is established, and nothing beyond it is claimed here.`}
         />
@@ -255,6 +258,7 @@ export default async function BrandPage({
       <Section ground="mist" edge>
         <SectionHead
           eyebrow="Services offered"
+          tone="datum"
           title="The categories of work the business does."
           aside="Listed so you can see what kind of trade business this is. For scope, coverage, and anything resembling a quote, go to the brand's own site. Craftline does not take service calls and does not publish service pages."
         />
