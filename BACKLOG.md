@@ -381,3 +381,45 @@ Reported in the Phase 3 audit, decided on neither way, and left alone:
 These are nine edits to strings that already exist. They are listed here rather
 than done because the instruction enumerated other items and did not include
 them, and doing unrequested work to a page's metadata is how a site drifts.
+
+## Corrections to the performance findings, recorded
+
+### The "25 KB of form code on 25 routes" claim was wrong on two counts
+
+Reported in the performance pass as three form chunks totalling 25.4 KB
+uncompressed, all shipped to every route. Checked properly by reading the
+`<script src>` tags out of each prerendered page rather than counting every
+response the browser touched:
+
+- The two form chunks were already correctly route split. `1f1lbvz81rq42.js`
+  loaded only on /contact and `1kl8wbbalqz6a.js` only on /franchising.
+- What actually shipped everywhere was a third chunk of 10.9 KB, and it was not
+  form code. It was `src/config/company.ts` crossing the client boundary,
+  because `site-header.tsx` is a client component and `Wordmark` inside it
+  imported `COMPANY` for one string, the link's accessible name.
+
+Fixed by moving `NAV` and `LEGAL_NAV` to `src/config/nav.ts` and passing the
+company name into `Wordmark` as a prop. The config now reaches the client on
+one route, /franchising, where the franchise form genuinely needs it.
+
+**The byte saving is about 0.6 KB uncompressed, not 10.9.** The chunk that
+disappeared was mostly shared client runtime that simply redistributed into the
+remaining chunks; only the config data itself was eliminated. The change is
+worth keeping for the boundary, not for the bytes, and it is recorded here so
+nobody re-measures it expecting ten kilobytes.
+
+### Lighthouse and applied throttling disagree on the inlined stylesheet
+
+Lantern reports LCP moving the wrong way, home 2.41s to 2.94s. Measured on the
+two real builds under applied throttling, inlining is 250 to 292 ms faster on
+every template with confidence intervals nowhere near zero. The decision was
+taken on the applied numbers and the reasoning is written into next.config.ts.
+Every template stays under the 3.5s Lighthouse ceiling either way.
+
+### A stale capture nearly produced a false Rule One pass
+
+A build failed after the compile step, the capture threw, and the comparison ran
+against a leftover file and printed CLEAN. The only tell was the label in the
+output header. Captures now record the build they came from and the compare half
+refuses to run against one that predates the build on disk. Both halves planted
+and verified.

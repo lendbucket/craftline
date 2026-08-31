@@ -5,6 +5,7 @@ import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { CtaBand } from "@/components/cta-band";
 import { Cell, HairlineGrid } from "@/components/system/grid";
+import { RuledItem } from "@/components/system/ruled-list";
 import { SplitBar } from "@/components/system/rule";
 import { Section } from "@/components/system/section";
 import { SectionHead } from "@/components/system/section-head";
@@ -193,16 +194,37 @@ function BlockView({ block, first = false }: { block: Block; first?: boolean }) 
   if (block.kind === "list") {
     return (
       /*
-        Discs, kept. A list inside a reading column needs a marker: without one
-        the items read as short paragraphs and the reader loses the fact that
-        they are a set. This was one of the few places the previous template was
-        already right.
+        RULED ROWS, NOT DISCS, AND THE REASON IS THE NUMERALS.
+
+        Fourteen list blocks across twelve articles, sixty four items, and not
+        one of them is a sequence. "The kinds of fee, and what each one is for"
+        is four kinds, not four steps, and numbering it would tell a reader
+        something untrue about it. That is settled: numerals mean order on this
+        site and they appear on exactly one article.
+
+        Which leaves the question of what a SET looks like, and a disc is not
+        an answer to it. A disc is the absence of a device rather than a
+        different one, so the reader has nothing to tell a set from a sequence
+        by except the presence of numbers somewhere else.
+
+        RuledItem is the system's existing answer and it is already used for
+        exactly this shape: the due diligence list on the franchising page,
+        five complete instructions that are not ordered. Nothing new is
+        invented here. The rules stay at the line colour rather than graphite,
+        which is what that list already does, so the weight sits closer to a
+        paragraph break than to a table.
+
+        THE SPLIT BAR WAS CONSIDERED AND DECLINED. It is the one mark the whole
+        site repeats and it costs two spans, which makes it tempting. It also
+        means "a new region starts here" on all 27 routes, and five of them
+        stacked down a list would teach a reader something false about it. A
+        device that means two things means neither.
       */
-      <ul className="prose-body mt-6 list-disc space-y-3 pl-6">
+      <ul className="mt-8 border-t-2 border-graphite">
         {block.items.map((item, index) => (
-          <li key={index}>
+          <RuledItem key={index}>
             <InlineRun content={item} />
-          </li>
+          </RuledItem>
         ))}
       </ul>
     );
@@ -417,7 +439,14 @@ export default async function InsightPage({
       <CtaBand
 
         title="Have a question this did not answer?"
-        lead="Ask it. An inquiry is read by a person, reserves nothing, and commits you to nothing."
+        /*
+          Three clauses landing on person, nothing, nothing. The voice audit
+          caught it on all eighteen articles once the triad rule learned to
+          read clauses instead of sentences. What replaces it states the legal
+          position once and lets the reader draw the conclusion, which is more
+          accurate and less comforting, and that is the right way round here.
+        */
+        lead="No Franchise Disclosure Document has been issued, so there is nothing to apply for."
         secondaryHref="/insights"
         secondaryLabel="All guides"
       />

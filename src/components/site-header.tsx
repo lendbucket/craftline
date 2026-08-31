@@ -8,7 +8,7 @@ import { Menu, X } from "lucide-react";
 import { Container } from "@/components/container";
 import { SplitRule } from "@/components/system/rule";
 import { Wordmark } from "@/components/wordmark";
-import { NAV } from "@/config/company";
+import { NAV } from "@/config/nav";
 
 /**
  * Site header. A standard corporate top nav: white ground, the lockup at the
@@ -40,7 +40,16 @@ import { NAV } from "@/config/company";
  * mobile is handled separately, by MobileCta, which is a footer bar rather than
  * a floating header.
  */
-export function SiteHeader() {
+export function SiteHeader({
+  /*
+    Handed down from the layout, which is a server component, so that the
+    Wordmark inside this client tree does not have to import the config. See
+    the note on the name prop in wordmark.tsx.
+  */
+  brandName,
+}: {
+  brandName: string;
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -81,7 +90,7 @@ export function SiteHeader() {
       <SplitRule />
       <Container>
         <div className="flex h-20 items-center justify-between sm:h-24">
-          <Wordmark />
+          <Wordmark name={brandName} />
 
           <div className="flex items-center gap-6">
             <nav aria-label="Primary" className="hidden md:block">

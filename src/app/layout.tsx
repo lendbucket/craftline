@@ -323,7 +323,7 @@ export default function RootLayout({
           Skip to content
         </a>
 
-        <SiteHeader />
+        <SiteHeader brandName={COMPANY.name} />
         <main id="main" className="flex-1">
           {children}
         </main>

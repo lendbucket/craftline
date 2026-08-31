@@ -21,12 +21,53 @@
  * canonical or schema difference. Moves alone do not fail the run; they are
  * printed for a person to sign off.
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, statSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { FRANCHISE_FAQ } from "../src/config/company.ts";
 
 const [, , beforeFile, afterFile] = process.argv;
 const before = JSON.parse(readFileSync(beforeFile, "utf8"));
 const after = JSON.parse(readFileSync(afterFile, "utf8"));
+
+/*
+  A STALE CAPTURE IS THE ONE WAY THIS TOOL CAN LIE, so it is checked first.
+
+  It happened: a build failed after compiling, the capture threw, and this ran
+  against a leftover file and printed CLEAN. Nothing in the numbers looked
+  wrong, because the numbers were true about a state that no longer existed.
+
+  The after capture must describe the build that is on disk now. Compared on
+  the build's own mtime rather than on a hash, because the question is only
+  whether the capture is older than what it claims to describe.
+*/
+{
+  let builtNow = null;
+  try {
+    builtNow = statSync(
+      join(process.cwd(), ".next", "server", "app", "index.html"),
+    ).mtimeMs;
+  } catch {
+    /* No build present. Comparing two archived captures is legitimate. */
+  }
+  if (builtNow !== null && after.builtAt !== undefined) {
+    if (Math.abs(after.builtAt - builtNow) > 1000) {
+      console.error(
+        `
+STALE CAPTURE. "${afterFile}" describes a build from ${new Date(after.builtAt).toISOString()}, and the build on disk is from ${new Date(builtNow).toISOString()}.
+Re-run scripts/rule-one-capture.mjs. A comparison against a leftover capture reports CLEAN about a state that no longer exists.
+`,
+      );
+      process.exit(1);
+    }
+  } else if (builtNow !== null && after.builtAt === undefined) {
+    console.error(
+      `
+STALE CAPTURE FORMAT. "${afterFile}" was written before captures recorded their build, so it cannot be checked against the build on disk. Re-run the capture.
+`,
+    );
+    process.exit(1);
+  }
+}
 
 /** Multiset difference: what is in a that is not in b, counting duplicates. */
 function minus(a, b) {
@@ -180,6 +221,21 @@ const APPROVED = {
  * is approved only when the exact transformed string is present on the other
  * side. Both were exercised by the run they were written for, 36 and 146
  * deltas respectively, and neither approved anything else.
+ *
+ *   THE STRING SWAP LIST
+ *     catch  a sixth heading rewritten with no SWAPS entry
+ *            -> 7 unexplained removals, 7 unapproved additions, the heading
+ *               named on both sides                                  CAUGHT
+ *     miss   the five listed swaps, one band lead and four headings
+ *            -> 2172 approved deltas, run CLEAN                      SILENT
+ *
+ *   THE STALE CAPTURE GUARD
+ *     catch  the site rebuilt without re-capturing
+ *            -> "STALE CAPTURE ... describes a build from ..."       CAUGHT
+ *     catch  a capture written before captures recorded their build
+ *            -> "STALE CAPTURE FORMAT ..."                           CAUGHT
+ *     miss   a capture taken from the build currently on disk
+ *            -> runs normally                                        SILENT
  */
 const BRAND_SUFFIX = " | Craftline Brands";
 
@@ -259,6 +315,72 @@ const NEW_DESCRIPTIONS = new Set([
   "How franchising works: what a franchisor and a franchisee each do, what royalties and territory mean, and why disclosure comes before any offer. Inquiry only.",
 ]);
 const META_KEY = /^(description|og:description|twitter:description)=/;
+
+/**
+ * APPROVED STRING SWAPS: a rendered string replaced by a named replacement.
+ *
+ * Each pair is written out on both sides, so this cannot approve a removal
+ * whose replacement never arrived, or an addition that replaced nothing. The
+ * heading, block and word forms are derived from the pair rather than restated,
+ * the same way the retitle rule works.
+ *
+ * WHY THE PAIRS ARE NOT DERIVED FROM SOURCE. They could be read out of the data
+ * files, and that is exactly the mistake the FAQ entry made: an allowlist that
+ * reads the same source it is approving is a mirror. These are literals, and a
+ * fifth heading rewritten tomorrow fails this run until somebody writes it down.
+ */
+const SWAPS = [
+  {
+    from: "Ask it. An inquiry is read by a person, reserves nothing, and commits you to nothing.",
+    to: "No Franchise Disclosure Document has been issued, so there is nothing to apply for.",
+    why: 'band lead approved as proposed: it states the fact instead of reassuring three times',
+  },
+  {
+    from: "Look at obligations, not features",
+    to: "What a franchisor is obliged to do, not what it offers",
+    why: 'directed: "Rewrite the three consecutive headings opening Look at"',
+  },
+  {
+    from: "Look at what the system does about people",
+    to: "Qualified people are the binding constraint",
+    why: 'directed: "Rewrite the three consecutive headings opening Look at"',
+  },
+  {
+    from: "Look at how the playbook changes",
+    to: "A playbook that never changes becomes fiction",
+    why: 'directed: "Rewrite the three consecutive headings opening Look at"',
+  },
+  {
+    from: "Look at what it measures",
+    to: "What the system measures, and what that misses",
+    why: 'directed: "Rewrite the three consecutive headings opening Look at"',
+  },
+];
+
+/* Words on each side, so the word level rows do not need their own entries. */
+const swapWords = (side) => {
+  const set = new Set();
+  for (const s of SWAPS) for (const w of s[side].split(/\s+/)) if (w) set.add(w);
+  return set;
+};
+const SWAP_FROM_WORDS = swapWords("from");
+const SWAP_TO_WORDS = swapWords("to");
+
+function swapFor(field, kind, value) {
+  const side = kind === "removed" ? "from" : "to";
+  for (const s of SWAPS) {
+    const target = s[side];
+    if (value === target) return s.why;
+    if (value === `H2:${target}` || value === `H3:${target}`) return s.why;
+  }
+  if (field === "mainWords") {
+    const words = kind === "removed" ? SWAP_FROM_WORDS : SWAP_TO_WORDS;
+    if (words.has(value)) {
+      return "word of an approved string swap";
+    }
+  }
+  return null;
+}
 
 const titlesBefore = new Set(
   Object.values(before.routes).map((r) => r.title),
@@ -506,6 +628,8 @@ function approvalFor(field, kind, value) {
   if (hit) return hit;
   const byRule = ruleFor(field, kind, value);
   if (byRule) return byRule;
+  const bySwap = swapFor(field, kind, value);
+  if (bySwap) return bySwap;
   if (kind === "added" && WORD_FIELDS.has(field) && APPROVED_WORDS.has(value)) {
     return "word of an approved block";
   }

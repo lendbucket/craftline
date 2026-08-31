@@ -8,9 +8,8 @@ import {
   CONTACT_EMAIL,
   FRANCHISE_DISCLAIMER,
   LEGAL_ENTITIES,
-  LEGAL_NAV,
-  NAV,
 } from "@/config/company";
+import { LEGAL_NAV, NAV } from "@/config/nav";
 
 /**
  * Site footer. Standard corporate: navigation columns, corporate structure,
@@ -48,7 +47,7 @@ export function SiteFooter() {
       <Container>
         <div className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
-            <Wordmark as="plain" className="h-11 w-auto" />
+            <Wordmark as="plain" name={COMPANY.name} className="h-11 w-auto" />
             <p className="text-steel mt-5 max-w-xs text-[0.9375rem] leading-relaxed">
               {COMPANY.descriptor}
             </p>

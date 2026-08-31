@@ -7,11 +7,10 @@ import {
   FRANCHISE_FAQ,
   INQUIRY_PROCESS,
   LEGAL_ENTITIES,
-  NAV,
-  LEGAL_NAV,
   OPERATOR_PROFILE,
   SITE_URL,
 } from "@/config/company";
+import { LEGAL_NAV, NAV } from "@/config/nav";
 import { ORDERED_INSIGHTS, type Block } from "@/data/insights";
 
 /**

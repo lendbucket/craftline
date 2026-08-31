@@ -35,7 +35,8 @@
  * gained or lost, and as the list of leaf text blocks, which is what makes a
  * difference readable by a person. Both are written out.
  */
-import { writeFileSync } from "node:fs";
+import { statSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { chromium } from "playwright";
 import { startNextServer } from "./lib/dev-server.mjs";
 import { auditRoutes } from "./lib/routes.mjs";
@@ -200,11 +201,29 @@ try {
     [...document.querySelectorAll("loc")].map((l) => l.textContent ?? ""),
   );
 
+  /*
+    THE BUILD THIS WAS CAPTURED FROM, RECORDED SO A STALE CAPTURE CANNOT PASS.
+
+    This nearly produced a false verification. A build failed after the compile
+    step, the capture threw, and the comparison ran against a leftover file from
+    an earlier state and reported CLEAN. The only thing that gave it away was
+    the label in the output header reading "after" instead of the label that had
+    just been asked for, which is a thin thread to hang a merge gate on.
+
+    The compare half now refuses to run when a capture predates the build output
+    it claims to describe.
+  */
+  const builtAt = statSync(
+    join(process.cwd(), ".next", "server", "app", "index.html"),
+  ).mtimeMs;
+
   writeFileSync(
     outFile,
     JSON.stringify(
       {
         label,
+        capturedAt: Date.now(),
+        builtAt,
         routeList: auditRoutes().map((r) => r.path).sort(),
         sitemap: sitemap.map((u) => u.replace(/^https?:\/\/[^/]+/, "")).sort(),
         routes,

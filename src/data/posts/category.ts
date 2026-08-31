@@ -278,7 +278,15 @@ export const CATEGORY_POSTS: Insight[] = [
           ".",
         ],
       },
-      { kind: "heading", text: "Look at obligations, not features" },
+      /*
+        These four headings all opened "Look at" and read as one shape repeated,
+        which is the parallel phrasing tell. The voice audit could not see it:
+        the sibling scan cannot reach subheads because each block renders in its
+        own wrapper, and once a heading level scan was added, a call to action
+        sitting in the middle of the run broke the streak. Removing that prompt
+        exposed it. Each heading now states its own claim.
+      */
+      { kind: "heading", text: "What a franchisor is obliged to do, not what it offers" },
       {
         kind: "paragraph",
         text: "A feature list is marketing. An obligation is disclosed and enforceable. When a system describes training, technology, or marketing support, the question is whether the disclosure document commits the franchisor to provide it or reserves the right to.",
@@ -291,12 +299,12 @@ export const CATEGORY_POSTS: Insight[] = [
           " for a reason.",
         ],
       },
-      { kind: "heading", text: "Look at what the system does about people" },
+      { kind: "heading", text: "Qualified people are the binding constraint" },
       {
         kind: "paragraph",
         text: "In a licensed trade, qualified people are the binding constraint on growth. A system that has nothing to say about recruitment, training pathways, or retention has left the hardest problem in the category entirely with the operator.",
       },
-      { kind: "heading", text: "Look at how the playbook changes" },
+      { kind: "heading", text: "A playbook that never changes becomes fiction" },
       {
         kind: "paragraph",
         text: "A playbook written once and never revised becomes fiction, and everyone working under it learns to ignore it. Ask what the route is for an operator to say a step does not work in their market, and what happens to that feedback.",
@@ -305,7 +313,7 @@ export const CATEGORY_POSTS: Insight[] = [
         kind: "paragraph",
         text: "A system with no such route is either very confident or not listening, and the franchisees who left will tell you which.",
       },
-      { kind: "heading", text: "Look at what it measures" },
+      { kind: "heading", text: "What the system measures, and what that misses" },
       {
         kind: "paragraph",
         text: "Instrumentation makes a standard observable, which is the only reason a written standard is enforceable at all. But measurement drifts toward whatever is easy to count, and a system watching only the convenient numbers will optimise for those and miss the work quality it claims to care about.",
