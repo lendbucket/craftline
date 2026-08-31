@@ -50,7 +50,14 @@ export function BrandRow() {
     <ul className="space-y-10">
       {BRANDS.map((brand) => (
         <li key={brand.slug}>
-          <div className="border-graphite grid border-2 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+          {/*
+            EVEN SPLIT. The import declares
+            repeat(auto-fit, minmax(min(100%,400px), 1fr)) with no gap, which
+            at the 1200px measure gives two 600px tracks. The build had
+            1.15fr/1fr, which is 53.5/46.5 and reads as a mistake rather than a
+            proportion.
+          */}
+          <div className="border-graphite grid border-2 grid-cols-[repeat(auto-fit,minmax(min(100%,400px),1fr))]">
             {/* THE FILL. White and one tint, and nothing else. */}
             <div className="bg-signal-solid flex flex-col gap-7 p-7 sm:p-10">
               <div className="flex flex-wrap items-center gap-3">
@@ -69,24 +76,41 @@ export function BrandRow() {
                 announcing the artwork would read the same name twice.
               */}
               {hasBrandLockup(brand.slug) ? (
-                <span className="inline-flex self-start bg-white px-5 py-4">
+                <span className="flex h-22 w-22 shrink-0 items-center justify-center bg-white p-2">
                   <BrandLockup
                     slug={brand.slug}
                     decorative
-                    className="h-12 w-auto max-w-[15rem]"
+                    className="max-h-full w-full"
                   />
                 </span>
               ) : null}
 
               <span className="d2 block text-white">{brand.name}</span>
 
+              {/*
+                THE IMPORT’S THREE SHORT PILLS, restored. It sets Licensed,
+                Insured and Veteran owned. The build was rendering all four
+                BRANDS[].attributes strings, which are longer and wrapped the
+                row to four lines inside the fill.
+
+                THE SHORTER SET ASSERTS NOTHING THE LONGER ONE DID NOT, which is
+                the test that had to be met before shortening. "Licensed" and
+                "Insured" are the two halves of the committed string "Licensed
+                and insured" at company.ts:93, split rather than reworded, and
+                the claim is identical. "Veteran owned" is verbatim from
+                company.ts:94. The two dropped strings are not lost from the
+                block: "Operating in San Antonio, Texas" is the Market pair in
+                the panel opposite and "Residential and light commercial
+                service" is on the brand’s own page, where the full attribute
+                list still renders unchanged.
+              */}
               <ul className="flex flex-wrap gap-2.5">
-                {brand.attributes.map((attribute) => (
+                {["Licensed", "Insured", "Veteran owned"].map((pill) => (
                   <li
-                    key={attribute}
+                    key={pill}
                     className="font-display border-2 border-white/70 px-3.5 py-1.5 text-sm font-bold tracking-[0.1em] text-white uppercase"
                   >
-                    {attribute}
+                    {pill}
                   </li>
                 ))}
               </ul>

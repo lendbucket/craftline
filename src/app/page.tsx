@@ -68,7 +68,12 @@ export default function HomePage() {
       <section className="border-graphite relative border-b-2 bg-white">
         <OffsetFrames />
         <Container className="relative">
-          <div className="band-loose">
+          {/*
+            The import gives the hero 104px above and nothing below, then closes
+            it on the fact strip, with 80px between the controls and the strip.
+            band-loose would put 144px there and leave the strip floating.
+          */}
+          <div className="pt-20 pb-20 sm:pt-28 lg:pt-36">
             <Eyebrow tone="datum">
               Skilled trade brand and franchise development
             </Eyebrow>
@@ -83,7 +88,7 @@ export default function HomePage() {
               real joints: what the company is, what it builds, and what it
               builds them into.
             */}
-            <h1 className="d1 mt-7 max-w-[16ch]">
+            <h1 className="d1 mt-7 max-w-[67.5rem]">
               A franchise development company building{" "}
               <span className="text-datum">skilled trade</span>{" "}
               <span className="text-signal">service brands.</span>
@@ -154,7 +159,7 @@ export default function HomePage() {
           unordered list and the numerals are aria-hidden, so nothing tells a
           screen reader that brand systems precedes operating playbooks.
         */}
-        <NumberedGrid items={CAPABILITIES} cols={2} ground="mist" className="mt-16" />
+        <NumberedGrid items={CAPABILITIES} ground="mist" className="mt-16" />
       </Section>
 
       {/* ---------------------------------------------------------------
@@ -253,7 +258,6 @@ export default function HomePage() {
 
         <NumberedStatements
           items={OPERATOR_PROFILE}
-          cols={3}
           ground="white"
           className="mt-14"
         />

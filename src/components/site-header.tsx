@@ -79,7 +79,7 @@ export function SiteHeader() {
   return (
     <header className="border-graphite border-b-2 bg-white">
       <SplitRule />
-      <Container wide>
+      <Container>
         <div className="flex h-20 items-center justify-between sm:h-24">
           <Wordmark />
 

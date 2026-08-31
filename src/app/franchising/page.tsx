@@ -265,7 +265,7 @@ export default function FranchisingPage() {
           aside="Described qualitatively and deliberately so. Saying what support exists is permitted. Quantifying what it produces would be a financial performance representation, so no sentence here carries a number."
         />
 
-        <NumberedGrid items={CAPABILITIES} cols={2} ground="white" className="mt-16" />
+        <NumberedGrid items={CAPABILITIES} ground="white" className="mt-16" />
 
         <CtaPrompt
           className="mt-14 max-w-3xl"
@@ -288,7 +288,6 @@ export default function FranchisingPage() {
 
         <NumberedStatements
           items={OPERATOR_PROFILE}
-          cols={3}
           ground="mist"
           className="mt-14"
         />

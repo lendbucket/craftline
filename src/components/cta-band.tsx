@@ -55,10 +55,16 @@ export function CtaBand({
     <section className="bg-signal-solid">
       <Container>
         <div className="band">
-          <div className="flex flex-wrap items-end justify-between gap-x-12 gap-y-9">
-            <div className="max-w-2xl">
+          {/*
+            The import sets this row align-items:center with the copy block
+            capped at 560px and the controls opposite it, so the heading and the
+            buttons sit on one line rather than the buttons dropping to the
+            bottom of a tall left column.
+          */}
+          <div className="flex flex-wrap items-center justify-between gap-x-16 gap-y-9">
+            <div className="max-w-[35rem]">
               <h2 className="d2 text-white">{title}</h2>
-              <p className="text-onred mt-6 max-w-[52ch] leading-relaxed">
+              <p className="text-onred mt-6 leading-relaxed">
                 {lead}
               </p>
             </div>

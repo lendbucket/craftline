@@ -34,6 +34,23 @@ const COLUMNS: Record<Cols, string> = {
   4: "sm:grid-cols-2 lg:grid-cols-4",
 };
 
+/*
+  THE IMPORT DOES NOT COUNT COLUMNS, IT DECLARES A MINIMUM AND LETS THE MEASURE
+  DECIDE, and that is why its four part grid is three across with the fourth
+  alone beneath rather than a 2x2.
+
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 24px;
+
+  At the 1200px measure that fits three 384px tracks, because four would need
+  1432px. An explicit lg:grid-cols-2 cannot produce that shape at any width, and
+  cannot follow the measure if the measure ever changes again.
+*/
+const AUTO_FIT_340 =
+  "grid-cols-[repeat(auto-fit,minmax(min(100%,340px),1fr))]";
+const AUTO_FIT_270 =
+  "grid-cols-[repeat(auto-fit,minmax(min(100%,270px),1fr))]";
+
 export function HairlineGrid({
   children,
   cols = 2,
@@ -83,19 +100,17 @@ export function HairlineGrid({
  */
 export function NumberedGrid({
   items,
-  cols = 2,
   ground = "white",
   className = "",
 }: {
   items: readonly { title: string; body: string }[];
-  cols?: Cols;
   /** The knockout has to be filled with the ground the block sits on. */
   ground?: "white" | "mist";
   className?: string;
 }) {
   const knockout = ground === "mist" ? "bg-mist" : "bg-white";
   return (
-    <ul className={`grid gap-6 ${COLUMNS[cols]} ${className}`}>
+    <ul className={`grid gap-6 ${AUTO_FIT_340} ${className}`}>
       {items.map((item, index) => (
         <li
           key={item.title}
@@ -121,18 +136,16 @@ export function NumberedGrid({
  */
 export function NumberedStatements({
   items,
-  cols = 3,
   ground = "white",
   className = "",
 }: {
   items: readonly string[];
-  cols?: Cols;
   ground?: "white" | "mist";
   className?: string;
 }) {
   const knockout = ground === "mist" ? "bg-mist" : "bg-white";
   return (
-    <ul className={`grid gap-6 ${COLUMNS[cols]} ${className}`}>
+    <ul className={`grid gap-8 ${AUTO_FIT_270} ${className}`}>
       {items.map((item, index) => (
         <li
           key={item}

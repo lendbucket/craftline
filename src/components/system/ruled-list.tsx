@@ -114,8 +114,16 @@ export function FactStrip({
    */
   bordered?: boolean;
 }) {
+  /*
+    The import distributes these with repeat(auto-fit, minmax(210px, 1fr)),
+    which is why removing two of its four cells redistributes the remaining two
+    across the full measure instead of leaving them crowded at the left. Fixed
+    column counts cannot do that. `cols` now only sets the floor.
+  */
   const columns =
-    cols === "two" ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-4";
+    cols === "two"
+      ? "grid-cols-[repeat(auto-fit,minmax(min(100%,210px),1fr))]"
+      : "grid-cols-[repeat(auto-fit,minmax(min(100%,210px),1fr))]";
   const frame = bordered
     ? "hairline-grid"
     : "grid gap-px bg-line [&>*]:bg-white";

@@ -34,7 +34,6 @@ export function Section({
   ground = "white",
   density = "normal",
   edge = false,
-  wide = false,
   id,
   className = "",
 }: {
@@ -43,8 +42,6 @@ export function Section({
   density?: "loose" | "normal" | "tight";
   /** Heavy graphite rule across the top of the section. */
   edge?: boolean;
-  /** Widest container, for blocks that run to the page edges. */
-  wide?: boolean;
   id?: string;
   className?: string;
 }) {
@@ -65,7 +62,7 @@ export function Section({
       */
       className={`${grounds[ground]} ${edge ? "border-graphite border-t-2" : ""} ${id ? "scroll-mt-6" : ""} ${className}`}
     >
-      <Container wide={wide}>
+      <Container>
         <div className={densities[density]}>{children}</div>
       </Container>
     </section>

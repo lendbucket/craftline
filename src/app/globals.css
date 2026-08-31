@@ -160,6 +160,34 @@
   --color-onred: #ffe3e4;
 
   /*
+    PAGE GEOMETRY, TAKEN FROM THE IMPORT RATHER THAN APPROXIMATED.
+
+    The import declares, on every page container:
+
+      max-width: 1280px  (1240px on the interior pages)
+      padding:   0 clamp(20px, 3.5vw, 40px)
+
+    and it has no global box-sizing reset, so those are CONTENT box values. At a
+    1280 viewport that resolves to a 1200px content measure inside a 40px
+    gutter, and the 1240 and 1280 pages are identical there because neither
+    max-width binds until the viewport passes 1320.
+
+    THE BUILD WAS 64px NARROWER THAN THAT AND IT DROVE FIVE SEPARATE FAULTS.
+    Tailwind's preflight sets border-box, so max-w-[75rem] with px-8 gave a
+    1136px measure inside a 72px gutter. Everything laid out against it
+    inherited the error: the four part grid fell from three columns to two, the
+    brand block could not hold an even split, and the hero headline and the
+    offset frames stopped overlapping.
+
+    So the measure is a token, and every container reads it. Change it here and
+    all eleven templates move together. Do not set a width on a section.
+  */
+  --container-page: 80rem;
+  --container-gutter: clamp(1.25rem, 3.5vw, 2.5rem);
+  /* Reading measure for the two legal documents. Prose, not structure. */
+  --container-read: 52rem;
+
+  /*
     TYPE. Three roles.
 
     next/font injects the loaded families under *-family names from the root

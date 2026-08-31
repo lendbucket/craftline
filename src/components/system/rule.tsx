@@ -110,6 +110,19 @@ export function Eyebrow({
  * they take the delivered values at full strength as hairline outlines, because
  * a washed out rule on white reads as a printing fault rather than a device.
  *
+ * GEOMETRY, FROM THE IMPORT. It declares each frame 420 by 300 at a 3px rule,
+ * with the pair offset 100px horizontally and 66px vertically: the red one at
+ * top 64 and the blue at top 130.
+ *
+ * THE OFFSET IS THE IMPORT'S. THE HORIZONTAL POSITION IS NOT, DELIBERATELY.
+ * The import hangs the outer frame at right:-60px so it runs off the edge of
+ * the viewport, and the first version of this reproduced that at -96px. Cut
+ * off, with a compressed headline nowhere near it, it read as a stray box
+ * rather than as a device. Both frames now stop at the container's right edge,
+ * which is 40px in, so the pair is whole. What makes them work is not the bleed
+ * but the overlap: at the correct 1080px measure the headline runs to x=1120
+ * and crosses both of them.
+ *
  * Decorative and hidden from assistive technology. Hidden below the large
  * breakpoint too: at 390 there is no room to the side of the headline for them
  * to sit in, and overlapping them with the type would be noise.
@@ -120,8 +133,8 @@ export function OffsetFrames({ className = "" }: { className?: string }) {
       aria-hidden="true"
       className={`pointer-events-none absolute inset-0 hidden overflow-hidden lg:block ${className}`}
     >
-      <span className="border-signal absolute top-16 -right-24 h-72 w-[26rem] border-[3px]" />
-      <span className="border-datum absolute top-32 right-8 h-72 w-[26rem] border-[3px]" />
+      <span className="border-signal absolute top-16 right-10 h-[18.75rem] w-[26.25rem] border-[3px]" />
+      <span className="border-datum absolute top-[8.125rem] right-[8.75rem] h-[18.75rem] w-[26.25rem] border-[3px]" />
     </div>
   );
 }

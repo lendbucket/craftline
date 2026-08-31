@@ -3,36 +3,36 @@
  * its content in one of these, so the left edge of a heading on the home page
  * lines up with the left edge of a heading on the franchising page.
  *
- * WIDENED IN PHASE 2A, FROM 1024 TO 1200. The diagnosis measured the home page
- * brands band as a 307 pixel card at the left edge of a 1024 pixel column with
- * 685 pixels of empty white beside it. Part of that is the card, which is now a
- * block that runs the full width, and part of it was the column: 1024 is a
- * reading measure, and this site's structural blocks are tables and grids that
- * want the room. Reading measure is now set where reading happens, by
- * `narrow` and by the article column, rather than by the page container.
+ * THE MEASURE IS THE IMPORT'S, AND IT IS A TOKEN. See --container-page and
+ * --container-gutter in globals.css for where the numbers come from and what
+ * went wrong when they were approximated. The short version: the import runs a
+ * 1200px content measure inside a 40px gutter at a 1280 viewport, this build
+ * ran 1136 inside 72, and five separate layout faults were all that one
+ * difference showing up in five places.
  *
- * Nothing else may introduce its own max width.
+ * THERE IS NO `wide` ANY MORE. It existed because the header and footer wanted
+ * more room than the old, too-narrow default. The default is now correct, and
+ * the import runs its nav, its footer and its home page on the same 1280
+ * container, so a second width would be a difference with nothing behind it.
+ *
+ * Nothing else may introduce its own width.
  */
 export function Container({
   children,
-  wide = false,
   narrow = false,
   className = "",
 }: {
   children: React.ReactNode;
-  /** Full structural width, for blocks that run to the page edges. */
-  wide?: boolean;
   /** Reading measure, for the legal documents and other prose-first pages. */
   narrow?: boolean;
   className?: string;
 }) {
-  const width = narrow
-    ? "max-w-[52rem]"
-    : wide
-      ? "max-w-[80rem]"
-      : "max-w-[75rem]";
   return (
-    <div className={`mx-auto w-full ${width} px-5 sm:px-8 ${className}`}>
+    <div
+      className={`mx-auto w-full px-[var(--container-gutter)] ${
+        narrow ? "max-w-[var(--container-read)]" : "max-w-[var(--container-page)]"
+      } ${className}`}
+    >
       {children}
     </div>
   );

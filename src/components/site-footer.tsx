@@ -45,7 +45,7 @@ export function SiteFooter() {
 
   return (
     <footer className="border-graphite border-t-2 bg-white">
-      <Container wide>
+      <Container>
         <div className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <Wordmark as="plain" className="h-11 w-auto" />
