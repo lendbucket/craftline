@@ -19,7 +19,8 @@
     "email-audit": "tsx scripts/email-audit.ts",
     "font-metrics": "node scripts/font-metrics.mjs",
     "voice-audit": "node scripts/voice-audit.mjs",
-    "lighthouse": "node scripts/lighthouse-audit.mjs"
+    "lighthouse": "node scripts/lighthouse-audit.mjs",
+    "rule-one": "node scripts/rule-one-compare.mjs scratch/rule-one-before.json scratch/rule-one-after.json"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.111.0",

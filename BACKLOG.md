@@ -6,6 +6,53 @@ reason and, where one exists, the concrete incident that produced it.
 
 Items are removed when they ship, not when they are attempted.
 
+## Open, from Phase 2A
+
+### Dark grounds were declined on faulty reasoning, and that is revisitable
+
+The Phase 1 report declined the import's dark section grounds, and the reason
+given was wrong in a way that matters, so it is recorded here rather than left
+to read as a settled design judgment.
+
+**What was said.** That signal red measures 2.99:1 on graphite, datum blue
+2.80:1 and steel 2.95:1, so the brand cannot go on dark without lightened
+variants, and a lightened brand red stops matching the logo, the Open Graph
+card and the Organization schema.
+
+**What is actually true.** Those ratios are correct and the conclusion drawn
+from them is not. The constraint is narrower than it was stated: **brand colour
+cannot carry TEXT on a dark ground.** It says nothing about dark grounds
+themselves. The import does not put brand colour in text on its ink bands. It
+sets the type in white and uses red and blue only in rules, borders, the split
+bar and the offset frames, none of which carry text and none of which are
+subject to a contrast minimum.
+
+The same mistake was made a second time about the closing red band, declined as
+"a dark ground wearing the brand's colour", and that one was corrected during
+2A: a surface needing only two values does not need the re-pinning mechanism a
+full page ground would need. The dark grounds were never re-examined under the
+corrected reasoning.
+
+**So this is open, not closed.** A dark band with white type and brand coloured
+rules is buildable today with no new tokens and no lightened variants. What it
+would still need is a decision about whether this property wants dark bands at
+all, which is a design and positioning question rather than a contrast one. If
+it is picked up, the thing to check is that no token other than white lands on
+the dark field, which is what the contrast audit already enforces.
+
+### The Wattsmith lockup is small inside the import's 88 by 88 tile
+
+The brand block places the delivered lockup in a white tile taken from the
+import at 88 by 88 with 8px of padding. The import drew that tile for a square
+placeholder. The delivered artwork is 1372 by 498, a 2.75:1 landscape lockup,
+so inside the tile it renders at roughly 72 by 26.
+
+It is legible and it is not wrong, but it is smaller than the mark deserves on
+a page about the brands this company owns, and the tile is square for a reason
+that no longer applies. Deferred rather than resolved: the fix is a tile
+proportioned to the artwork instead of to the placeholder, and it is a
+one line change whenever somebody wants to make it.
+
 ## Phase 3: the Rule One verification, method fixed in advance
 
 Not yet run. The method is written down here before the results exist so that it
