@@ -23,7 +23,24 @@ import type { Insight } from "@/data/insights";
 export const CATEGORY_POSTS: Insight[] = [
   {
     slug: "what-a-home-services-franchise-is",
-    title: "What a home services franchise actually is",
+    /*
+      THE PHRASE LEADS, BECAUSE THIS IS THE ONE ARTICLE WHERE IT SHOULD.
+      "home services franchise" is the highest volume phrase in the category
+      this site writes about and the lowest difficulty, and it was sitting
+      seven characters into the title behind "What a". The article is already
+      the definitional piece on the term, so the title now says so first.
+
+      The slug does not change. It already contains the phrase, it is linked
+      from two other posts and from the franchising page, and renaming a URL
+      to gain nothing is how link equity gets thrown away.
+
+      Checked against the other seventeen for cannibalisation before changing
+      it: only what-to-look-for-in-a-home-services-franchise also carries the
+      phrase in its title, and it is a comparison framework rather than a
+      definition. The two want different results and now read as different
+      pieces, which they were already.
+    */
+    title: "Home services franchise: what the category actually is",
     eyebrow: "The category",
     description:
       "Home services franchising explained for someone encountering it for the first time: what the franchisor supplies, what the operator does, and how the category differs from food or retail franchising.",

@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { CtaBand, CtaPrompt } from "@/components/cta-band";
 import { Cell, HairlineGrid } from "@/components/system/grid";
+import { SplitBar } from "@/components/system/rule";
 import { Section } from "@/components/system/section";
 import { SectionHead } from "@/components/system/section-head";
 import {
@@ -14,6 +15,7 @@ import {
   formatPublished,
   getInsight,
   INSIGHTS,
+  LIMITS_HEADING,
   ORDERED_INSIGHTS,
 } from "@/data/insights";
 import { articleSchema, breadcrumbSchema } from "@/lib/schema";
@@ -85,6 +87,14 @@ export async function generateMetadata({
     title: insight.title,
     description: insight.description,
     path: `/insights/${insight.slug}`,
+    /*
+      NO BRAND SUFFIX ON AN ARTICLE. See the note on brandSuffix in
+      src/lib/seo.ts. The suffix is 19 characters and it pushed sixteen of the
+      eighteen article titles past the point a desktop result truncates, which
+      cost the end of the headline on every one of them. The headline is what
+      the article is; the brand is what the other nine routes carry.
+    */
+    brandSuffix: false,
   });
 }
 
@@ -144,11 +154,38 @@ function InlineRun({ content }: { content: string | Inline[] }) {
  * blue is this site's structure colour, and a hairline rather than a block
  * because the column is quiet and has to stay that way.
  */
-function BlockView({ block }: { block: Block }) {
+function BlockView({ block, first = false }: { block: Block; first?: boolean }) {
   if (block.kind === "heading") {
     return (
-      <div className="mt-14 first:mt-0">
-        <span aria-hidden="true" className="bg-datum block h-1 w-10" />
+      /*
+        THE SPACE ABOVE A SUBHEAD WAS BEING CANCELLED ON EVERY SUBHEAD.
+
+        This read "mt-14 first:mt-0", which is correct only if the heading is a
+        sibling of the blocks around it. It is not: the body renders each block
+        inside its own wrapper, so the heading div is the first child of its
+        wrapper every single time and first:mt-0 won every single time. Every
+        subhead in the section sat 24 pixels under the paragraph above it, on
+        the same margin as another paragraph, which is why the articles read as
+        one undifferentiated run.
+
+        The first block of an article is the only one that genuinely needs no
+        space above it, and the renderer already knows which one that is.
+      */
+      <div className={first ? "" : "mt-14"}>
+        {/*
+          THE SUBHEAD MARK IS NOW THE MARK THE REST OF THE SITE USES.
+
+          It was a 40 pixel blue rule, invented here and used nowhere else. It
+          did the job a mark does, so a reader scrolling found their section,
+          but it meant the longest reading on the property was the one place
+          the split bar did not appear. Eighteen articles, four to six subheads
+          each, all carrying a device that belongs to no system.
+
+          The bar costs nothing here that it does not cost anywhere else: it is
+          two spans, it carries no text, and it is hidden from assistive
+          technology because the heading beside it says what the section is.
+        */}
+        <SplitBar />
         <h2 className="d3-prose mt-5">{block.text}</h2>
       </div>
     );
@@ -179,6 +216,49 @@ function BlockView({ block }: { block: Block }) {
   );
 }
 
+/**
+ * A SUBHEAD IN THE ONE ARTICLE THAT IS GENUINELY A SEQUENCE.
+ *
+ * Numerals mean order on this site and nowhere else, which is the rule the
+ * Steps component is written under. Exactly one post qualifies: the buying
+ * sequence, where step three cannot happen before step two, and whose headings
+ * already read "One:", "Two:", "Three:".
+ *
+ * BECAUSE THE ORDINAL IS ALREADY IN THE HEADING, THE NUMERAL IS DECORATIVE AND
+ * IS HIDDEN. That is the opposite of the Phase 2A failure, where a decorative
+ * numeral replaced the words "Step 1" and took the sequence out of the page
+ * with it. Here the numeral repeats what the heading says out loud, so hiding
+ * it costs a screen reader nothing and showing it costs a sighted reader
+ * nothing either. Nothing is added to the page's text and nothing is removed
+ * from it.
+ */
+function SequenceHeading({
+  block,
+  first = false,
+}: {
+  block: Block & { kind: "heading" };
+  first?: boolean;
+}) {
+  return (
+    <div
+      className={`grid gap-x-6 sm:grid-cols-[3.5rem_minmax(0,1fr)] ${
+        first ? "" : "mt-14"
+      }`}
+    >
+      <p
+        aria-hidden="true"
+        className="text-signal font-display hidden text-[2.75rem] leading-[0.8] font-extrabold tabular-nums sm:block"
+      >
+        {String(block.step).padStart(2, "0")}
+      </p>
+      <div>
+        <SplitBar className="sm:hidden" />
+        <h2 className="d3-prose mt-5 sm:mt-0">{block.text}</h2>
+      </div>
+    </div>
+  );
+}
+
 export default async function InsightPage({
   params,
 }: {
@@ -195,12 +275,38 @@ export default async function InsightPage({
   );
 
   /*
+    THE CLOSING LIMITS SECTION COMES OUT OF THE READING COLUMN.
+
+    Fifteen of the eighteen posts end on "What this does not establish", and
+    until now it was the last subhead in a run of subheads: the same size, the
+    same mark, the same column, indistinguishable from the section above it.
+
+    It is not the same as the section above it. It is the passage a reader who
+    has been sold to before is looking for, and it is the passage a generative
+    engine lifts when it wants a statement it can attribute, because a stated
+    limit is unusual in this category. Giving it its own band on its own ground
+    is the article's fifth section and the one place the uppercase display
+    heading belongs in a piece that is otherwise set in sentence case.
+
+    Split on the heading rather than on a count, so a post that does not carry
+    one simply has no band and loses nothing.
+  */
+  const limitsAt = insight.body.findIndex(
+    (block) => block.kind === "heading" && block.text === LIMITS_HEADING,
+  );
+  const body = limitsAt === -1 ? insight.body : insight.body.slice(0, limitsAt);
+  const limits = limitsAt === -1 ? [] : insight.body.slice(limitsAt + 1);
+
+  /*
     Where the in-body prompt goes. Biased to 40% rather than the midpoint,
     because block INDEX is not block HEIGHT: a heading is a fraction of a
     paragraph, so a true index midpoint lands well past the visual middle. The
     CTA audit caught exactly that on the third article.
+
+    Measured against the reading body rather than the whole post, now that the
+    closing limits section has left it.
   */
-  const midpoint = Math.floor(insight.body.length * 0.4);
+  const midpoint = Math.floor(body.length * 0.4);
 
   return (
     <>
@@ -230,9 +336,13 @@ export default async function InsightPage({
           continuous text for that to matter.
         */}
         <article className="max-w-[38rem]">
-          {insight.body.map((block, index) => (
+          {body.map((block, index) => (
             <div key={index}>
-              <BlockView block={block} />
+              {block.kind === "heading" && block.step ? (
+                <SequenceHeading block={block} first={index === 0} />
+              ) : (
+                <BlockView block={block} first={index === 0} />
+              )}
               {index === midpoint ? (
                 <CtaPrompt
                   className="mt-14"
@@ -251,11 +361,36 @@ export default async function InsightPage({
         </article>
       </Section>
 
+      {limits.length > 0 ? (
+        <Section ground="mist" density="tight" edge>
+          <SectionHead
+            eyebrow="Limits"
+            tone="signal"
+            title={LIMITS_HEADING}
+            size="d3"
+            compact
+          />
+          <div className="mt-8 max-w-[38rem]">
+            {limits.map((block, index) => (
+              <BlockView key={index} block={block} />
+            ))}
+          </div>
+        </Section>
+      ) : null}
+
+      {/*
+        Still mist, and the graphite edge rule is what separates it from the
+        limits band above rather than a change of ground. HairlineGrid fills
+        its cells white so the grid reads against the ground it sits on, which
+        is the whole reason this section was put on mist in the first place;
+        moving it to white would have made the cards invisible to gain an
+        alternation the edge rule already provides.
+      */}
       {others.length > 0 ? (
         <Section ground="mist" edge>
           <SectionHead
             eyebrow="More reading"
-            tone="signal"
+            tone="datum"
             title="Other guides in this section."
             compact
           />

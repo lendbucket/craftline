@@ -112,6 +112,10 @@ const APPROVED = {
       ],
     ],
     mainBlocks: [
+      [
+        "Limits",
+        "eyebrow on the closing limits band, Workstream A: bring the articles to the depth of the designed pages",
+      ],
       ["Skilled trade brand and franchise development", "hero eyebrow, directed"],
       ["skilled trade", "tricolour headline span, directed"],
       ["service brands.", "tricolour headline span, directed"],
@@ -129,6 +133,202 @@ const APPROVED = {
     ],
   },
 };
+
+/**
+ * APPROVED RULES, FOR CHANGES THAT ARE MECHANICAL RATHER THAN EDITORIAL.
+ *
+ * A literal list cannot express "the same nineteen character suffix came off
+ * eighteen titles". Written out it is thirty six entries that a reader has to
+ * compare by eye to be sure the only thing that changed was the suffix, which
+ * is exactly the review a machine should be doing.
+ *
+ * THESE ARE NOT A LOOSENING, AND EACH ONE IS WRITTEN TO BE UNABLE TO PASS
+ * ANYTHING ELSE. The suffix rule does not approve "a title that got shorter":
+ * it approves a removed title only when the identical string minus the exact
+ * brand suffix is present in the after capture, and approves an added title
+ * only when the identical string plus that suffix was in the before capture.
+ * A title whose words changed fails both halves and is reported.
+ *
+ * Every rule names the instruction that authorised it, in the operator's own
+ * terms, the same as a literal entry.
+ */
+const BRAND_SUFFIX = " | Craftline Brands";
+const titlesBefore = new Set(
+  Object.values(before.routes).map((r) => r.title),
+);
+const titlesAfter = new Set(Object.values(after.routes).map((r) => r.title));
+
+/**
+ * ONE ARTICLE WAS RETITLED, AND A TITLE APPEARS IN NINE INVENTORIES.
+ *
+ * "What a home services franchise actually is" became "Home services franchise:
+ * what the category actually is" so the phrase leads. That one edit shows up as
+ * a removal and an addition in the title, the Open Graph and Twitter metas, the
+ * h1, the h2 on the index, seventeen card anchors, the Article headline, a
+ * breadcrumb name, and the main text of every route that lists the section.
+ *
+ * THE RULE IS A SUBSTITUTION CHECK, NOT A CONTAINS CHECK. A removed value is
+ * approved only when the identical string with the old title swapped for the
+ * new one is present in the after capture, and the reverse for an addition.
+ * A card whose description also changed, or an anchor whose href moved, fails
+ * both halves and is reported, because the substituted string would not be
+ * found.
+ */
+const RETITLE_FROM = "What a home services franchise actually is";
+const RETITLE_TO = "Home services franchise: what the category actually is";
+const RETITLE_WHY =
+  'Ahrefs retitle, directed: "Retitle the existing article for home services franchise"';
+
+/* Every value of a field across a whole capture, built once, on first use. */
+const valueIndex = { before: null, after: null };
+function valuesOf(side, field) {
+  if (!valueIndex[side]) {
+    const source = side === "before" ? before : after;
+    const index = {};
+    for (const [name, get] of FIELDS) {
+      const all = new Set();
+      for (const route of Object.values(source.routes)) {
+        for (const value of get(route) ?? []) all.add(value);
+      }
+      index[name] = all;
+    }
+    valueIndex[side] = index;
+  }
+  return valueIndex[side][field] ?? new Set();
+}
+
+const APPROVED_RULES = [
+  {
+    kind: "removed",
+    field: "*",
+    why: RETITLE_WHY,
+    test: (v, field) =>
+      v.includes(RETITLE_FROM) &&
+      valuesOf("after", field).has(v.split(RETITLE_FROM).join(RETITLE_TO)),
+  },
+  {
+    kind: "added",
+    field: "*",
+    why: RETITLE_WHY,
+    test: (v, field) =>
+      v.includes(RETITLE_TO) &&
+      valuesOf("before", field).has(v.split(RETITLE_TO).join(RETITLE_FROM)),
+  },
+  /*
+    The retitled article is also the one article whose title lost the brand
+    suffix in the same pass, so neither the substitution rule above nor the
+    suffix rule below can see it on its own: the removed string differs from
+    every added string by two changes at once. Both halves are listed here as
+    literals, which is the right treatment for a value that two approved
+    decisions landed on together.
+  */
+  {
+    kind: "removed",
+    field: "title",
+    why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
+    test: (v) => v === `${RETITLE_FROM}${BRAND_SUFFIX}`,
+  },
+  {
+    kind: "added",
+    field: "title",
+    why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
+    test: (v) => v === RETITLE_TO,
+  },
+  /*
+    WORD LEVEL, DERIVED FROM THE RETITLE AND NOTHING ELSE.
+
+    A word is approved only if it is a word of the old headline (on the removed
+    side) or of the new one (on the added side). Nothing else passes.
+
+    THE LIMIT, STATED RATHER THAN GLOSSED. These are multisets, so if some
+    unrelated change removed a further instance of a common word like "the",
+    this rule would approve that instance too. What stops that mattering is
+    that the block inventory is the stricter check and it is already clean:
+    mainBlocks reports zero unapproved, so no new or missing sentence exists
+    for a stray word to belong to. Word level is the backstop here, not the
+    authority.
+  */
+  {
+    kind: "removed",
+    field: "mainWords",
+    why: `${RETITLE_WHY} (word of the previous headline)`,
+    test: (v) => RETITLE_FROM.split(" ").includes(v),
+  },
+  {
+    kind: "added",
+    field: "mainWords",
+    why: `${RETITLE_WHY} (word of the new headline)`,
+    test: (v) => RETITLE_TO.split(" ").includes(v),
+  },
+  {
+    kind: "removed",
+    field: "title",
+    why: 'title suffix: "Drop | Craftline Brands from article titles"',
+    test: (v) =>
+      v.endsWith(BRAND_SUFFIX) &&
+      titlesAfter.has(v.slice(0, -BRAND_SUFFIX.length)),
+  },
+  {
+    kind: "added",
+    field: "title",
+    why: 'title suffix: "Drop | Craftline Brands from article titles"',
+    test: (v) => titlesBefore.has(v + BRAND_SUFFIX),
+  },
+  {
+    kind: "removed",
+    field: "jsonLd",
+    why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
+    test: (v) =>
+      v === "url=https://craftlinebrands.com/" ||
+      v === "itemListElement[0].item=https://craftlinebrands.com/",
+  },
+  {
+    kind: "added",
+    field: "jsonLd",
+    why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
+    test: (v) =>
+      v === "url=https://craftlinebrands.com" ||
+      v === "itemListElement[0].item=https://craftlinebrands.com",
+  },
+  {
+    kind: "added",
+    field: "jsonLd",
+    why: 'FAQPage on /franchising, from FRANCHISE_FAQ, already rendered on the page',
+    test: (v) =>
+      v === "@type=FAQPage" ||
+      /^mainEntity\[\d+\]\.(@type=Question|name=|acceptedAnswer\.(@type=Answer|text=))/.test(
+        v,
+      ) ||
+      v === "@id=https://craftlinebrands.com/franchising#faq" ||
+      v === "isPartOf.@id=https://craftlinebrands.com/#website",
+  },
+  {
+    kind: "added",
+    field: "jsonLd",
+    why: 'breadcrumb schema on /privacy and /terms, directed',
+    test: (v) =>
+      /*
+        Anchored at both ends. The first version left the name alternation
+        open, so "name=Home services franchise: what the category actually is"
+        matched on the word "Home" and an article retitle was quietly approved
+        as a breadcrumb. An allowlist that approves by prefix is not one.
+      */
+      /^itemListElement\[\d+\]\.(name=(Home|Privacy policy|Terms of use)$|item=https:\/\/craftlinebrands\.com(\/privacy|\/terms)?$|@type=ListItem$|position=\d+$)/.test(
+        v,
+      ) ||
+      v === "@type=BreadcrumbList" ||
+      v === "@context=https://schema.org",
+  },
+];
+
+function ruleFor(field, kind, value) {
+  for (const rule of APPROVED_RULES) {
+    if (rule.field !== "*" && rule.field !== field) continue;
+    if (rule.kind !== kind) continue;
+    if (rule.test(value, field)) return rule.why;
+  }
+  return null;
+}
 
 const flat = (o) =>
   Object.fromEntries(
@@ -150,6 +350,8 @@ function approvalFor(field, kind, value) {
   const table = kind === "removed" ? APPROVED_REMOVED : APPROVED_ADDED;
   const hit = table[field]?.get(value);
   if (hit) return hit;
+  const byRule = ruleFor(field, kind, value);
+  if (byRule) return byRule;
   if (kind === "added" && WORD_FIELDS.has(field) && APPROVED_WORDS.has(value)) {
     return "word of an approved block";
   }

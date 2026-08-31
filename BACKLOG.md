@@ -291,3 +291,81 @@ at the apex and carry the consolidation. Fix whenever convenient, either by
 setting the redirect status on the **www** domain row in Vercel, which is the
 row that performs the redirect, or with a host matched permanent redirect in
 `next.config`.
+
+## Phase 3 decisions, recorded
+
+### The brand suffix policy is split, and the split is deliberate
+
+Article titles carry no ` | Craftline Brands`. Every other route does. The
+suffix is 19 characters against a truncation point near 60, so on a core page it
+costs a fifth of the line and buys the brand a place in every result, which is
+the trade a company nobody has heard of wants. On an article it left 41
+characters for a headline that has to carry a question somebody typed, and
+sixteen of eighteen titles ran past the cut.
+
+Open Graph and Twitter titles keep the suffix on every route including the
+articles. Those are shared link cards rather than search results, they carry no
+length pressure, and a link pasted into a message is where a reader needs to be
+told whose writing it is.
+
+Implemented as `brandSuffix` on `pageMetadata`, which flips the Next.js title to
+`{ absolute }`. Adding a route that should drop the suffix is one argument.
+
+### llms.txt and llms-full.txt are generated, and that is the point
+
+Both are route handlers reading `src/config/company.ts` and the insight data at
+build time, not files in `public/`. A hand written pair would have been
+describing the pre redesign site within a month and nothing would have said so.
+
+Three things the site publishes are held out of both files, and the reasoning is
+in `src/lib/llms.ts`: the FAQ answers on cost, earnings, and territory
+availability; the territory expansion capability; and `CAPITAL_BRACKETS`. All
+are safe on the page, where the disclaimer sits under them, and none is safe as
+a line lifted out of a text file. What replaces them is a constraints block that
+states what this company does not publish, in a form that says the right thing
+read whole or read one line at a time.
+
+The article bodies ARE included, and that was a measurement rather than a
+judgment: the corpus contains zero dollar figures, zero percentages, and zero
+earnings claims. The three matches for that vocabulary are all refusals. If a
+future article breaks that, `npm run llms-audit` fails before it ships.
+
+### sameAs is zero because zero profiles exist
+
+The Organization node carries no `sameAs` and will not until a real external
+profile does. There is no company LinkedIn, no Crunchbase entry, no Wikidata
+item. The operating brand's own site is not a candidate: it identifies a
+different entity and already appears on the brand node. When one exists it goes
+in `schema.ts` beside `ENTITY_URL`.
+
+### The voice audit was reviewed for one defect class, not one bug
+
+Rule 8 passed for a whole phase while counting sentences when the tell was
+clauses. Every rule was re-read for the same shape of error and four more were
+found: the string rules read only `<main>` and so never saw the footer
+disclaimer, the density rule ignored `<dt>`, the bold lead-in rule tested a tag
+name when the tell is weight, and the parallel phrasing rule could not see
+subheads because an article wraps every block in its own div. All five are
+fixed and every rule is injection verified in the file header.
+
+### Two audits are red on this branch on purpose
+
+`voice-audit` fails 18 times on one string, the closing band lead, which
+Workstream B replaces. `cta-audit` fails 6 times at 3.52 to 3.58 viewports,
+which is the rule that is being rewritten for the new CTA pattern. Neither was
+worked around, and neither should be closed by touching anything other than the
+approved Workstream B change.
+
+### Not done, and not forgotten: three length fixes were never approved
+
+Reported in the Phase 3 audit, decided on neither way, and left alone:
+
+- The home description is 84 characters, which is 26 under the band and the one
+  route on the site whose snippet is too short to earn its place.
+- `/franchising` 267, `/insights` 222 and `/about` 219 all overrun 160.
+- `/about` 24, `/brands` 25, `/contact` 26 and `/insights` 27 are all under the
+  30 character floor.
+
+These are nine edits to strings that already exist. They are listed here rather
+than done because the instruction enumerated other items and did not include
+them, and doing unrequested work to a page's metadata is how a site drifts.

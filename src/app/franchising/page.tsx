@@ -28,7 +28,7 @@ import {
   FRANCHISE_GLOSSARY,
 } from "@/data/franchising";
 import { ORDERED_INSIGHTS } from "@/data/insights";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 /**
@@ -407,6 +407,13 @@ export default function FranchisingPage() {
           </div>
         </div>
       </Section>
+
+      {/*
+        The nine pairs rendered in the FAQ band above, marked up from the same
+        array they are rendered from. See faqSchema in src/lib/schema.ts for
+        why the articles carry none of this.
+      */}
+      <JsonLd data={faqSchema(FRANCHISE_FAQ, "/franchising")} />
 
       <JsonLd
         data={breadcrumbSchema([{ name: "Franchising", path: "/franchising" }])}

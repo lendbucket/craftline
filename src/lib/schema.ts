@@ -43,6 +43,31 @@ export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 
 /**
+ * THE ENTITY URL, AND WHY IT HAS NO TRAILING SLASH.
+ *
+ * It used to be `${SITE_URL}/`, while the home page canonical resolves to
+ * `https://craftlinebrands.com` with no slash. Two strings for one entity is
+ * exactly the ambiguity an extractor has to guess its way through, and a
+ * knowledge graph that has guessed twice has two nodes. The canonical is the
+ * authority on this site's own address, so schema follows it rather than the
+ * other way round.
+ *
+ * The node ids above keep their slash. A fragment id is an identifier rather
+ * than an address, it is never fetched, and changing an id that other nodes
+ * reference by @id would break the references for no gain.
+ *
+ * NO sameAs, AND THAT IS A MEASURED ABSENCE RATHER THAN AN OVERSIGHT.
+ * sameAs is for external pages that unambiguously identify this same entity:
+ * a company LinkedIn page, a Crunchbase entry, a Wikidata item. Craftline has
+ * none of those yet. The operating brand's site is not a candidate, because it
+ * identifies a different entity and already appears correctly on the brand
+ * node below. Pointing sameAs at a page that is not this company is a false
+ * identity claim, and it is worse than the empty field it replaces. When a
+ * real profile exists, it goes here.
+ */
+export const ENTITY_URL = SITE_URL;
+
+/**
  * The Craftline logo, as an absolute URL. Google will not resolve a relative
  * one, and an Organization without a logo forfeits the knowledge panel image
  * for no reason.
@@ -63,7 +88,7 @@ export function organizationSchema() {
     "@id": ORGANIZATION_ID,
     name: COMPANY.name,
     alternateName: COMPANY.shortName,
-    url: `${SITE_URL}/`,
+    url: ENTITY_URL,
     logo: ORGANIZATION_LOGO,
     description: COMPANY.descriptor,
     /**
@@ -127,7 +152,7 @@ export function websiteSchema() {
     "@id": WEBSITE_ID,
     name: COMPANY.name,
     alternateName: COMPANY.shortName,
-    url: `${SITE_URL}/`,
+    url: ENTITY_URL,
     publisher: { "@id": ORGANIZATION_ID },
     inLanguage: "en-US",
   };
@@ -154,7 +179,57 @@ export function breadcrumbSchema(trail: { name: string; path: string }[]) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `${SITE_URL}${item.path === "/" ? "/" : item.path}`,
+      /*
+        Home resolves to the bare origin, matching both the home canonical and
+        Organization.url. It used to append a slash here and nowhere else,
+        which put a third spelling of the same address into the graph.
+      */
+      item: `${SITE_URL}${item.path === "/" ? "" : item.path}`,
+    })),
+  };
+}
+
+/**
+ * FAQPage, for a page that already renders real questions and answers.
+ *
+ * THE RULE THIS IS BUILT UNDER: schema describes what is on the page, and it
+ * never carries content the page does not. The nine pairs on the franchising
+ * page come from FRANCHISE_FAQ, the visible list is rendered from the same
+ * array, and this builder takes the same array. There is no second copy of the
+ * text to drift, and no path by which a question can exist in the markup and
+ * not on the page.
+ *
+ * THE ARTICLES GET NONE OF THIS, DELIBERATELY. Not one of the eighteen posts
+ * contains a genuine content question: every question mark in the section
+ * belongs to a call to action heading, and the body subheads are all
+ * declarative. Writing questions into eighteen articles so that eighteen
+ * FAQPage blocks could exist would be manufacturing content to fill markup,
+ * which is the failure this note exists to prevent. Zero is the correct
+ * number and it stays zero until a post genuinely asks something.
+ *
+ * ONE THING TO UNDERSTAND ABOUT MARKING UP THIS PARTICULAR FAQ. Three of the
+ * nine answers are the franchise legal gate doing its job: what it costs, what
+ * an operator can expect to earn, and whether a territory is open. Marking
+ * them up makes them eligible to be lifted and shown by a machine that does
+ * not carry the page's disclaimer with them. Each of those three is written to
+ * survive that, because each leads with the refusal and qualifies afterwards
+ * rather than the reverse. Any answer added later has to meet the same test
+ * before it goes in here, and an answer that only makes sense beside the
+ * disclaimer does not belong in structured data at all.
+ */
+export function faqSchema(
+  entries: readonly { q: string; a: string }[],
+  path: string,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}${path}#faq`,
+    isPartOf: { "@id": WEBSITE_ID },
+    mainEntity: entries.map((entry) => ({
+      "@type": "Question",
+      name: entry.q,
+      acceptedAnswer: { "@type": "Answer", text: entry.a },
     })),
   };
 }
