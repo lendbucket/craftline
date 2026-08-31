@@ -30,13 +30,14 @@ import "./globals.css";
  *   failed silently to a system fallback, which is exactly the class of bug the
  *   *-family naming note below exists to prevent.
  *
- *   `axes: ["opsz"]` is requested deliberately and is the one place this build
- *   pays for a second variable axis. The face is drawn to change with size: at
- *   the 88px page title it wants the display drawing, at the 16px eyebrow it
- *   wants the text drawing, and the difference is visible rather than
- *   theoretical. With the axis present, `font-optical-sizing: auto` in
- *   globals.css maps it from the rendered size automatically and no component
- *   ever sets it by hand.
+ *   `axes: ["opsz"]` is requested deliberately, and it is free. Measured: the
+ *   emitted woff2 is 58,296 bytes with the axis, without it, and with specific
+ *   static weights requested instead. Google serves the same variable file
+ *   either way, so declining the axis would have bought nothing and lost the
+ *   thing the face is drawn for: at the 88px page title it wants the display
+ *   drawing, at the 16px eyebrow it wants the text drawing. With the axis
+ *   present, `font-optical-sizing: auto` in globals.css maps it from the
+ *   rendered size and no component ever sets it by hand.
  *
  * SANS, Barlow. Body copy, form controls, captions, small labels.
  *
@@ -68,17 +69,59 @@ import "./globals.css";
  *   has used for a century, and the three do not compete because they are never
  *   asked to do each other's job.
  *
- * PRELOADING. Display and sans are preloaded, because they paint above the fold
- * on all 27 routes. The serif is not: it appears only inside a reading column
- * that is always below the fold, and preloading it on /contact would spend
- * bandwidth on a face that route never renders.
+ * PRELOADING. The display face and the body sans are preloaded. The serif is
+ * not, because it appears only inside a reading column that is always below the
+ * fold, and preloading it on /contact would spend bandwidth on a face that
+ * route never renders.
  *
- * CLS. All three take the default `display: "swap"` together with the default
- * `adjustFontFallback: true`, which generates a metric matched fallback face
- * with size-adjust and ascent, descent and line-gap overrides computed from the
- * real font. That is the mechanism that keeps the swap from moving the page.
- * It is verified rather than assumed: Lighthouse CLS is recorded for every
- * template in the audit run.
+ *   THE DISPLAY FACE'S PRELOAD WAS TESTED AND KEPT, AND THE TEST IS WORTH
+ *   RECORDING BECAUSE THE FIRST ANSWER WAS WRONG. It is 58KB, and preloading it
+ *   puts that 58KB in contention with the HTML, the CSS and the body face on a
+ *   throttled connection. Dropping the preload did buy real time:
+ *
+ *                       preloaded      not preloaded
+ *     home              LCP 2.77s      LCP 2.41s      3 runs, medians
+ *     franchising       LCP 2.71s      LCP 2.70s      unchanged
+ *     article           LCP 3.22s      LCP 3.22s      unchanged
+ *
+ *   On that evidence the preload was removed. It was then put back, because the
+ *   measurement was incomplete. Without the preload the face arrives after more
+ *   of the page has been laid out, and the swap starts moving things:
+ *
+ *                       preloaded      not preloaded
+ *     home              CLS 0.000      CLS 0.047      5 runs, identical each time
+ *     brand detail      CLS 0.000      CLS 0.030      5 runs, identical each time
+ *
+ *   So the trade is 0.36s of Lighthouse LCP against 0.047 of layout shift, and
+ *   it is not a close call. The LCP figure is Lantern's simulation of a slow
+ *   connection; under throttling actually applied, the home page LCP element
+ *   paints at 856ms in both configurations. The shift is real in both. A reader
+ *   does not experience a simulated second, and does experience a heading
+ *   jumping under their thumb.
+ *
+ *   WHAT THAT 0.047 ACTUALLY IS, because the first explanation was wrong. It is
+ *   the h1 reflowing: with the real face late, the home page lead paragraph
+ *   moves from y=485 to y=444, so the headline lost a line when the display
+ *   face arrived. A metric matched fallback matches AVERAGE CHARACTER WIDTH. It
+ *   cannot guarantee that a balanced headline breaks across the same number of
+ *   lines in both faces, and at a 16ch measure a small per-character difference
+ *   is a whole line.
+ *
+ *   So the preload is the primary defence and the fallback is the backstop, not
+ *   the other way round. Neutralising the fallback's size-adjust and rerunning
+ *   the no-preload case changes CLS not at all, which is the evidence for that
+ *   split. The fallback is verified applied by a separate measurement: with the
+ *   webfonts blocked it sets a reference string at 1287px where plain Arial
+ *   sets it at 2229px. It is doing its job. Its job is simply narrower than
+ *   "no shift".
+ *
+ * CLS. All three take `display: "swap"`. Barlow and Source Serif 4 get their
+ * metric matched fallback from `adjustFontFallback`, which is on by default.
+ * The display face does not, because next/font has no metrics for it, so its
+ * fallback is declared by hand in globals.css from measurements taken by
+ * `npm run font-metrics`. That is the mechanism that keeps the swap from moving
+ * the page, and it is verified rather than assumed: `npm run lighthouse`
+ * records CLS for each of the ten templates it can score.
  *
  * All three are declared under *-family names that differ from the Tailwind
  * theme keys in globals.css. Matching the names would create a
