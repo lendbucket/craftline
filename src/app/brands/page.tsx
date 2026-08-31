@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { BrandRow } from "@/components/brand-row";
-import { Container } from "@/components/container";
-import { Cta } from "@/components/cta";
+import { Cta, CtaRow } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { CtaBand } from "@/components/cta-band";
-import { Band, SectionHeading } from "@/components/section";
+import { Section } from "@/components/system/section";
+import { SectionHead } from "@/components/system/section-head";
 import { BRANDS } from "@/config/company";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -28,6 +28,12 @@ export const metadata: Metadata = pageMetadata({
  * Nothing here describes services in a way that competes with the operating
  * brand's own site for service keywords. Craftline states what the brand is and
  * links out; wattsmithelectric.com is the authority on what it does.
+ *
+ * THE PRIMARY ACTION STAYS ON THIS SITE. The import points "About Wattsmith
+ * Electric" at wattsmithelectric.com, which leaves /brands/wattsmith-electric
+ * with no inbound link from the index above it while it is still in the
+ * sitemap. That is an orphaned route, and it is recorded in BACKLOG.md as a
+ * rejected import behaviour so it does not come back.
  */
 export default function BrandsPage() {
   const [wattsmith] = BRANDS;
@@ -44,31 +50,44 @@ export default function BrandsPage() {
         secondaryLabel="How franchising works"
       />
 
-      <section className="bg-white">
-        <Container>
-          <Band>
-            <BrandRow />
+      {/*
+        The brand block is the whole point of this page, so it gets the loose
+        band and no heading above it. A section title over a single block that
+        the page title already named would be furniture.
+      */}
+      <Section ground="white" density="loose">
+        <BrandRow />
+      </Section>
 
-            <div className="mt-14 max-w-3xl">
-              <SectionHeading
-                eyebrow="Why only one"
-                title="A system is worth handing over only after it has been run."
-                lead="A franchise programme assembled before anyone has operated the brand is a set of assumptions. Building and running the first business is what turns those into a playbook, and it is the reason this list is short."
-              />
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Cta href={`/brands/${wattsmith.slug}`}>
-                  About {wattsmith.name}
-                </Cta>
-                <Cta href="/franchising" variant="secondary">
-                  How franchising works
-                </Cta>
-              </div>
-            </div>
-          </Band>
-        </Container>
-      </section>
+      <Section ground="mist" density="tight" edge>
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
+          <SectionHead
+            eyebrow="Why only one"
+            tone="signal"
+            title="A system is worth handing over only after it has been run."
+            compact
+          />
+          <div>
+            <p className="text-steel max-w-[62ch] leading-relaxed">
+              A franchise programme assembled before anyone has operated the
+              brand is a set of assumptions. Building and running the first
+              business is what turns those into a playbook, and it is the reason
+              this list is short.
+            </p>
+            <CtaRow className="mt-9">
+              <Cta href={`/brands/${wattsmith.slug}`}>
+                About {wattsmith.name}
+              </Cta>
+              <Cta href="/franchising" variant="secondary">
+                How franchising works
+              </Cta>
+            </CtaRow>
+          </div>
+        </div>
+      </Section>
 
       <CtaBand
+
         title="Interested in operating one?"
         lead="Craftline is developing its franchise programme. There is nothing to offer yet, and a conversation now costs you nothing."
         secondaryHref="/about"

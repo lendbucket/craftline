@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Fragment } from "react";
-import { Container } from "@/components/container";
-import { Cta } from "@/components/cta";
+import { Cta, CtaRow } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { CtaBand, CtaPrompt } from "@/components/cta-band";
-import { Band, Card, SectionHeading } from "@/components/section";
+import { Section } from "@/components/system/section";
+import { SectionHead } from "@/components/system/section-head";
 import { formatPublished, ORDERED_INSIGHTS } from "@/data/insights";
 import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
@@ -30,6 +30,20 @@ export const metadata: Metadata = pageMetadata({
  * eighteen posts, which a single dated list still handles without help. Add
  * navigation when a reader cannot find something, not before: taxonomy built
  * ahead of the volume that needs it is how a section starts looking abandoned.
+ *
+ * THE IMPORT'S CATEGORY FILTER WAS DECLINED. Ten buttons over client held
+ * state is a new capability on an existing route rather than a restyle of it,
+ * and this hub is server rendered and static today. The import also rewrites
+ * all eighteen links as absolute URLs opening in a new tab, which would turn
+ * the site's own internal linking into outbound behaviour on the most linked
+ * section of the property. Both are recorded in BACKLOG.md.
+ *
+ * PHASE 2A. The eighteen posts are now one ruled index rather than eighteen
+ * bordered cards. A dated list of articles is a table of contents, and a table
+ * of contents should look like one: the category and date align in a left
+ * column a reader can run their eye down, the titles align in another, and
+ * scanning for the piece you want is a matter of moving down one column rather
+ * than reading eighteen boxes.
  *
  * No author bylines anywhere in this section. The founder's name is never
  * rendered on this property, and corporate authorship is also the truthful
@@ -61,83 +75,93 @@ export default function InsightsPage() {
         secondaryLabel="How franchising works"
       />
 
-      <section className="bg-white">
-        <Container>
-          <Band>
-            <ul className="grid gap-5">
-              {ORDERED_INSIGHTS.map((insight, index) => (
-                <Fragment key={insight.slug}>
-                <Card as="li" className="p-0">
-                  <Link
-                    href={`/insights/${insight.slug}`}
-                    className="block h-full rounded-lg p-6 sm:p-7"
-                  >
-                    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                      <p className="eyebrow">{insight.eyebrow}</p>
-                      {/*
-                        A real date, hardcoded in the post data. It is the one
-                        piece of metadata a reader can use to judge whether a
-                        piece is current, so it must never be a build timestamp.
-                      */}
-                      <time
-                        dateTime={insight.published}
-                        className="text-steel text-[0.8125rem]"
-                      >
-                        {formatPublished(insight.published)}
-                      </time>
-                    </div>
-                    <h2 className="h3 mt-3 max-w-3xl">{insight.title}</h2>
-                    <p className="text-steel mt-3 max-w-3xl leading-relaxed">
+      <Section ground="white">
+        <ul className="border-graphite border-t-2">
+          {ORDERED_INSIGHTS.map((insight, index) => (
+            <Fragment key={insight.slug}>
+              <li className="border-line border-b">
+                <Link
+                  href={`/insights/${insight.slug}`}
+                  className="hover:bg-mist group grid gap-x-10 gap-y-3 py-7 transition-colors md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)]"
+                >
+                  <div>
+                    <p className="label-sm">{insight.eyebrow}</p>
+                    {/*
+                      A real date, hardcoded in the post data. It is the one
+                      piece of metadata a reader can use to judge whether a
+                      piece is current, so it must never be a build timestamp.
+                    */}
+                    <time
+                      dateTime={insight.published}
+                      className="text-steel mt-2 block text-[0.8125rem]"
+                    >
+                      {formatPublished(insight.published)}
+                    </time>
+                  </div>
+                  <div>
+                    <h2 className="d3-sentence group-hover:text-datum max-w-[52ch] transition-colors">
+                      {insight.title}
+                    </h2>
+                    <p className="text-steel mt-3 max-w-[68ch] leading-relaxed">
                       {insight.description}
                     </p>
-                    <p className="text-datum mt-4 text-[0.9375rem] font-semibold">
+                    <p className="text-datum font-display mt-4 text-[0.9375rem] font-bold tracking-[0.07em] uppercase">
                       Read this
                       <span className="sr-only">: {insight.title}</span>
                     </p>
-                  </Link>
-                  </Card>
-                  {/*
-                    A prompt partway down the list rather than only at its foot.
-                    The section runs to eighteen posts, and the CTA audit
-                    measured nearly seven viewports of unbroken cards at desktop
-                    width with no way to act anywhere in it.
-                  */}
-                  {PROMPT_AFTER.has(index) ? (
-                    <li>
-                      <CtaPrompt
-                        className="bg-mist"
-                        title="Reading to decide rather than to browse?"
-                        lead="An inquiry reaches a person who can answer directly. No Franchise Disclosure Document has been issued, so there is nothing to apply for."
-                      />
-                    </li>
-                  ) : null}
-                </Fragment>
-              ))}
-            </ul>
-          </Band>
-        </Container>
-      </section>
+                  </div>
+                </Link>
+              </li>
+              {/*
+                A prompt partway down the list rather than only at its foot.
+                The section runs to eighteen posts, and the CTA audit measured
+                nearly seven viewports of unbroken cards at desktop width with
+                no way to act anywhere in it.
+              */}
+              {PROMPT_AFTER.has(index) ? (
+                <li className="py-8">
+                  <CtaPrompt
+                    className="max-w-3xl"
+                    title="Reading to decide rather than to browse?"
+                    lead="An inquiry reaches a person who can answer directly. No Franchise Disclosure Document has been issued, so there is nothing to apply for."
+                  />
+                </li>
+              ) : null}
+            </Fragment>
+          ))}
+        </ul>
+      </Section>
 
-      <section className="bg-mist">
-        <Container>
-          <Band>
-            <SectionHeading
-              eyebrow="Why this section exists"
-              title="Information, published before there is anything to sell."
-              lead="Craftline is developing its franchise programme and no Franchise Disclosure Document has been issued. Until one is, there is nothing to offer and no terms to discuss. What can be done honestly in the meantime is to set out how this kind of business works, so that anyone who eventually reads a real disclosure document arrives already understanding the structure and can tell a good one from a bad one."
-            />
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+      <Section ground="mist" density="tight" edge>
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-20">
+          <SectionHead
+            eyebrow="Why this section exists"
+            tone="signal"
+            title="Information, published before there is anything to sell."
+            compact
+          />
+          <div>
+            <p className="text-steel max-w-[68ch] leading-relaxed">
+              Craftline is developing its franchise programme and no Franchise
+              Disclosure Document has been issued. Until one is, there is nothing
+              to offer and no terms to discuss. What can be done honestly in the
+              meantime is to set out how this kind of business works, so that
+              anyone who eventually reads a real disclosure document arrives
+              already understanding the structure and can tell a good one from a
+              bad one.
+            </p>
+            <CtaRow className="mt-9">
               <Cta href="/franchising">How franchising works</Cta>
               <Cta href="/about" variant="secondary">
                 About the company
               </Cta>
-            </div>
-          </Band>
-        </Container>
-      </section>
+            </CtaRow>
+          </div>
+        </div>
+      </Section>
 
       <CtaBand
-        ground="white"
+
         title="Still working out whether this suits you?"
         lead="That is the right question to be asking, and it is the one an inquiry is for. You will get a straight answer, including a no."
         secondaryHref="/franchising"

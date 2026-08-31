@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Container } from "@/components/container";
 import { FranchiseForm } from "@/components/form/franchise-form";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
 import { CtaPrompt } from "@/components/cta-band";
-import { Band, Card, SectionHeading } from "@/components/section";
+import { NumberedGrid, NumberedStatements } from "@/components/system/grid";
+import {
+  RuledHeadingRow,
+  RuledHeadingRows,
+  RuledItem,
+  RuledRow,
+  RuledRows,
+  Steps,
+} from "@/components/system/ruled-list";
+import { Section } from "@/components/system/section";
+import { SectionHead } from "@/components/system/section-head";
 import {
   CAPABILITIES,
   FRANCHISE_DISCLAIMER,
@@ -39,8 +48,8 @@ export const metadata: Metadata = pageMetadata({
 /**
  * Franchising.
  *
- * THE MOST LEGALLY CONSTRAINED PAGE ON THIS SITE, and now also the longest,
- * because it is the education section. Read the rules before editing anything.
+ * THE MOST LEGALLY CONSTRAINED PAGE ON THIS SITE, and also the longest, because
+ * it is the education section. Read the rules before editing anything.
  *
  * The FDD is not issued. Until it is, and in registration states until
  * registered, nothing on this page may constitute a franchise offer:
@@ -72,6 +81,16 @@ export const metadata: Metadata = pageMetadata({
  * The disclaimer renders twice on this page by design: directly above the form
  * where someone is about to type, and in the site footer. Nobody should have
  * to scroll to find the thing that says this is not an offer.
+ *
+ * PHASE 2A, AND WHY THIS PAGE CHANGED MOST. It carries ten sections and every
+ * one of them opened with the identical eyebrow, heading and grey paragraph,
+ * ten times out of ten. Beneath that, thirty items of content rendered as the
+ * same rounded card: seven glossary terms, five FDD explanations, five
+ * diligence checks, four capabilities, three traits, four steps and nine FAQ
+ * entries. The FAQ band alone ran 4415 pixels at 390 with no ordering signal in
+ * it. Six different shapes now carry those six different content types, and
+ * the section heads alternate between the stacked and asymmetric forms, so a
+ * reader can tell where they are in a long document by what it looks like.
  */
 export default function FranchisingPage() {
   return (
@@ -88,343 +107,306 @@ export default function FranchisingPage() {
 
       {/* ---------------------------------------------------------------
           WHAT A FRANCHISE IS
+          Serif prose and the jump list. The list is a plain ruled column
+          rather than a boxed card: it is navigation, and navigation on this
+          site is ruled rather than boxed.
           --------------------------------------------------------------- */}
-      <section className="bg-white">
-        <Container>
-          <Band>
-            <div className="grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-16">
-              <div>
-                <SectionHeading
-                  eyebrow="The basics"
-                  title="What a franchise actually is."
-                />
-                <div className="prose-body mt-6 space-y-5">
-                  <p>
-                    A franchise is a licence. One company owns a brand and a
-                    documented way of operating, and it licenses another party
-                    the right to run a business using both. The person who takes
-                    that licence owns their business and carries its risk. What
-                    they are buying is not the business itself but the brand,
-                    the method, and the support behind them.
-                  </p>
-                  <p>
-                    That arrangement is why franchising exists in trade services
-                    at all. The technical work is well understood and a
-                    competent contractor can already do it. What sinks these
-                    businesses is rarely the trade. It is scheduling, pricing,
-                    hiring, collections, marketing, and the administrative load
-                    that arrives with the second van. A franchise system is an
-                    attempt to solve those problems once, centrally, and then
-                    hand the solution to each operator.
-                  </p>
-                  <p>
-                    It is not a passive investment and it is not a job. It sits
-                    between the two, and the obligations run in both directions.
-                    The operator agrees to run the business to a standard. The
-                    franchisor agrees to maintain the brand and provide the
-                    support it promised. Either side can fail to hold up its
-                    end, which is exactly what the disclosure document and the
-                    franchise agreement exist to make legible before anyone
-                    signs.
-                  </p>
-                </div>
-              </div>
-
-              <Card className="h-fit">
-                <h3 className="h3">In this section</h3>
-                <ul className="mt-4 space-y-2">
-                  {[
-                    ["#vocabulary", "The vocabulary"],
-                    ["#fdd", "What an FDD is"],
-                    ["#diligence", "How to check a system"],
-                    ["#support", "What Craftline provides"],
-                    ["#operators", "What Craftline looks for"],
-                    ["#process", "From inquiry to opening"],
-                    ["#faq", "Questions"],
-                    ["#inquiry", "Make an inquiry"],
-                  ].map(([href, label]) => (
-                    <li key={href}>
-                      <Link href={href} className="link tap-44 text-[0.9375rem]">
-                        {label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
+      <Section ground="white">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] lg:gap-20">
+          <div>
+            <SectionHead
+              eyebrow="The basics"
+              tone="signal"
+              title="What a franchise actually is."
+              compact
+            />
+            <div className="prose-body mt-8 max-w-[62ch] space-y-5">
+              <p>
+                A franchise is a licence. One company owns a brand and a
+                documented way of operating, and it licenses another party the
+                right to run a business using both. The person who takes that
+                licence owns their business and carries its risk. What they are
+                buying is not the business itself but the brand, the method, and
+                the support behind them.
+              </p>
+              <p>
+                That arrangement is why franchising exists in trade services at
+                all. The technical work is well understood and a competent
+                contractor can already do it. What sinks these businesses is
+                rarely the trade. It is scheduling, pricing, hiring, collections,
+                marketing, and the administrative load that arrives with the
+                second van. A franchise system is an attempt to solve those
+                problems once, centrally, and then hand the solution to each
+                operator.
+              </p>
+              <p>
+                It is not a passive investment and it is not a job. It sits
+                between the two, and the obligations run in both directions. The
+                operator agrees to run the business to a standard. The franchisor
+                agrees to maintain the brand and provide the support it promised.
+                Either side can fail to hold up its end, which is exactly what
+                the disclosure document and the franchise agreement exist to make
+                legible before anyone signs.
+              </p>
             </div>
-          </Band>
-        </Container>
-      </section>
+          </div>
+
+          <nav aria-label="In this section" className="lg:sticky lg:top-8 lg:self-start">
+            <h2 className="label-sm">In this section</h2>
+            <ul className="border-graphite mt-4 border-t-2">
+              {[
+                ["#vocabulary", "The vocabulary"],
+                ["#fdd", "What an FDD is"],
+                ["#diligence", "How to check a system"],
+                ["#support", "What Craftline provides"],
+                ["#operators", "What Craftline looks for"],
+                ["#process", "From inquiry to opening"],
+                ["#faq", "Questions"],
+                ["#inquiry", "Make an inquiry"],
+              ].map(([href, label]) => (
+                <li key={href} className="border-line border-b">
+                  <Link
+                    href={href}
+                    className="text-graphite hover:text-datum font-display block py-3.5 text-[1.0625rem] font-bold tracking-[0.04em] uppercase transition-colors"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </Section>
 
       {/* ---------------------------------------------------------------
           THE VOCABULARY
+          Two column ruled rows: the terms align in a column a reader can run
+          their eye down, which is the whole job of a glossary.
           --------------------------------------------------------------- */}
-      <section id="vocabulary" className="bg-mist scroll-mt-8">
-        <Container>
-          <Band>
-            <SectionHeading
-              eyebrow="The vocabulary"
-              title="The words you are expected to already know."
-              lead="Every term below describes how franchising works generally. Where a term normally carries a number, the number belongs in a disclosure document rather than on a website, so this explains the mechanism instead."
-            />
+      <Section id="vocabulary" ground="mist" edge>
+        <SectionHead
+          eyebrow="The vocabulary"
+          tone="datum"
+          title="The words you are expected to already know."
+          aside="Every term below describes how franchising works generally. Where a term normally carries a number, the number belongs in a disclosure document rather than on a website, so this explains the mechanism instead."
+        />
 
-            <dl className="mt-12 grid gap-5 sm:grid-cols-2">
-              {FRANCHISE_GLOSSARY.map((entry) => (
-                <Card key={entry.term}>
-                  <dt className="h3">{entry.term}</dt>
-                  <dd className="text-steel mt-3 leading-relaxed">
-                    {entry.body}
-                  </dd>
-                </Card>
-              ))}
-            </dl>
+        <RuledRows className="mt-14">
+          {FRANCHISE_GLOSSARY.map((entry) => (
+            <RuledRow key={entry.term} term={entry.term}>
+              {entry.body}
+            </RuledRow>
+          ))}
+        </RuledRows>
 
-            <CtaPrompt
-              className="mt-10 max-w-2xl"
-              title="Already know the vocabulary?"
-              lead="Then the useful next step is a conversation. An inquiry asks for nothing sensitive and commits you to nothing."
-              label="Make an inquiry"
-            />
-          </Band>
-        </Container>
-      </section>
+        <CtaPrompt
+          className="mt-14 max-w-3xl"
+          title="Already know the vocabulary?"
+          lead="Then the useful next step is a conversation. An inquiry asks for nothing sensitive and commits you to nothing."
+          label="Make an inquiry"
+        />
+      </Section>
 
       {/* ---------------------------------------------------------------
           THE FDD
           --------------------------------------------------------------- */}
-      <section id="fdd" className="bg-white scroll-mt-8">
-        <Container>
-          <Band>
-            <SectionHeading
-              eyebrow="Disclosure"
-              title="What a Franchise Disclosure Document is, and why it exists."
-              lead="This is the single most important document in the decision, and most people evaluating a franchise have never seen one. Craftline has not issued one, so there is nothing to offer yet. Understanding it now is what makes the eventual reading useful."
-            />
+      <Section id="fdd" ground="white">
+        <SectionHead
+          eyebrow="Disclosure"
+          tone="signal"
+          title="What a Franchise Disclosure Document is, and why it exists."
+          lead="This is the single most important document in the decision, and most people evaluating a franchise have never seen one. Craftline has not issued one, so there is nothing to offer yet. Understanding it now is what makes the eventual reading useful."
+        />
 
-            <div className="border-line divide-line mt-12 divide-y rounded-lg border">
-              {FDD_EXPLAINER.map((entry) => (
-                <div key={entry.heading} className="p-6 sm:p-7">
-                  <h3 className="h3">{entry.heading}</h3>
-                  <p className="text-steel mt-3 max-w-3xl leading-relaxed">
-                    {entry.body}
-                  </p>
-                </div>
-              ))}
-            </div>
+        {/*
+          Headings, not definition terms. These five are the explainer a
+          prospect and their attorney read to understand the document that
+          governs the decision, and they belong in the heading outline. Same
+          ruled presentation as the vocabulary above; different semantics,
+          because the content is different. See RuledHeadingRows.
+        */}
+        <RuledHeadingRows className="mt-14">
+          {FDD_EXPLAINER.map((entry) => (
+            <RuledHeadingRow key={entry.heading} heading={entry.heading}>
+              {entry.body}
+            </RuledHeadingRow>
+          ))}
+        </RuledHeadingRows>
 
-            <CtaPrompt
-              className="bg-mist mt-10 max-w-2xl"
-              title="No disclosure document has been issued yet."
-              lead="When one is, anyone who has made contact hears about it. An inquiry now is a conversation and nothing more: it reserves nothing and commits you to nothing."
-              label="Make an inquiry"
-            />
-          </Band>
-        </Container>
-      </section>
+        <CtaPrompt
+          className="mt-14 max-w-3xl"
+          title="No disclosure document has been issued yet."
+          lead="When one is, anyone who has made contact hears about it. An inquiry now is a conversation and nothing more: it reserves nothing and commits you to nothing."
+          label="Make an inquiry"
+        />
+      </Section>
 
       {/* ---------------------------------------------------------------
           DUE DILIGENCE
+          Five complete instructions with no labels and no numerals. They are
+          checks to run, not a sequence, and inventing a label for each one
+          would be decoration.
           --------------------------------------------------------------- */}
-      <section id="diligence" className="bg-mist scroll-mt-8">
-        <Container>
-          <Band>
-            <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:gap-16">
-              <SectionHeading
-                eyebrow="Due diligence"
-                title="How to check any franchise system, including this one."
-                lead="This advice is against a franchisor's short term interest and it is here anyway. A system does not benefit from operators who joined without understanding what they joined."
-              />
-              <ul className="space-y-4">
-                {DUE_DILIGENCE.map((item) => (
-                  <li
-                    key={item}
-                    className="border-line rounded-lg border bg-white p-5 leading-relaxed text-graphite"
-                  >
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Band>
-        </Container>
-      </section>
+      <Section id="diligence" ground="mist" density="tight" edge>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:gap-20">
+          <SectionHead
+            eyebrow="Due diligence"
+            tone="datum"
+            title="How to check any franchise system, including this one."
+            lead="This advice is against a franchisor's short term interest and it is here anyway. A system does not benefit from operators who joined without understanding what they joined."
+          />
+          <ul className="border-graphite border-t-2">
+            {DUE_DILIGENCE.map((item) => (
+              <RuledItem key={item}>{item}</RuledItem>
+            ))}
+          </ul>
+        </div>
+      </Section>
 
       {/* ---------------------------------------------------------------
           WHAT CRAFTLINE PROVIDES
           --------------------------------------------------------------- */}
-      <section id="support" className="bg-white scroll-mt-8">
-        <Container>
-          <Band>
-            <SectionHeading
-              eyebrow="What Craftline provides"
-              title="What an operator would inherit."
-              lead="Described qualitatively and deliberately so. Saying what support exists is permitted. Quantifying what it produces would be a financial performance representation, so no sentence here carries a number."
-            />
+      <Section id="support" ground="white">
+        <SectionHead
+          eyebrow="What Craftline provides"
+          tone="signal"
+          title="What an operator would inherit."
+          aside="Described qualitatively and deliberately so. Saying what support exists is permitted. Quantifying what it produces would be a financial performance representation, so no sentence here carries a number."
+        />
 
-            <ul className="mt-12 grid gap-5 sm:grid-cols-2">
-              {CAPABILITIES.map((capability) => (
-                <Card as="li" key={capability.title}>
-                  <h3 className="h3">{capability.title}</h3>
-                  <p className="text-steel mt-3 leading-relaxed">
-                    {capability.body}
-                  </p>
-                </Card>
-              ))}
-            </ul>
+        <NumberedGrid items={CAPABILITIES} ground="white" className="mt-16" />
 
-            <CtaPrompt
-              className="bg-mist mt-10 max-w-2xl"
-              title="Want this described for your situation?"
-              lead="The support model is the same for everyone; what differs is the market and the operator. An inquiry is where that conversation starts."
-              label="Make an inquiry"
-            />
-          </Band>
-        </Container>
-      </section>
+        <CtaPrompt
+          className="mt-14 max-w-3xl"
+          title="Want this described for your situation?"
+          lead="The support model is the same for everyone; what differs is the market and the operator. An inquiry is where that conversation starts."
+          label="Make an inquiry"
+        />
+      </Section>
 
       {/* ---------------------------------------------------------------
           WHAT CRAFTLINE LOOKS FOR
           --------------------------------------------------------------- */}
-      <section id="operators" className="bg-mist scroll-mt-8">
-        <Container>
-          <Band>
-            <SectionHeading
-              eyebrow="Who this is for"
-              title="What Craftline looks for in an operator."
-              lead="Traits rather than qualifications. There is no experience requirement and no background requirement stated anywhere on this site, because a stated threshold is a claim about who will be accepted and no such claim can be made before disclosure."
-            />
+      <Section id="operators" ground="mist" density="tight" edge>
+        <SectionHead
+          eyebrow="Who this is for"
+          tone="datum"
+          title="What Craftline looks for in an operator."
+          aside="Traits rather than qualifications. There is no experience requirement and no background requirement stated anywhere on this site, because a stated threshold is a claim about who will be accepted and no such claim can be made before disclosure."
+        />
 
-            <ul className="mt-12 grid gap-5 sm:grid-cols-3">
-              {OPERATOR_PROFILE.map((trait) => (
-                <Card as="li" key={trait}>
-                  <p className="leading-relaxed text-graphite">{trait}</p>
-                </Card>
-              ))}
-            </ul>
-          </Band>
-        </Container>
-      </section>
+        <NumberedStatements
+          items={OPERATOR_PROFILE}
+          ground="mist"
+          className="mt-14"
+        />
+      </Section>
 
       {/* ---------------------------------------------------------------
           THE PROCESS
+          The one numbered list on the site. Step three cannot happen before
+          step two, so the numerals are information rather than ornament.
           --------------------------------------------------------------- */}
-      <section id="process" className="bg-white scroll-mt-8">
-        <Container>
-          <Band>
-            <SectionHeading
-              eyebrow="The process"
-              title="From an inquiry to an opening."
-              lead="Four steps, and the fourth one has not happened yet. No Franchise Disclosure Document has been issued and no date is being committed to."
-            />
+      <Section id="process" ground="white">
+        <SectionHead
+          eyebrow="The process"
+          tone="signal"
+          title="From an inquiry to an opening."
+          lead="Four steps, and the fourth one has not happened yet. No Franchise Disclosure Document has been issued and no date is being committed to."
+        />
 
-            <ol className="mt-12 grid gap-5 sm:grid-cols-2">
-              {INQUIRY_PROCESS.map((step, index) => (
-                <Card as="li" key={step.title}>
-                  <p className="text-datum text-[0.9375rem] font-semibold">
-                    Step {index + 1}
-                  </p>
-                  <h3 className="h3 mt-2">{step.title}</h3>
-                  <p className="text-steel mt-3 leading-relaxed">{step.body}</p>
-                </Card>
-              ))}
-            </ol>
+        <Steps steps={INQUIRY_PROCESS} className="mt-14" />
 
-            <CtaPrompt
-              className="bg-mist mt-10 max-w-2xl"
-              title="Start at step one."
-              lead="The form asks who you are, where you are interested, and roughly when. It asks for no financial documents and no signature."
-              label="Franchise inquiry"
-            />
-          </Band>
-        </Container>
-      </section>
+        <CtaPrompt
+          className="mt-14 max-w-3xl"
+          title="Start at step one."
+          lead="The form asks who you are, where you are interested, and roughly when. It asks for no financial documents and no signature."
+          label="Franchise inquiry"
+        />
+      </Section>
 
       {/* ---------------------------------------------------------------
           FAQ
+          Single column ruled blocks. A question is not a term and will not
+          sit in a 15rem column, so this is the one place the ruled row runs
+          stacked rather than beside.
           --------------------------------------------------------------- */}
-      <section id="faq" className="bg-mist scroll-mt-8">
-        <Container>
-          <Band>
-            <SectionHeading
-              eyebrow="Questions"
-              title="The questions a serious operator asks."
-              lead="Including the two that cannot be answered yet, and why."
-            />
+      <Section id="faq" ground="mist" edge>
+        <SectionHead
+          eyebrow="Questions"
+          tone="datum"
+          title="The questions a serious operator asks."
+          aside="Including the two that cannot be answered yet, and why."
+        />
 
-            <dl className="border-line divide-line mt-12 divide-y rounded-lg border bg-white">
-              {FRANCHISE_FAQ.map((entry) => (
-                <div key={entry.q} className="p-6 sm:p-7">
-                  <dt className="h3">{entry.q}</dt>
-                  <dd className="text-steel mt-3 max-w-3xl leading-relaxed">
-                    {entry.a}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+        <dl data-faq className="border-graphite mt-14 border-t-2">
+          {FRANCHISE_FAQ.map((entry) => (
+            <div key={entry.q} className="border-line border-b py-7">
+              <dt className="d3-sentence max-w-[54ch]">{entry.q}</dt>
+              <dd className="text-steel mt-4 max-w-[72ch] leading-relaxed">
+                {entry.a}
+              </dd>
+            </div>
+          ))}
+        </dl>
 
-            <CtaPrompt
-              className="mt-10 max-w-2xl"
-              title="Question not answered here?"
-              lead="Ask it directly. You will get a straight answer, including the answer that something cannot be discussed until a disclosure document exists."
-              label="Make an inquiry"
-            />
+        <CtaPrompt
+          className="mt-14 max-w-3xl"
+          title="Question not answered here?"
+          lead="Ask it directly. You will get a straight answer, including the answer that something cannot be discussed until a disclosure document exists."
+          label="Make an inquiry"
+        />
 
-            <p className="text-steel mt-10 leading-relaxed">
-              More on how these businesses work:{" "}
-              {ORDERED_INSIGHTS.map((insight, index) => (
-                <span key={insight.slug}>
-                  {index > 0 ? ", " : ""}
-                  <Link
-                    href={`/insights/${insight.slug}`}
-                    className="link tap-44"
-                  >
-                    {insight.title}
-                  </Link>
-                </span>
-              ))}
-              .
-            </p>
-          </Band>
-        </Container>
-      </section>
+        <p className="text-steel mt-12 leading-relaxed">
+          More on how these businesses work:{" "}
+          {ORDERED_INSIGHTS.map((insight, index) => (
+            <span key={insight.slug}>
+              {index > 0 ? ", " : ""}
+              <Link href={`/insights/${insight.slug}`} className="link tap-44">
+                {insight.title}
+              </Link>
+            </span>
+          ))}
+          .
+        </p>
+      </Section>
 
       {/* ---------------------------------------------------------------
           INQUIRY
           --------------------------------------------------------------- */}
-      <section id="inquiry" className="bg-white scroll-mt-8">
-        <Container>
-          <Band>
-            <SectionHeading
+      <Section id="inquiry" ground="white" edge>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-20">
+          <div>
+            <SectionHead
               eyebrow="Make an inquiry"
+              tone="signal"
               title="Start a conversation."
               lead="This is an inquiry, not an application. It asks for nothing sensitive, commits you to nothing, and is read by a person."
             />
 
             {/*
               IN-BODY DISCLAIMER. Verbatim from FRANCHISE_DISCLAIMER, placed
-              directly above the form rather than only in the footer. Do not
-              reword it, do not summarise it, and do not move it below the
-              submit button.
+              beside the form rather than only in the footer. Do not reword it,
+              do not summarise it, and do not move it below the submit button.
 
-              Styled as plain bordered legal text rather than as a coloured
+              Styled as plain ruled legal text rather than as a coloured
               callout. A red box around it would read as marketing emphasis
-              rather than as the standing legal statement it is.
+              rather than as the standing legal statement it is, and red on this
+              site means "act".
             */}
-            <div className="border-line mt-10 max-w-2xl rounded-lg border bg-mist p-6">
-              <h3 className="text-graphite text-[0.9375rem] font-semibold">
-                Important legal notice
-              </h3>
-              <p className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
+            <div className="border-graphite mt-12 border-t-2 pt-6">
+              <h3 className="label-sm">Important legal notice</h3>
+              <p className="text-steel mt-4 max-w-[62ch] text-[0.9375rem] leading-relaxed">
                 {FRANCHISE_DISCLAIMER}
               </p>
             </div>
+          </div>
 
-            <div className="mt-10">
-              <FranchiseForm />
-            </div>
-          </Band>
-        </Container>
-      </section>
+          <div>
+            <FranchiseForm />
+          </div>
+        </div>
+      </Section>
 
       <JsonLd
         data={breadcrumbSchema([{ name: "Franchising", path: "/franchising" }])}

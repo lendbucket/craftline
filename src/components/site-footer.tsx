@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/container";
+import { SplitRule } from "@/components/system/rule";
 import { Wordmark } from "@/components/wordmark";
 import {
   BRANDS,
@@ -15,20 +16,26 @@ import {
  * Site footer. Standard corporate: navigation columns, corporate structure,
  * legal text, copyright.
  *
- * THE DISCLAIMER LIVES HERE AGAIN, AND THAT IS LOAD BEARING. It used to render
- * in the NOTES field of the TitleBlock, which every page placed above this
- * footer. The title block is retired with the rest of the drawing set system,
- * so the disclaimer comes back to the footer, which is where a franchisor site
- * conventionally puts it and where an attorney will look for it.
- *
- * The rule is unchanged: FRANCHISE_DISCLAIMER renders verbatim on every page of
- * this property. It is impossible to violate by adding a page, because the
- * footer is part of the layout shell rather than something an author remembers
- * to include.
+ * THE DISCLAIMER LIVES HERE, AND THAT IS LOAD BEARING. FRANCHISE_DISCLAIMER
+ * renders verbatim on every page of this property. It is impossible to violate
+ * by adding a page, because the footer is part of the layout shell rather than
+ * something an author remembers to include.
  *
  * If you find yourself typing the disclaimer text into a component, stop. It is
  * the one piece of copy on this site that is legally load bearing and it exists
  * in exactly one place, in src/config/company.ts.
+ *
+ * PHASE 2A: the split rule closes the document the same way it opens it, the
+ * column headings take the display face, and the whole block is bounded by a
+ * heavy graphite rule instead of a hairline. The legal text is unchanged in
+ * treatment and deliberately so: plain small grey type, not a bordered callout,
+ * because a box around a disclaimer makes it look like marketing emphasis
+ * rather than the standing legal statement it is.
+ *
+ * THE IMPORT'S FOOTER POINTS PRIVACY AND TERMS AT href="#". Both routes exist
+ * and both are in the sitemap. See BACKLOG.md, where that is recorded as a
+ * rejected import behaviour so it does not get reintroduced by someone reading
+ * the export rather than this file.
  *
  * White ground, because the mark sits here and the mark is only approved on
  * white.
@@ -37,21 +44,21 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-line border-t bg-white">
-      <Container wide>
+    <footer className="border-graphite border-t-2 bg-white">
+      <Container>
         <div className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
-            <Wordmark as="plain" className="h-10 w-auto" />
-            <p className="text-steel mt-4 max-w-xs text-[0.9375rem] leading-relaxed">
+            <Wordmark as="plain" className="h-11 w-auto" />
+            <p className="text-steel mt-5 max-w-xs text-[0.9375rem] leading-relaxed">
               {COMPANY.descriptor}
             </p>
           </div>
 
           <div>
-            <h2 className="text-graphite text-[0.9375rem] font-semibold">
+            <h2 className="font-display text-signal text-lg font-bold tracking-[0.14em] uppercase">
               Company
             </h2>
-            <ul className="mt-4 space-y-1">
+            <ul className="mt-5 space-y-1">
               {NAV.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -66,10 +73,10 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h2 className="text-graphite text-[0.9375rem] font-semibold">
+            <h2 className="font-display text-datum text-lg font-bold tracking-[0.14em] uppercase">
               Brands
             </h2>
-            <ul className="mt-4 space-y-1">
+            <ul className="mt-5 space-y-1">
               {BRANDS.map((brand) => (
                 <li key={brand.slug}>
                   <Link
@@ -84,10 +91,10 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h2 className="text-graphite text-[0.9375rem] font-semibold">
+            <h2 className="font-display text-graphite text-lg font-bold tracking-[0.14em] uppercase">
               Legal
             </h2>
-            <ul className="mt-4 space-y-1">
+            <ul className="mt-5 space-y-1">
               {LEGAL_NAV.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -140,6 +147,8 @@ export function SiteFooter() {
           </p>
         </div>
       </Container>
+      {/* The document closes on the same mark it opened with. */}
+      <SplitRule />
     </footer>
   );
 }

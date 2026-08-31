@@ -58,10 +58,10 @@ function controlClasses(hasError: boolean) {
   // min-h-11 is the 44px touch floor. Font size comes from globals.css, which
   // pins form controls to 16px so iOS never zooms the viewport on focus.
   const base =
-    "mt-2 block w-full min-h-11 rounded border bg-white px-3 py-3 text-graphite transition-colors";
+    "mt-2 block w-full min-h-12 border-2 bg-white px-3.5 py-3 text-graphite transition-colors";
   return hasError
     ? `${base} border-fault`
-    : `${base} border-line hover:border-graphite/40`;
+    : `${base} border-line hover:border-graphite`;
 }
 
 interface BaseProps {
@@ -266,7 +266,7 @@ export function ErrorSummary({
       ref={headingRef}
       tabIndex={-1}
       role="alert"
-      className="border-fault rounded border bg-white p-4"
+      className="border-fault border-2 bg-white p-4"
     >
       <p className="text-fault text-sm font-semibold">
         {count === 1

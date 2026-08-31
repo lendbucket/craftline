@@ -4,26 +4,52 @@
   CRAFTLINE BRANDS DESIGN TOKENS
   ==============================
 
-  The drawing set system that used to live here is retired: the title block,
-  the section register, the mono label layer, the schematic linework, the
-  plotted rule motion, the squared corners. It was distinctive and it read as
-  designed, and on this property that is a liability rather than an asset.
+  WHAT CHANGED IN PHASE 2A, AND WHAT DELIBERATELY DID NOT.
 
-  WHAT THIS SITE IS NOW
-  ---------------------
-  A corporate site for a franchise holding company, read by franchise
-  prospects, their attorneys, and their lenders. Those readers are looking for
-  reasons to trust a company that has not issued an FDD yet. Anything that
-  makes a reader pause and consider the design is spending their attention on
-  the wrong thing.
+  The previous system was written to be unnoticeable. It succeeded, and the
+  Phase 1 diagnosis is what that cost: 34 of 34 content bands on one padding
+  value, two grounds strictly alternating, the same eyebrow-heading-paragraph
+  opening on 33 of 42 sections, and a 48px ceiling on the largest type on the
+  property. A page nobody notices and a page nobody wrote look identical.
 
-  So the target is familiar, not distinctive: white ground, a plain sans, a
-  standard nav, standard cards, a standard footer. If an element would make
-  someone wonder about it, it is wrong for this site.
+  This system takes its presentation from the Claude Design import. What it
+  takes is the structural vocabulary: a condensed display face used at real
+  size, square ink-ruled blocks instead of rounded hairline cards, hairline
+  grids instead of gapped tiles, the two-tone split bar as a repeating mark,
+  ruled term rows for long lists, and genuine variety in band density.
 
-  The brand colours carry over unchanged, and so do their jobs. Red is action.
-  Blue is structure and links. That split was decided on evidence and none of
-  the evidence changed.
+  WHAT IT DOES NOT TAKE, AND WHY THE REASONS ARE RECORDED HERE
+  -----------------------------------------------------------
+  NO DARK GROUNDS. The import opens every page on an ink field. Measured
+  against graphite, signal red is 2.99:1, datum blue is 2.80:1 and steel is
+  2.95:1. All three fail. Carrying them on dark needs lightened variants, and a
+  lightened brand red is no longer the red in the logo, the Open Graph card, or
+  the Organization schema. The site stays white dominant and the surface aware
+  colour block stays retired. If you are about to add a dark section, you are
+  also signing up to break the mark's alignment with its own artwork.
+
+  THE FULL BLEED RED BAND IS BACK, AND MY ARGUMENT AGAINST IT WAS WRONG. I
+  declined it as "a dark ground wearing the brand's colour" needing the same
+  re-pinning mechanism. That conflated two different things. The dark ground
+  problem is that a page needs MANY tokens on it: body text, secondary text,
+  links, section rules. The closing band needs exactly two: white for the
+  heading and the controls at 5.93, and --color-onred for one paragraph at 4.90.
+  A surface with a two value palette does not need a mechanism, it needs a rule,
+  and the rule is written on --color-onred below.
+
+  DECLINING DARK GROUNDS NEVER IMPLIED DECLINING COLOUR, and for a while this
+  build behaved as though it had. Both brand values clear AA for normal text on
+  both grounds: red 5.93 on white and 5.48 on mist, blue 6.32 and 5.84. Colour
+  is deployed structurally throughout, and every placement is listed with its
+  measured ratio in the Phase 2A report.
+
+  NO IMPORT COLOURS. The import invents #C4161C and #1A82C6. The delivered red
+  and the AA-corrected blue below are unchanged and remain the only two.
+
+  So the authority this design has comes from type scale, rule weight, and
+  blocks that run edge to edge, rather than from a change of ground. That is a
+  narrower set of tools than the import used and it is the set that survives
+  the constraints this property actually has.
 
   Do not hardcode a hex value in a component.
 */
@@ -33,17 +59,20 @@
     GROUNDS. White is the page. Mist is the only alternation, and it is a step
     small enough to separate two sections without reading as a coloured band.
 
-    There are no dark grounds. Every retired ground is deleted rather than left
-    defined: an unused colour token is an invitation to reintroduce a dark band
-    without anyone deciding to.
+    Unchanged from the previous system, and still only two. The fix for
+    "grounds are the only rhythm device" is not a third ground: it is that
+    density, rule weight, and edge-to-edge structure now carry rhythm too.
   */
   --color-mist: #f5f6f7;
   --color-line: #e3e6e9;
 
   /*
-    GRAPHITE. Body text, headings, and the darkest thing on the page.
-    Deliberately not pure black: near-black at large sizes on white is harsh,
-    and a slight cool cast reads as considered rather than as a default.
+    GRAPHITE. Body text, headings, structural rules, and the darkest thing on
+    the page. Deliberately not pure black: near-black at large sizes on white is
+    harsh, and a slight cool cast reads as considered rather than as a default.
+
+    It now also does structural work. The heavy rules that bound a block are
+    graphite, which is why the value matters at 2px and 3px as well as at 17px.
   */
   --color-graphite: #14191c;
 
@@ -61,21 +90,30 @@
   /*
     THE ACCENT PAIR
     ---------------
-    Two brand colours, two jobs, carried over from the colour migration.
+    Two brand colours, two jobs. Unchanged, and the jobs are now stated more
+    precisely because the new system has more places to put colour and more
+    ways to waste it.
 
-      SIGNAL, brand red #CB0000.  Where you act. Primary buttons and form
-      submits. Red is scarce on purpose: the moment it decorates, it stops
-      meaning "act".
+      SIGNAL, brand red #CB0000.  Where you act, and the left half of the split
+      bar. Primary buttons, form submits, and the step numerals on the one list
+      that is genuinely a sequence. Nothing else. Red is scarce on purpose: the
+      moment it decorates, it stops meaning "act".
 
       DATUM, brand blue.  Structure and information. Links, section eyebrows,
-      active navigation, focus.
+      active navigation, focus, the right half of the split bar, and the top
+      edge of a hairline grid cell. Blue marks where you are and how the page is
+      organised.
+
+    THE IMPORT ALTERNATES RED AND BLUE BY ARRAY INDEX. That is decoration, it
+    discards a colour system that was decided on evidence, and it is not
+    reproduced here.
   */
   --color-signal: #cb0000;
   /*
     The same value under a name reserved for solid fills. The two are equal
-    today because there are no dark grounds left to re-pin against, and they
-    stay separate because the distinction is what stopped a fill from flipping
-    to a light pin and putting light text on a light background. White on this
+    today because there are no dark grounds to re-pin against, and they stay
+    separate because the distinction is what stopped a fill from flipping to a
+    light pin and putting light text on a light background. White on this
     clears 5.93.
   */
   --color-signal-solid: #cb0000;
@@ -86,9 +124,9 @@
 
     Read this before "correcting" it. The delivered brand blue is #007CCB. It
     clears 4.05:1 at its best, on white, which fails AA for normal text. Every
-    blue on this site carries text, so the value below is the brand hue
-    darkened until it passes. There is no longer any non-text use of blue, so
-    the exact brand value is not defined here at all.
+    blue on this site carries text or marks structure beside text, so the value
+    below is the brand hue darkened until it passes. It measures 6.32:1 on
+    white and 6.05:1 on mist.
   */
   --color-datum: #0063a4;
   --color-datum-hover: #004f84;
@@ -97,11 +135,9 @@
     FAULT. Form validation.
 
     Amber rather than red, because red means "act" here and an error painted
-    red looks like the submit button. The FAULT chip that used to accompany it
-    is gone with the rest of the label layer; the accessible signal is now
-    carried by role="alert", aria-invalid, aria-describedby, and the error text
-    itself naming the problem, which is the conventional treatment and reaches
-    more people than a chip did.
+    red looks like the submit button. The accessible signal is carried by
+    role="alert", aria-invalid, aria-describedby, and the error text itself
+    naming the problem, which is the conventional treatment.
   */
   --color-fault: #8a5510;
 
@@ -109,34 +145,140 @@
   --color-control: #14191c;
 
   /*
-    TYPE. Two roles, both conventional.
+    ON-RED. Secondary text inside the closing action band.
+
+    The band is a solid signal red field with reversed type. White clears 5.93
+    on it and carries the heading and the controls. This tint carries the
+    supporting paragraph, at 4.90, which is AA for normal text.
+
+    NOTHING ELSE MAY GO ON RED. Graphite measures 2.99 there and datum blue
+    1.07. If you find yourself wanting a token inside the band, the answer is
+    white or this, and there is no third option. That is why the band carries a
+    heading, one paragraph and two controls and nothing more: it is the one
+    surface on the site where the palette is two values wide.
+  */
+  --color-onred: #ffe3e4;
+
+  /*
+    PAGE GEOMETRY, TAKEN FROM THE IMPORT RATHER THAN APPROXIMATED.
+
+    The import declares, on every page container:
+
+      max-width: 1280px  (1240px on the interior pages)
+      padding:   0 clamp(20px, 3.5vw, 40px)
+
+    and it has no global box-sizing reset, so those are CONTENT box values. At a
+    1280 viewport that resolves to a 1200px content measure inside a 40px
+    gutter, and the 1240 and 1280 pages are identical there because neither
+    max-width binds until the viewport passes 1320.
+
+    THE BUILD WAS 64px NARROWER THAN THAT AND IT DROVE FIVE SEPARATE FAULTS.
+    Tailwind's preflight sets border-box, so max-w-[75rem] with px-8 gave a
+    1136px measure inside a 72px gutter. Everything laid out against it
+    inherited the error: the four part grid fell from three columns to two, the
+    brand block could not hold an even split, and the hero headline and the
+    offset frames stopped overlapping.
+
+    So the measure is a token, and every container reads it. Change it here and
+    all eleven templates move together. Do not set a width on a section.
+  */
+  --container-page: 80rem;
+  --container-gutter: clamp(1.25rem, 3.5vw, 2.5rem);
+  /* Reading measure for the two legal documents. Prose, not structure. */
+  --container-read: 52rem;
+
+  /*
+    TYPE. Three roles.
 
     next/font injects the loaded families under *-family names from the root
     layout. Those names MUST differ from the theme keys below: a custom
     property that references itself is a cycle, resolves to invalid, and
     silently drops the face to a system fallback with no error anywhere.
 
-    - SANS, Source Sans 3. Headings, navigation, buttons, and all UI. A plain
-      humanist sans with no mannerisms, chosen precisely because a reader does
-      not notice it, which is the brief for this property.
-    - SERIF, Source Serif 4. Long-form reading only: the franchising education
-      pages and article bodies. Same superfamily as the sans, so the two are
-      drawn to sit together.
+    - DISPLAY, Big Shoulders. Page titles, section titles, eyebrows, buttons,
+      chips, fact values, navigation. A condensed American gothic, which is the
+      register skilled trade signage is actually set in.
 
-    There is no third face and no mono. The mono label layer was the signature
-    of the retired system and it is gone with it.
+      THE IMPORT ASKS FOR "BIG SHOULDERS DISPLAY", WHICH GOOGLE NO LONGER
+      SERVES. That family was folded into "Big Shoulders", a variable family
+      carrying an optical size axis from 10 to 72 where the high end is the old
+      Display cut. The successor is what is loaded, and the axis is requested,
+      so `font-optical-sizing: auto` gives an 88px title the display drawing and
+      a 16px eyebrow the text drawing without either being set by hand.
+
+    - SANS, Source Sans 3. Body copy, form controls, captions, and everything a
+      reader reads at paragraph size. One variable file. It was already this
+      site's face and it is the operating brand property's face too, so the two
+      read as one company. The import specifies Barlow; the owner overrode that
+      on payload, because Barlow is not a variable family and shipping it cost
+      two extra requests. See the note in the root layout.
+
+    - SERIF, Source Serif 4. Long form reading only: the franchising education
+      prose, the eighteen articles, and the two legal documents. See the note in
+      the root layout for why it survived the change of pairing.
   */
+  /*
+    "Big Shoulders Fallback" is the hand declared metric matched face below,
+    and it must sit immediately after the real family. Everything after it is
+    the last resort stack for a browser that has neither.
+  */
+  --font-display: var(--font-display-family), "Big Shoulders Fallback",
+    "Arial Narrow", "Helvetica Neue", sans-serif;
   --font-sans: var(--font-sans-family), "Helvetica Neue", Arial, sans-serif;
   --font-serif: var(--font-serif-family), Georgia, "Times New Roman", serif;
 
   /*
-    A small, ordinary radius. The previous system was squared to the pixel
-    because a drawing sheet has no rounded corners. This is not a drawing
-    sheet, and hard corners on a white corporate page read as a device.
+    THE SYSTEM IS SQUARE. Every radius is zero, and the tokens are kept rather
+    than deleted so that a stray `rounded-lg` inherited from the previous
+    system renders square instead of reintroducing a curve nobody chose.
+
+    This is the import's most consistent single decision: across seven page
+    files there is not one border radius and not one box shadow. Blocks are
+    bounded by rules, and the weight of the rule is what says how important the
+    block is.
   */
-  --radius-sm: 3px;
-  --radius: 5px;
-  --radius-lg: 8px;
+  --radius-sm: 0px;
+  --radius: 0px;
+  --radius-lg: 0px;
+}
+
+/*
+  THE DISPLAY FACE'S METRIC MATCHED FALLBACK, DECLARED BY HAND
+  ===========================================================
+
+  next/font normally generates one of these per family and inserts it into the
+  stack. It did for Source Sans 3 and Source Serif 4. It did not for the display
+  face, and the build says so out loud:
+
+    Failed to find font override values for font `Big Shoulders`
+    Skipping generating a fallback font.
+
+  The family was renamed from "Big Shoulders Display" and the metrics table
+  next/font ships has not caught up. Without this block the display face, which
+  sets every heading on all 27 routes and is the largest contentful paint
+  element on most of them, would swap in against unadjusted Arial.
+
+  THAT WOULD NOT BE A SMALL SHIFT. Measured, Big Shoulders averages 44.48px per
+  character where Arial averages 68.23px at the same size. Arial is 53 per cent
+  wider. Every heading on the site would paint wide, wrap onto more lines, and
+  then collapse when the real face arrived, moving everything below it.
+
+  The values are measured from the font the build actually emitted, by
+  `npm run font-metrics`, which prints them and fails if they no longer match
+  what is declared here. Regenerate after any font change. Do not hand tune
+  them: they are arithmetic, not taste.
+
+    size-adjust      = avg character width of the face / that of Arial
+    ascent-override  = ascent  / unitsPerEm / size-adjust
+    descent-override = descent / unitsPerEm / size-adjust
+*/
+@font-face {
+  font-family: "Big Shoulders Fallback";
+  src: local("Arial");
+  size-adjust: 65.20%;
+  ascent-override: 151.84%;
+  descent-override: 32.21%;
+  line-gap-override: 0%;
 }
 
 :root {
@@ -154,9 +296,8 @@
   changed what its text resolved to.
 
   White and mist are close enough in luminance that one value per token clears
-  AA on both, so every colour above is now unconditional. If you are about to
-  add a dark ground, you are also signing up to bring that mechanism back, and
-  the contrast audit is what will tell you whether you did it correctly.
+  AA on both, so every colour above is unconditional. Phase 2A considered dark
+  grounds and declined them precisely so this stays true.
 */
 
 html {
@@ -171,8 +312,14 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.65;
+  line-height: 1.62;
   -webkit-font-smoothing: antialiased;
+  /*
+    The display face is variable on both weight and optical size. Optical sizing
+    is on by default in every engine that supports it, and stating it here means
+    a future `font-optical-sizing: none` has to be deliberate.
+  */
+  font-optical-sizing: auto;
   /*
     Never allow the page itself to scroll sideways on a phone. Wide content
     must scroll inside its own container, not the body.
@@ -181,87 +328,302 @@ body {
 }
 
 /* Long strings wrap instead of forcing overflow. */
-h1, h2, h3, h4, p, li, a, dd, dt {
+h1,
+h2,
+h3,
+h4,
+p,
+li,
+a,
+dd,
+dt {
   overflow-wrap: break-word;
 }
 
 /* 16px minimum on form controls so iOS never auto-zooms on focus. */
-input, select, textarea {
+input,
+select,
+textarea {
   font-size: 16px;
+  font-family: var(--font-sans);
 }
 
 /*
   TYPE SCALE
   ----------
-  Ordinary corporate sizes. The retired system topped out at 4.5rem, which is
-  an editorial size and part of what made the page read as designed. A
-  franchisor's home page headline is a statement, not a poster.
-*/
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: var(--color-graphite);
-}
 
-.h1 {
-  font-size: clamp(2rem, 1.5rem + 2.2vw, 3rem);
-  font-weight: 600;
-  line-height: 1.14;
-  letter-spacing: -0.015em;
-}
-.h2 {
-  font-size: clamp(1.625rem, 1.35rem + 1.2vw, 2.125rem);
-  font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.012em;
-}
-.h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.35;
+  Two families of heading, and the split between them is a rule rather than a
+  preference.
+
+    UPPERCASE marks the top of a region: page titles, section titles, eyebrows,
+    fact values, buttons, chips. A reader scanning for "where does this part
+    start" is looking for these.
+
+    SENTENCE CASE is for anything read as language: card titles, FAQ questions,
+    glossary terms, and the subheadings inside a four thousand word article.
+    Setting a question or a long subhead in capitals costs real legibility and
+    buys nothing, and the articles are the longest reading on the site.
+
+  The import sets every heading at every level in capitals. This is the one
+  place the type treatment departs from it, and the reason is the article
+  template.
+*/
+/*
+  IN @layer base, AND THAT IS LOAD BEARING RATHER THAN TIDINESS.
+
+  Unlayered CSS beats every cascade layer, including Tailwind's utilities. When
+  this rule sat outside a layer it silently defeated `text-white` on every
+  heading on the site, which is how the closing red band shipped with a graphite
+  headline on red at 2.98:1 across 23 routes. The class was in the markup, the
+  utility was in the stylesheet, and the colour was still wrong.
+
+  The contrast audit caught it, which is the whole reason that audit exists.
+
+  Every base element rule that sets a property a utility might need to override
+  belongs in this layer. If you add one outside it, you are building the same
+  trap again.
+*/
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--color-graphite);
+  }
 }
 
 /*
-  Section eyebrow. Small, uppercase, blue, mildly tracked.
+  PAGE TITLE. One per page.
 
-  This is the one small-caps label left, and it is deliberately set in the body
-  sans rather than a mono face. A mono eyebrow is a design signature; a small
-  blue heading above a section title is what a corporate site does.
+  The previous ceiling was 3rem, an ordinary corporate size, and it is a large
+  part of why no page had an element that owned it. Big Shoulders is condensed
+  enough that 5.5rem occupies roughly the horizontal space a 3.25rem grotesque
+  would, so this is a change in presence rather than in footprint.
 */
-.eyebrow {
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-datum);
+@layer components {
+  .d1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.625rem, 1.55rem + 5.4vw, 5.5rem);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+}
+
+/*
+  ARTICLE TITLE. The page title on the eighteen insight posts.
+
+  Sentence case, and smaller than .d1, and both of those follow from the rule
+  above rather than from taste. An article title is a sentence: "What makes
+  skilled trade service businesses suited to franchise systems" is language a
+  reader reads, not a marker they scan for. Setting it in capitals at 88px
+  would cost real legibility on the one part of the site where legibility is
+  the governing concern, and it would set the wrong expectation for the four
+  thousand words underneath it.
+
+  It stays in the display face, so an article is visibly part of the same site,
+  and it stays large enough to own the top of the page. What it does not do is
+  shout at somebody who came to read.
+*/
+@layer components {
+  .d1-prose {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 1.6rem + 3.2vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+    color: var(--color-graphite);
+  }
+}
+
+/* SECTION TITLE. */
+@layer components {
+  .d2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1.45rem + 2.75vw, 3.25rem);
+    font-weight: 800;
+    line-height: 0.96;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+}
+
+/*
+  ITEM TITLE. Card headings, FAQ questions, glossary terms, article subheads.
+  Display face for the family resemblance, sentence case for reading.
+*/
+@layer components {
+  .d3 {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+  }
+}
+
+/*
+  THE SENTENCE CASE EXCEPTION, AND IT IS NARROW.
+
+  Card headings, glossary terms and fact values are uppercase, because they are
+  labels a reader scans. Two things are not, and both are language a reader
+  reads at length:
+
+    FAQ questions. "Is Craftline offering franchises right now?" set in capitals
+    is harder to read and the question mark loses its shape.
+
+    Article subheads, which have their own class below.
+
+  If you are adding a heading and cannot decide, ask whether someone scans it or
+  reads it. Scanned is .d3, read is this.
+*/
+@layer components {
+  .d3-sentence {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: 0.005em;
+    color: var(--color-graphite);
+  }
+}
+
+/*
+  THE DISPLAY NUMERAL.
+
+  Large, in one of the two brand colours, knocked out of the top rule of the
+  block it numbers. It is the import's most recognisable device after the split
+  bar and it is what makes an enumerated group read as authored rather than as
+  a grid of boxes.
+
+  WHAT IT CLAIMS, AND WHAT IT DOES NOT. It enumerates, it does not sequence.
+  Four capabilities numbered 01 to 04 is a true statement that there are four of
+  them; it is not a claim that brand systems precedes operating playbooks. So
+  the markup stays an unordered list, the numeral is aria-hidden, and no
+  assistive technology is told there is an order. A reader sees a counted set,
+  which is what it is. The one genuinely sequential list on the site, the
+  inquiry process, uses <ol> and says so in the markup.
+*/
+@layer components {
+  .numeral {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    font-variant-numeric: tabular-nums;
+    /* Sits on the block's top rule with the ground knocked out behind it. */
+    display: inline-block;
+    position: relative;
+    left: -0.625rem;
+    margin-top: -1.125rem;
+    padding: 0 0.625rem;
+  }
+}
+@media (min-width: 640px) {
+  .numeral {
+    font-size: 4rem;
+  }
+}
+
+/* Article subheads sit inside a serif column and take a size that matches it. */
+@layer components {
+  .d3-prose {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 1.3rem + 0.9vw, 1.875rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.005em;
+    color: var(--color-graphite);
+  }
+}
+
+/*
+  DATUM VALUE. The answer half of a label and value pair: a fact strip cell, a
+  brand fact, a corporate entity name. Uppercase, because it is a value being
+  presented rather than a sentence being read.
+*/
+@layer components {
+  .d4 {
+    font-family: var(--font-display);
+    font-size: 1.3125rem;
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--color-graphite);
+  }
+}
+
+/*
+  Section eyebrow. Display face, small, uppercase, widely tracked, blue.
+
+  It is always preceded by the split bar, and the two are one component. See
+  src/components/system/rule.tsx: an eyebrow without the bar is a loose end
+  rather than a variant.
+*/
+@layer components {
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-datum);
+  }
+}
+
+/*
+  The small label above a value. Set in the body sans rather than the display
+  face, because at 11px a condensed uppercase gothic loses its counters and
+  turns into texture.
+*/
+@layer components {
+  .label-sm {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-steel);
+  }
 }
 
 /* Lead paragraph under a heading. */
-.lead {
-  font-size: 1.1875rem;
-  line-height: 1.6;
-  color: var(--color-steel);
+@layer components {
+  .lead {
+    font-size: 1.1875rem;
+    line-height: 1.6;
+    color: var(--color-steel);
+  }
 }
 
 /*
-  Long-form reading, used by the franchising education pages and the articles.
-  The only place the serif appears.
+  Long-form reading. The franchising education prose, the articles, and the two
+  legal documents. The only place the serif appears.
 */
-.prose-body {
-  font-family: var(--font-serif);
-  font-size: 1.125rem;
-  line-height: 1.75;
-  color: var(--color-graphite);
+@layer components {
+  .prose-body {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: var(--color-graphite);
+  }
 }
 
-/*
-  Standard inline text link. Blue, underlined on hover rather than always,
-  which is the convention readers expect inside corporate body copy.
-*/
 /*
   UNDERLINED BY DEFAULT, AND THAT IS AN ACCESSIBILITY REQUIREMENT RATHER THAN A
   TASTE DECISION.
@@ -284,6 +646,92 @@ h1, h2, h3, h4, h5, h6 {
 .link:hover {
   color: var(--color-datum-hover);
 }
+
+/*
+  BAND DENSITY
+  ------------
+
+  Three values, and having three is the entire point. The diagnosis found one
+  padding value across 34 of 34 content bands, which is what made every section
+  weigh the same regardless of what was in it.
+
+  Use them by what the band is doing:
+
+    band-loose   A page opening, or the one block on a page that should be
+                 given room. Roughly one per page.
+    band         Ordinary content. The default, and still the majority.
+    band-tight   Connective tissue: a short prompt, a routing note, a strip of
+                 facts, a closing line. A band that exists to join two things
+                 should not occupy the same height as one that explains a model.
+
+  If every band on a page ends up the same, the page has not been laid out, it
+  has been stacked.
+*/
+.band-loose {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+.band {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+.band-tight {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .band-loose {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
+  .band {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+  .band-tight {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .band-loose {
+    padding-top: 9rem;
+    padding-bottom: 9rem;
+  }
+  .band {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+  .band-tight {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+}
+
+/*
+  THE HAIRLINE GRID.
+
+  A group of cells separated by a single line rather than by a gap, so the
+  group reads as one ruled table instead of as scattered tiles. The mechanism
+  is a one pixel grid gap over a line coloured background, which is the
+  import's construction and is the cheapest way to get a true hairline between
+  cells without doubling borders at every seam.
+
+  The outer border is graphite rather than line: the group has an edge, and the
+  edge is heavier than the divisions inside it.
+*/
+.hairline-grid {
+  display: grid;
+  gap: 1px;
+  background-color: var(--color-line);
+  border: 2px solid var(--color-graphite);
+}
+.hairline-grid > * {
+  background-color: #ffffff;
+}
+/* On mist, cells stay white so the grid separates from the ground it sits on. */
 
 /*
   Touch target floor for inline text links.
@@ -332,10 +780,9 @@ h1, h2, h3, h4, h5, h6 {
 /*
   MOTION
   ------
-  There is none beyond ordinary hover and focus transitions. The retired system
-  had a scroll driven "plotted rule" animation as its one idea; an idea is
-  exactly what this site should not have. Reduced motion is still honoured for
-  the transitions that remain.
+  There is none beyond ordinary hover and focus transitions. The import carries
+  no motion either, which is one of the few places it and the retired system
+  agreed. Reduced motion is still honoured for the transitions that remain.
 */
 @media (prefers-reduced-motion: reduce) {
   html {

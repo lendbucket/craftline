@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Container } from "@/components/container";
+import { SplitRule } from "@/components/system/rule";
 import { Wordmark } from "@/components/wordmark";
 import { NAV } from "@/config/company";
 
@@ -17,6 +18,18 @@ import { NAV } from "@/config/company";
  * white and the delivered artwork has no alpha, so the header that carries it
  * is white. Do not add a tint, a dark variant, or a scrolled state that changes
  * the ground.
+ *
+ * PHASE 2A ADDED TWO THINGS AND CHANGED NOTHING ELSE. The split rule across the
+ * top, which is the mark the whole system repeats and which opens the document
+ * on it. And the navigation set in the display face, uppercase and tracked,
+ * because the nav is structure rather than prose and belongs to the same type
+ * family as the section eyebrows it sits above.
+ *
+ * THE IMPORT'S FIVE TAB BOTTOM BAR WAS DECLINED. It drops Contact from the
+ * navigation set and relabels Franchising to "Franchise", neither of which
+ * matches NAV, and NAV is the single source the header, the footer and the
+ * sitemap all read so that they cannot drift. The full screen sheet below and
+ * the standing MobileCta button stay as they are.
  *
  * The only client component on the property, and only because of the mobile
  * sheet. Everything else renders on the server.
@@ -64,8 +77,9 @@ export function SiteHeader() {
     pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="border-line border-b bg-white">
-      <Container wide>
+    <header className="border-graphite border-b-2 bg-white">
+      <SplitRule />
+      <Container>
         <div className="flex h-20 items-center justify-between sm:h-24">
           <Wordmark />
 
@@ -77,7 +91,7 @@ export function SiteHeader() {
                     <Link
                       href={item.href}
                       aria-current={isActive(item.href) ? "page" : undefined}
-                      className={`inline-flex min-h-11 items-center text-[0.9375rem] font-semibold transition-colors ${
+                      className={`font-display inline-flex min-h-11 items-center text-[1.0625rem] font-bold tracking-[0.06em] uppercase transition-colors ${
                         isActive(item.href)
                           ? "text-datum"
                           : "text-graphite hover:text-datum"
@@ -98,7 +112,7 @@ export function SiteHeader() {
             */}
             <Link
               href="/franchising#inquiry"
-              className="bg-signal-solid hover:bg-signal-solid-hover hidden min-h-11 items-center justify-center rounded px-5 text-[0.9375rem] font-semibold text-white transition-colors md:inline-flex"
+              className="bg-signal-solid hover:bg-signal-solid-hover font-display hidden min-h-11 items-center justify-center px-6 text-[1rem] font-bold tracking-[0.07em] text-white uppercase transition-colors md:inline-flex"
             >
               Franchise inquiry
             </Link>
@@ -146,7 +160,7 @@ export function SiteHeader() {
             sizes in one view is the kind of thing a reader notices. The icon
             is the mark at the scale this slot conventionally carries.
           */}
-          <div className="border-line pt-safe flex shrink-0 items-center justify-between border-b px-5">
+          <div className="border-graphite pt-safe flex shrink-0 items-center justify-between border-b-2 px-5">
             <div className="flex h-20 items-center gap-3">
               <Image
                 src="/brand/craftline-icon.png"
@@ -155,7 +169,9 @@ export function SiteHeader() {
                 alt=""
                 className="h-9 w-auto"
               />
-              <span className="text-graphite text-lg font-semibold">Menu</span>
+              <span className="font-display text-graphite text-2xl font-bold uppercase">
+                Menu
+              </span>
             </div>
             <button
               type="button"
@@ -171,12 +187,15 @@ export function SiteHeader() {
           <nav aria-label="Primary" className="sheet-scroll flex-1 px-5">
             <ul className="flex flex-col py-2">
               {NAV.map((item) => (
-                <li key={item.href} className="border-line border-b last:border-b-0">
+                <li
+                  key={item.href}
+                  className="border-line border-b last:border-b-0"
+                >
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
                     aria-current={isActive(item.href) ? "page" : undefined}
-                    className={`flex min-h-16 items-center text-lg font-semibold ${
+                    className={`font-display flex min-h-16 items-center text-2xl font-bold tracking-[0.04em] uppercase ${
                       isActive(item.href) ? "text-datum" : "text-graphite"
                     }`}
                   >
@@ -188,11 +207,11 @@ export function SiteHeader() {
           </nav>
 
           {/* FOOT. The primary action, pinned, clear of the home indicator. */}
-          <div className="border-line pb-safe-3 shrink-0 border-t px-5 pt-4">
+          <div className="border-graphite pb-safe-3 shrink-0 border-t-2 px-5 pt-4">
             <Link
               href="/franchising#inquiry"
               onClick={() => setOpen(false)}
-              className="bg-signal-solid hover:bg-signal-solid-hover flex min-h-14 items-center justify-center rounded text-base font-semibold text-white transition-colors"
+              className="bg-signal-solid hover:bg-signal-solid-hover font-display flex min-h-14 items-center justify-center text-lg font-bold tracking-[0.07em] text-white uppercase transition-colors"
             >
               Franchise inquiry
             </Link>

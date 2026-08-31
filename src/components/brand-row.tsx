@@ -1,70 +1,144 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { BrandLockup, hasBrandLockup } from "@/components/brand/brand-lockup";
 import { BRANDS } from "@/config/company";
 
 /**
- * The brand row on the home page: one white card per operating brand, each
- * carrying that brand's delivered lockup and linking to its page.
+ * The operating brands. One filled block each, running the full width.
  *
- * BUILT FOR MANY, RENDERING ONE. The grid is driven by the BRANDS array, so a
- * second brand is a data edit in src/config/company.ts and nothing here
- * changes. What it will never do is pad the row with invented brands to make
- * the company look larger. There is one operating brand today, the row shows
- * one, and a franchise prospect who counts the cards learns something true.
+ * WHAT THIS IS NOW, AND WHY IT CHANGED TWICE. The original was a 307 by 316
+ * pixel card in the left third of the content column with 685 pixels of empty
+ * white beside it. The first rebuild made it full width and ruled, which fixed
+ * the size and lost the treatment: the import fills this block with signal red
+ * and reverses the type out of it, and that fill is the reason the brand reads
+ * as the company's asset rather than as a directory entry.
  *
- * That is also why this is a static grid rather than a carousel. A carousel
- * implies there is more to see off screen; with one brand it would either sit
- * motionless and look broken or rotate a single slide and look padded. When
- * the array grows past what a row can hold, revisit it then.
+ * THE FILL IS SAFE FOR THE SAME REASON THE CLOSING BAND IS. One value goes on
+ * red here: white, at 5.93, for the status pill, the category, the name and the
+ * attribute pills. The trade and market pairs sit in a white panel beside the
+ * fill rather than on it, which is where the import puts them and which keeps
+ * the label type in graphite and steel where it belongs.
  *
- * Every card is white because each lockup is approved on a light field, and
- * because the Craftline mark rule applies to the whole page.
+ * NO SUMMARY INSIDE THE BLOCK, DELIBERATELY. The import carries a description
+ * in this card. On this site BRANDS[].summary already renders as the paragraph
+ * directly beneath the block on the home page, and it renders nowhere at all on
+ * the brands index. Putting it in the card would duplicate it on one route and
+ * add it to another, so the block carries the name and the attested attributes
+ * and lets the existing paragraph do its job.
+ *
+ * THE REAL LOCKUP STAYS. The import carries a placeholder here; this carries
+ * the delivered Wattsmith artwork, rendered as inline SVG so it can sit on a
+ * white tile inside the red field without a rectangle of its own.
+ *
+ * THE IMPORT'S "WATTSMITH FIELD PHOTO" SLOT IS STILL DECLINED. No photography.
+ * The right hand panel carries the brand's own facts, which is stronger than
+ * the photograph would have been because a prospect reading it learns
+ * something. The four pending stock slots stay pending and untouched.
+ *
+ * BUILT FOR MANY, RENDERING ONE. Driven by the BRANDS array, so a second brand
+ * is a data edit. It will never be padded with invented brands to make the
+ * company look larger: there is one operating brand today, the page shows one,
+ * and a prospect who counts them learns something true.
+ *
+ * EVERY STRING TRACES TO src/config/company.ts. The name, category, city and
+ * state are the four the retired card rendered. The pills are BRANDS[].
+ * attributes verbatim, at lines 93 to 96, which the owner directed be surfaced
+ * here alongside the import's pill device.
  */
 export function BrandRow() {
   return (
-    <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="space-y-10">
       {BRANDS.map((brand) => (
         <li key={brand.slug}>
-          <Link
-            href={`/brands/${brand.slug}`}
-            className="border-line hover:border-datum flex h-full flex-col rounded-lg border bg-white transition-colors"
-          >
-            {/*
-              Fixed height on the lockup well so cards stay aligned when a
-              second brand arrives with artwork of a different aspect ratio.
-              The lockup is decorative here: the brand name is rendered as real
-              text directly beneath it, so announcing the artwork as well would
-              make a screen reader read the same name twice.
-            */}
-            <span className="border-line flex h-32 items-center justify-center border-b px-8">
-              {hasBrandLockup(brand.slug) ? (
-                <BrandLockup
-                  slug={brand.slug}
-                  decorative
-                  className="max-h-16 w-full max-w-[13rem]"
-                />
-              ) : (
-                <span className="text-graphite text-lg font-semibold">
-                  {brand.name}
+          {/*
+            EVEN SPLIT. The import declares
+            repeat(auto-fit, minmax(min(100%,400px), 1fr)) with no gap, which
+            at the 1200px measure gives two 600px tracks. The build had
+            1.15fr/1fr, which is 53.5/46.5 and reads as a mistake rather than a
+            proportion.
+          */}
+          <div className="border-graphite grid border-2 grid-cols-[repeat(auto-fit,minmax(min(100%,400px),1fr))]">
+            {/* THE FILL. White and one tint, and nothing else. */}
+            <div className="bg-signal-solid flex flex-col gap-7 p-7 sm:p-10">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-signal font-display inline-flex items-center bg-white px-3 py-1 text-sm font-extrabold tracking-[0.16em] uppercase">
+                  Operating
                 </span>
-              )}
-            </span>
+                <span className="font-display text-sm font-bold tracking-[0.16em] text-white uppercase">
+                  {brand.category}
+                </span>
+              </div>
 
-            <span className="flex flex-1 flex-col p-6">
-              <span className="text-graphite text-lg font-semibold">
-                {brand.name}
-              </span>
-              <span className="text-steel mt-1 text-[0.9375rem]">
-                {brand.category}
-              </span>
-              <span className="text-steel mt-3 text-[0.9375rem] leading-relaxed">
-                {brand.city}, {brand.state}
-              </span>
-              <span className="text-datum mt-5 text-[0.9375rem] font-semibold">
-                About {brand.name}
-              </span>
-            </span>
-          </Link>
+              {/*
+                The delivered lockup on a white tile. It is approved on a light
+                field only, so it gets one rather than being placed on the red.
+                Decorative: the brand name is real text directly beneath it, so
+                announcing the artwork would read the same name twice.
+              */}
+              {hasBrandLockup(brand.slug) ? (
+                <span className="flex h-22 w-22 shrink-0 items-center justify-center bg-white p-2">
+                  <BrandLockup
+                    slug={brand.slug}
+                    decorative
+                    className="max-h-full w-full"
+                  />
+                </span>
+              ) : null}
+
+              <span className="d2 block text-white">{brand.name}</span>
+
+              {/*
+                THE IMPORT’S THREE SHORT PILLS, restored. It sets Licensed,
+                Insured and Veteran owned. The build was rendering all four
+                BRANDS[].attributes strings, which are longer and wrapped the
+                row to four lines inside the fill.
+
+                THE SHORTER SET ASSERTS NOTHING THE LONGER ONE DID NOT, which is
+                the test that had to be met before shortening. "Licensed" and
+                "Insured" are the two halves of the committed string "Licensed
+                and insured" at company.ts:93, split rather than reworded, and
+                the claim is identical. "Veteran owned" is verbatim from
+                company.ts:94. The two dropped strings are not lost from the
+                block: "Operating in San Antonio, Texas" is the Market pair in
+                the panel opposite and "Residential and light commercial
+                service" is on the brand’s own page, where the full attribute
+                list still renders unchanged.
+              */}
+              <ul className="flex flex-wrap gap-2.5">
+                {["Licensed", "Insured", "Veteran owned"].map((pill) => (
+                  <li
+                    key={pill}
+                    className="font-display border-2 border-white/70 px-3.5 py-1.5 text-sm font-bold tracking-[0.1em] text-white uppercase"
+                  >
+                    {pill}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* THE FACTS. A white panel, so labels keep graphite and steel. */}
+            <div className="border-graphite bg-line grid grid-cols-2 gap-px border-t-2 lg:border-t-0 lg:border-l-2">
+              <div className="flex flex-col justify-center bg-white px-6 py-7">
+                <span className="label-sm">Trade</span>
+                <span className="d4 mt-2">{brand.category}</span>
+              </div>
+              <div className="flex flex-col justify-center bg-white px-6 py-7">
+                <span className="label-sm">Market</span>
+                <span className="d4 mt-2">
+                  {brand.city}, {brand.state}
+                </span>
+              </div>
+              <div className="col-span-2 bg-white px-6 py-7">
+                <Link
+                  href={`/brands/${brand.slug}`}
+                  className="text-datum hover:text-datum-hover font-display inline-flex items-center gap-2 text-[1.0625rem] font-bold tracking-[0.07em] uppercase transition-colors"
+                >
+                  About {brand.name}
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
         </li>
       ))}
     </ul>

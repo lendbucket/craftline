@@ -1,6 +1,5 @@
+import { Cta, CtaRow } from "@/components/cta";
 import { Container } from "@/components/container";
-import { Cta } from "@/components/cta";
-import { Band } from "@/components/section";
 
 /**
  * The end of page conversion block, and the inline mid page variant.
@@ -19,6 +18,23 @@ import { Band } from "@/components/section";
  * The secondary action is deliberately an education destination rather than a
  * second conversion path. Somebody who is not ready to make contact should be
  * given something to read, not asked twice.
+ *
+ * A FULL BLEED SIGNAL RED FIELD WITH REVERSED TYPE, which is the import's
+ * treatment and which an earlier version of this file declined on a bad
+ * argument. I called it "a dark ground wearing the brand's colour" needing the
+ * same re-pinning mechanism the dark grounds would have needed. That conflated
+ * two different problems. A dark PAGE ground has to carry many tokens: body
+ * copy, secondary copy, links, rules, section markers. This band carries two:
+ *
+ *   white            5.93 on #CB0000, for the heading and both controls
+ *   --color-onred    4.90 on #CB0000, for the one supporting paragraph
+ *
+ * A surface with a two value palette does not need a mechanism, it needs a
+ * rule, and the rule is that nothing else goes on it. Graphite measures 2.99
+ * there and datum blue 1.07, so there is no third thing to be tempted by.
+ *
+ * It is the loudest object on the site and there is exactly one per page, at
+ * the end, which is what keeps it meaning "this is where you act".
  */
 export function CtaBand({
   title,
@@ -27,7 +43,6 @@ export function CtaBand({
   primaryLabel = "Franchise inquiry",
   secondaryHref = "/franchising",
   secondaryLabel = "How franchising works",
-  ground = "mist",
 }: {
   title: string;
   lead: string;
@@ -35,37 +50,51 @@ export function CtaBand({
   primaryLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
-  /** Pick the one that alternates against the section above it. */
-  ground?: "white" | "mist";
 }) {
   return (
-    <section className={ground === "mist" ? "bg-mist" : "bg-white"}>
+    <section className="bg-signal-solid">
       <Container>
-        <Band>
-          <div className="max-w-2xl">
-            <h2 className="h2">{title}</h2>
-            <p className="lead mt-4">{lead}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Cta href={primaryHref}>{primaryLabel}</Cta>
-              <Cta href={secondaryHref} variant="secondary">
+        <div className="band">
+          {/*
+            The import sets this row align-items:center with the copy block
+            capped at 560px and the controls opposite it, so the heading and the
+            buttons sit on one line rather than the buttons dropping to the
+            bottom of a tall left column.
+          */}
+          <div className="flex flex-wrap items-center justify-between gap-x-16 gap-y-9">
+            <div className="max-w-[35rem]">
+              <h2 className="d2 text-white">{title}</h2>
+              <p className="text-onred mt-6 leading-relaxed">
+                {lead}
+              </p>
+            </div>
+            <CtaRow>
+              <Cta href={primaryHref} variant="mark">
+                {primaryLabel}
+              </Cta>
+              <Cta href={secondaryHref} variant="markOutline">
                 {secondaryLabel}
               </Cta>
-            </div>
+            </CtaRow>
           </div>
-        </Band>
+        </div>
       </Container>
     </section>
   );
 }
 
 /**
- * The mid page variant: a bordered prompt that sits inside a section rather
- * than forming one.
+ * The mid page variant: a ruled prompt that sits inside a section rather than
+ * forming one.
  *
  * Used at natural decision points on long pages, which means after a passage
  * that answers a question rather than at a fixed interval. A prompt placed by
  * word count instead of by argument is the thing that makes a page feel like it
  * is selling to you.
+ *
+ * Bounded top and bottom by a graphite rule rather than boxed. A box around a
+ * prompt inside a reading column reads as an advertisement dropped into the
+ * article; two rules read as the page pausing, which is what this is.
  */
 export function CtaPrompt({
   title,
@@ -82,11 +111,11 @@ export function CtaPrompt({
 }) {
   return (
     <div
-      className={`border-line rounded-lg border bg-white p-6 sm:p-7 ${className}`}
+      className={`border-graphite border-y-2 py-7 ${className}`}
     >
-      <h3 className="h3">{title}</h3>
-      <p className="text-steel mt-3 leading-relaxed">{lead}</p>
-      <div className="mt-5">
+      <h3 className="d3-sentence">{title}</h3>
+      <p className="text-steel mt-3 max-w-[62ch] leading-relaxed">{lead}</p>
+      <div className="mt-6">
         <Cta href={href}>{label}</Cta>
       </div>
     </div>
