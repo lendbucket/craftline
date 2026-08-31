@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
+import { Barlow, Big_Shoulders, Source_Serif_4 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { JsonLd } from "@/components/json-ld";
 import { MobileCta, MobileCtaSpacer } from "@/components/mobile-cta";
@@ -12,32 +12,89 @@ import { OG_IMAGE } from "@/lib/seo";
 import "./globals.css";
 
 /**
- * TWO TYPE ROLES, BOTH CONVENTIONAL.
+ * THREE TYPE ROLES.
  *
- * Source Sans 3 carries everything: headings, navigation, buttons, body. It is
- * a plain humanist sans with no mannerisms, and that is the entire reason it
- * was chosen. The retired display face read as drawn and deliberate, which is
- * a large part of what made the site look designed rather than corporate.
+ * All three are self hosted. next/font downloads the files at build time and
+ * serves them from this deployment, so the browser never contacts Google, and
+ * the privacy policy's claim that this site makes zero third party requests
+ * stays true. That is not an optimisation, it is a factual statement on
+ * /privacy that the font loader is responsible for keeping accurate.
  *
- * Source Serif 4 is retained for long-form reading only, through the
- * .prose-body class: the franchising education pages and the article bodies.
- * Same superfamily as the sans, so the two are drawn to sit together, and a
- * serif reading column is the convention for substantive explanatory content
- * on a corporate site.
+ * DISPLAY, Big Shoulders. Page titles, section titles, eyebrows, buttons,
+ * chips, navigation, fact values.
  *
- * There is no third face. The mono is gone with the label layer it existed for.
+ *   THE IMPORT ASKS FOR "Big Shoulders Display". GOOGLE NO LONGER SERVES THAT
+ *   FAMILY. It was folded into "Big Shoulders", a variable family with an
+ *   optical size axis running 10 to 72, where the top of that range is the
+ *   drawing the old Display cut carried. Requesting the retired name would have
+ *   failed silently to a system fallback, which is exactly the class of bug the
+ *   *-family naming note below exists to prevent.
  *
- * WEIGHT BUDGET. Both load as variable weight. Neither requests the optical
- * size axis, because the gain is invisible at the sizes used here and the axis
- * costs real bytes.
+ *   `axes: ["opsz"]` is requested deliberately and is the one place this build
+ *   pays for a second variable axis. The face is drawn to change with size: at
+ *   the 88px page title it wants the display drawing, at the 16px eyebrow it
+ *   wants the text drawing, and the difference is visible rather than
+ *   theoretical. With the axis present, `font-optical-sizing: auto` in
+ *   globals.css maps it from the rendered size automatically and no component
+ *   ever sets it by hand.
  *
- * Both are declared under *-family names that differ from the Tailwind theme
- * keys in globals.css. Matching the names would create a self-referential
- * custom property, which resolves to invalid and silently drops the face to a
- * system fallback with no error anywhere.
+ * SANS, Barlow. Body copy, form controls, captions, small labels.
+ *
+ *   Barlow is NOT a variable family on Google Fonts, so each weight is a
+ *   separate file and every weight requested is bytes shipped. Two are
+ *   requested: 400 for reading and 600 for labels, emphasis, and form labels.
+ *   The import uses four. The other two were dropped because the display face
+ *   now carries everything that would have needed 700, and 500 was doing
+ *   nothing 400 does not. If a design need for a third weight appears, add it
+ *   here rather than reaching for a synthetic bold.
+ *
+ * SERIF, Source Serif 4. Long form reading only, through .prose-body: the
+ * franchising education prose, the eighteen articles, and the two legal
+ * documents.
+ *
+ *   IT SURVIVED THE CHANGE OF PAIRING, AND THAT WAS THE DECISION MOST WORTH
+ *   GETTING RIGHT. The import has no reading face at all and sets four thousand
+ *   word articles in the same grotesque as its buttons. The articles are the
+ *   longest continuous reading on this property and the audience for them is a
+ *   prospect's attorney and accountant. Barlow is a UI grotesque with a large
+ *   x-height and tight apertures; it is a good interface face and a poor
+ *   sustained reading face at that length. Source Serif 4 is drawn for exactly
+ *   this and is already here.
+ *
+ *   It no longer shares a superfamily with the sans, which was the original
+ *   reason for choosing it. What replaces that argument is a plainer one: a
+ *   condensed gothic for structure, a grotesque for interface, and a
+ *   transitional serif for reading is the stack trade and technical publishing
+ *   has used for a century, and the three do not compete because they are never
+ *   asked to do each other's job.
+ *
+ * PRELOADING. Display and sans are preloaded, because they paint above the fold
+ * on all 27 routes. The serif is not: it appears only inside a reading column
+ * that is always below the fold, and preloading it on /contact would spend
+ * bandwidth on a face that route never renders.
+ *
+ * CLS. All three take the default `display: "swap"` together with the default
+ * `adjustFontFallback: true`, which generates a metric matched fallback face
+ * with size-adjust and ascent, descent and line-gap overrides computed from the
+ * real font. That is the mechanism that keeps the swap from moving the page.
+ * It is verified rather than assumed: Lighthouse CLS is recorded for every
+ * template in the audit run.
+ *
+ * All three are declared under *-family names that differ from the Tailwind
+ * theme keys in globals.css. Matching the names would create a
+ * self-referential custom property, which resolves to invalid and silently
+ * drops the face to a system fallback with no error anywhere.
  */
-const sans = Source_Sans_3({
+const display = Big_Shoulders({
   subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-display-family",
+  display: "swap",
+});
+
+const sans = Barlow({
+  subsets: ["latin"],
+  weight: ["400", "600"],
   variable: "--font-sans-family",
   display: "swap",
 });
@@ -46,6 +103,7 @@ const serif = Source_Serif_4({
   subsets: ["latin"],
   variable: "--font-serif-family",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -159,7 +217,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sans.variable} ${serif.variable}`}
+      className={`${display.variable} ${sans.variable} ${serif.variable}`}
     >
       <body className="text-graphite flex min-h-screen flex-col bg-white">
         {/*

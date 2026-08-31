@@ -19,8 +19,8 @@ export function LegalSection({
   children: React.ReactNode;
 }) {
   return (
-    <section aria-labelledby={id} className="border-line border-t pt-9">
-      <h2 id={id} className="h3">
+    <section aria-labelledby={id} className="border-graphite border-t-2 pt-9">
+      <h2 id={id} className="d3">
         {heading}
       </h2>
       <div className="mt-5 space-y-4">{children}</div>

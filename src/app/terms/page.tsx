@@ -57,9 +57,9 @@ export default function TermsPage() {
       />
 
       <section className="bg-white">
-        <Container>
-          <div className="py-16 sm:py-20">
-            <div className="max-w-2xl space-y-12">
+        <Container narrow>
+          <div className="band">
+            <div className="space-y-12">
               <EffectiveDate />
 
               <LegalSection id="who" heading="Who operates this site">

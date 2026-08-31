@@ -56,11 +56,11 @@ export function MobileCta() {
         anyone else. The label below names the destination rather than saying
         "learn more", so hearing it out of context still tells you where it goes.
       */
-      className="border-line pb-safe-3 fixed inset-x-0 bottom-0 z-40 border-t bg-white px-4 pt-3 md:hidden"
+      className="border-graphite pb-safe-3 fixed inset-x-0 bottom-0 z-40 border-t-2 bg-white px-4 pt-3 md:hidden"
     >
       <Link
         href="/franchising#inquiry"
-        className="bg-signal-solid hover:bg-signal-solid-hover flex min-h-13 items-center justify-center rounded py-3.5 text-base font-semibold text-white transition-colors"
+        className="bg-signal-solid hover:bg-signal-solid-hover font-display flex min-h-13 items-center justify-center py-3.5 text-lg font-bold tracking-[0.07em] text-white uppercase transition-colors"
       >
         Franchise inquiry
       </Link>

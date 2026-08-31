@@ -122,7 +122,7 @@ export function FranchiseForm() {
       <div
         role="status"
         data-testid="submit-success"
-        className="max-w-xl rounded border border-line bg-white p-6"
+        className="border-graphite max-w-xl border-2 bg-white p-6"
       >
         <p className="text-base font-semibold text-graphite">Inquiry received.</p>
         <p className="mt-3 text-sm leading-relaxed text-steel">
@@ -228,7 +228,7 @@ export function FranchiseForm() {
       <button
         type="submit"
         disabled={pending}
-        className="bg-signal-solid hover:bg-signal-solid-hover text-white inline-flex min-h-11 items-center justify-center px-7 py-3.5 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+        className="bg-signal-solid hover:bg-signal-solid-hover font-display inline-flex min-h-12 items-center justify-center px-7 text-[1.0625rem] font-bold tracking-[0.07em] text-white uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-60"
       >
         {pending ? "Sending" : "Send inquiry"}
       </button>
@@ -237,7 +237,7 @@ export function FranchiseForm() {
         <div
           role="alert"
           data-testid="submit-failure"
-          className="border-fault rounded border bg-white p-5"
+          className="border-fault border-2 bg-white p-5"
         >
           <p className="text-fault text-sm font-semibold">
             Your inquiry was not sent.
