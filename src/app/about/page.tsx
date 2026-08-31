@@ -19,7 +19,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "About",
   description:
-    "Craftline Brands is a franchise development company that owns the marks, the operating playbooks, and the technology behind the skilled trade service brands it builds. Veteran founded, held through two Wyoming entities.",
+    "Craftline Brands owns the marks, the operating playbooks, and the technology behind the skilled trade service brands it builds. Veteran founded.",
   path: "/about",
 });
 

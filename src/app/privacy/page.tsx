@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
+import { JsonLd } from "@/components/json-ld";
 import { EffectiveDate, LegalList, LegalSection, P } from "@/components/legal";
 import { PageHeader } from "@/components/page-header";
 import {
@@ -8,6 +9,7 @@ import {
   CONTACT_EMAIL,
   LEGAL_ENTITIES,
 } from "@/config/company";
+import { breadcrumbSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
@@ -270,6 +272,13 @@ export default function PrivacyPage() {
         </Container>
       </section>
 
+      {/*
+        Breadcrumbs. These two routes were the only ones on the site without
+        them, which left the legal pages as the one place a crawler had to
+        infer the trail from the URL. They are two levels deep like every other
+        second level route and there is no reason for the exception.
+      */}
+      <JsonLd data={breadcrumbSchema([{ name: "Privacy policy", path: "/privacy" }])} />
     </>
   );
 }

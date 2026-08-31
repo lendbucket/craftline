@@ -21,11 +21,53 @@
  * canonical or schema difference. Moves alone do not fail the run; they are
  * printed for a person to sign off.
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, statSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { FRANCHISE_FAQ } from "../src/config/company.ts";
 
 const [, , beforeFile, afterFile] = process.argv;
 const before = JSON.parse(readFileSync(beforeFile, "utf8"));
 const after = JSON.parse(readFileSync(afterFile, "utf8"));
+
+/*
+  A STALE CAPTURE IS THE ONE WAY THIS TOOL CAN LIE, so it is checked first.
+
+  It happened: a build failed after compiling, the capture threw, and this ran
+  against a leftover file and printed CLEAN. Nothing in the numbers looked
+  wrong, because the numbers were true about a state that no longer existed.
+
+  The after capture must describe the build that is on disk now. Compared on
+  the build's own mtime rather than on a hash, because the question is only
+  whether the capture is older than what it claims to describe.
+*/
+{
+  let builtNow = null;
+  try {
+    builtNow = statSync(
+      join(process.cwd(), ".next", "server", "app", "index.html"),
+    ).mtimeMs;
+  } catch {
+    /* No build present. Comparing two archived captures is legitimate. */
+  }
+  if (builtNow !== null && after.builtAt !== undefined) {
+    if (Math.abs(after.builtAt - builtNow) > 1000) {
+      console.error(
+        `
+STALE CAPTURE. "${afterFile}" describes a build from ${new Date(after.builtAt).toISOString()}, and the build on disk is from ${new Date(builtNow).toISOString()}.
+Re-run scripts/rule-one-capture.mjs. A comparison against a leftover capture reports CLEAN about a state that no longer exists.
+`,
+      );
+      process.exit(1);
+    }
+  } else if (builtNow !== null && after.builtAt === undefined) {
+    console.error(
+      `
+STALE CAPTURE FORMAT. "${afterFile}" was written before captures recorded their build, so it cannot be checked against the build on disk. Re-run the capture.
+`,
+    );
+    process.exit(1);
+  }
+}
 
 /** Multiset difference: what is in a that is not in b, counting duplicates. */
 function minus(a, b) {
@@ -112,6 +154,10 @@ const APPROVED = {
       ],
     ],
     mainBlocks: [
+      [
+        "Limits",
+        "eyebrow on the closing limits band, Workstream A: bring the articles to the depth of the designed pages",
+      ],
       ["Skilled trade brand and franchise development", "hero eyebrow, directed"],
       ["skilled trade", "tricolour headline span, directed"],
       ["service brands.", "tricolour headline span, directed"],
@@ -129,6 +175,436 @@ const APPROVED = {
     ],
   },
 };
+
+/**
+ * APPROVED RULES, FOR CHANGES THAT ARE MECHANICAL RATHER THAN EDITORIAL.
+ *
+ * A literal list cannot express "the same nineteen character suffix came off
+ * eighteen titles". Written out it is thirty six entries that a reader has to
+ * compare by eye to be sure the only thing that changed was the suffix, which
+ * is exactly the review a machine should be doing.
+ *
+ * THESE ARE NOT A LOOSENING, AND EACH ONE IS WRITTEN TO BE UNABLE TO PASS
+ * ANYTHING ELSE. The suffix rule does not approve "a title that got shorter":
+ * it approves a removed title only when the identical string minus the exact
+ * brand suffix is present in the after capture, and approves an added title
+ * only when the identical string plus that suffix was in the before capture.
+ * A title whose words changed fails both halves and is reported.
+ *
+ * Every rule names the instruction that authorised it, in the operator's own
+ * terms, the same as a literal entry.
+ *
+ * INJECTION VERIFICATION, TO THE STANDING RULE IN AGENTS.md
+ * --------------------------------------------------------
+ * ANCHORING. Every literal entry is matched with Map.get, which is whole string
+ * equality, so those are anchored by construction. Every rule was re-read for
+ * prefix matching after one was found doing it, and two were:
+ *
+ *   The breadcrumb entry left its name alternation open, so
+ *   "name=Home services franchise: what the category actually is" matched on
+ *   the word "Home" and an article retitle was being approved as a breadcrumb.
+ *   Anchored at both ends now.
+ *
+ *   The FAQPage entry matched "name=" and "text=" as prefixes, which approved
+ *   any question and any answer.
+ *
+ *     catch  a tenth question planted into FRANCHISE_FAQ
+ *            -> before the fix: the page level additions were caught but the
+ *               schema line was approved, because the allowlist reads the same
+ *               array it is approving. A mirror, not an allowlist.
+ *            -> after pinning the count at nine: jsonLd 0 approved to 43
+ *               unapproved, 60 unapproved additions in total. CAUGHT.
+ *     miss   the nine decided entries, unchanged
+ *            -> jsonLd 220 approved, 0 unapproved, run CLEAN. SILENT.
+ *
+ * The suffix rule and the retitle rule are substitution checks: a removed value
+ * is approved only when the exact transformed string is present on the other
+ * side. Both were exercised by the run they were written for, 36 and 146
+ * deltas respectively, and neither approved anything else.
+ *
+ *   THE STRING SWAP LIST
+ *     catch  a sixth heading rewritten with no SWAPS entry
+ *            -> 7 unexplained removals, 7 unapproved additions, the heading
+ *               named on both sides                                  CAUGHT
+ *     miss   the five listed swaps, one band lead and four headings
+ *            -> 2172 approved deltas, run CLEAN                      SILENT
+ *
+ *   THE STALE CAPTURE GUARD
+ *     catch  the site rebuilt without re-capturing
+ *            -> "STALE CAPTURE ... describes a build from ..."       CAUGHT
+ *     catch  a capture written before captures recorded their build
+ *            -> "STALE CAPTURE FORMAT ..."                           CAUGHT
+ *     miss   a capture taken from the build currently on disk
+ *            -> runs normally                                        SILENT
+ */
+const BRAND_SUFFIX = " | Craftline Brands";
+
+/*
+  The nine decided question and answer strings, read from the same export the
+  franchising page renders and the FAQPage schema is built from. Used to anchor
+  the FAQ approval below on values rather than on field names.
+*/
+const FAQ_VALUES = new Set();
+for (const entry of FRANCHISE_FAQ) {
+  FAQ_VALUES.add(`name=${entry.q}`);
+  FAQ_VALUES.add(`acceptedAnswer.text=${entry.a}`);
+}
+
+/*
+  AND THE COUNT IS PINNED, BECAUSE THE SET ABOVE IS CIRCULAR ON ITS OWN.
+
+  Reading the approved values from config means the allowlist can never
+  disagree with config. Planting a tenth question proved it: the rendered page
+  additions were caught, correctly, but the FAQPage schema line for the planted
+  question was approved, because by then it was in the array being read.
+
+  Nine is the number that was decided. If the array grows, this switches off
+  and every FAQ schema line is reported until somebody writes down why there
+  are ten. That is the difference between an allowlist and a mirror.
+*/
+const FAQ_APPROVED_COUNT = 9;
+const FAQ_UNCHANGED = FRANCHISE_FAQ.length === FAQ_APPROVED_COUNT;
+/**
+ * THE FOUR CALL TO ACTION POSITIONS REMOVED FROM EVERY ARTICLE.
+ *
+ * Approved instruction: "One position, two links, last block before the
+ * footer." An article carried five positions and eight links; the closing band
+ * is the only one left, and the strings below are what came off all eighteen.
+ *
+ * Listed as the exact rendered strings, so this cannot approve a fifth string
+ * that merely resembles them. Headings, anchors and words are derived from the
+ * same list rather than restated: a heading is the string with its level
+ * prefix, an anchor is the string with its href, and a word is a word of one
+ * of them.
+ */
+const REMOVED_CTA_STRINGS = [
+  "Franchise inquiry",
+  "How franchising works",
+  "All insights",
+  "Evaluating a franchise?",
+  "Questions this raised?",
+  "Craftline is developing its programme and no Franchise Disclosure Document has been issued. An inquiry starts a conversation and nothing else.",
+  "An inquiry is read by a person and commits you to nothing. No Franchise Disclosure Document has been issued, so there is nothing to apply for yet.",
+];
+const CTA_BLOCKS = new Set(REMOVED_CTA_STRINGS);
+const CTA_WORDS = new Set(
+  REMOVED_CTA_STRINGS.flatMap((s) => s.split(/\s+/)).filter(Boolean),
+);
+
+/**
+ * THE FOUR DESCRIPTIONS THAT CHANGED.
+ *
+ * Approved instruction: "Fix the short home description and the three long
+ * descriptions." Home was 84 characters, which is under the point a snippet
+ * stops being cut off; franchising, insights and about all ran past 160.
+ *
+ * Both sides written out. A description is a claim about the page and there
+ * are only four of them, so a literal pair is the right treatment: nothing
+ * derived, nothing matched by prefix.
+ */
+const OLD_DESCRIPTIONS = new Set([
+  "A franchise development company building and operating skilled trade service brands.",
+  "Craftline Brands is a franchise development company that owns the marks, the operating playbooks, and the technology behind the skilled trade service brands it builds. Veteran founded, held through two Wyoming entities.",
+  "Guides on franchising and skilled trade service businesses: what a Franchise Disclosure Document is, how royalties and territory work, what a home services franchise involves, and how to check a franchisor before you sign.",
+  "How franchising works, explained plainly: what a franchisor and a franchisee each do, what royalties and brand standards mean, what a Franchise Disclosure Document is and why it exists, and what Craftline Brands looks for in an operator. Information and inquiry only.",
+]);
+const NEW_DESCRIPTIONS = new Set([
+  "A franchise development company building and operating skilled trade service brands. Veteran founded, and held through two Wyoming entities.",
+  "Craftline Brands owns the marks, the operating playbooks, and the technology behind the skilled trade service brands it builds. Veteran founded.",
+  "Guides on franchising and skilled trade businesses: what a Franchise Disclosure Document is, how royalties and territory work, and how to check a franchisor.",
+  "How franchising works: what a franchisor and a franchisee each do, what royalties and territory mean, and why disclosure comes before any offer. Inquiry only.",
+]);
+const META_KEY = /^(description|og:description|twitter:description)=/;
+
+/**
+ * APPROVED STRING SWAPS: a rendered string replaced by a named replacement.
+ *
+ * Each pair is written out on both sides, so this cannot approve a removal
+ * whose replacement never arrived, or an addition that replaced nothing. The
+ * heading, block and word forms are derived from the pair rather than restated,
+ * the same way the retitle rule works.
+ *
+ * WHY THE PAIRS ARE NOT DERIVED FROM SOURCE. They could be read out of the data
+ * files, and that is exactly the mistake the FAQ entry made: an allowlist that
+ * reads the same source it is approving is a mirror. These are literals, and a
+ * fifth heading rewritten tomorrow fails this run until somebody writes it down.
+ */
+const SWAPS = [
+  {
+    from: "Ask it. An inquiry is read by a person, reserves nothing, and commits you to nothing.",
+    to: "No Franchise Disclosure Document has been issued, so there is nothing to apply for.",
+    why: 'band lead approved as proposed: it states the fact instead of reassuring three times',
+  },
+  {
+    from: "Look at obligations, not features",
+    to: "What a franchisor is obliged to do, not what it offers",
+    why: 'directed: "Rewrite the three consecutive headings opening Look at"',
+  },
+  {
+    from: "Look at what the system does about people",
+    to: "Qualified people are the binding constraint",
+    why: 'directed: "Rewrite the three consecutive headings opening Look at"',
+  },
+  {
+    from: "Look at how the playbook changes",
+    to: "A playbook that never changes becomes fiction",
+    why: 'directed: "Rewrite the three consecutive headings opening Look at"',
+  },
+  {
+    from: "Look at what it measures",
+    to: "What the system measures, and what that misses",
+    why: 'directed: "Rewrite the three consecutive headings opening Look at"',
+  },
+];
+
+/* Words on each side, so the word level rows do not need their own entries. */
+const swapWords = (side) => {
+  const set = new Set();
+  for (const s of SWAPS) for (const w of s[side].split(/\s+/)) if (w) set.add(w);
+  return set;
+};
+const SWAP_FROM_WORDS = swapWords("from");
+const SWAP_TO_WORDS = swapWords("to");
+
+function swapFor(field, kind, value) {
+  const side = kind === "removed" ? "from" : "to";
+  for (const s of SWAPS) {
+    const target = s[side];
+    if (value === target) return s.why;
+    if (value === `H2:${target}` || value === `H3:${target}`) return s.why;
+  }
+  if (field === "mainWords") {
+    const words = kind === "removed" ? SWAP_FROM_WORDS : SWAP_TO_WORDS;
+    if (words.has(value)) {
+      return "word of an approved string swap";
+    }
+  }
+  return null;
+}
+
+const titlesBefore = new Set(
+  Object.values(before.routes).map((r) => r.title),
+);
+const titlesAfter = new Set(Object.values(after.routes).map((r) => r.title));
+
+/**
+ * ONE ARTICLE WAS RETITLED, AND A TITLE APPEARS IN NINE INVENTORIES.
+ *
+ * "What a home services franchise actually is" became "Home services franchise:
+ * what the category actually is" so the phrase leads. That one edit shows up as
+ * a removal and an addition in the title, the Open Graph and Twitter metas, the
+ * h1, the h2 on the index, seventeen card anchors, the Article headline, a
+ * breadcrumb name, and the main text of every route that lists the section.
+ *
+ * THE RULE IS A SUBSTITUTION CHECK, NOT A CONTAINS CHECK. A removed value is
+ * approved only when the identical string with the old title swapped for the
+ * new one is present in the after capture, and the reverse for an addition.
+ * A card whose description also changed, or an anchor whose href moved, fails
+ * both halves and is reported, because the substituted string would not be
+ * found.
+ */
+const RETITLE_FROM = "What a home services franchise actually is";
+const RETITLE_TO = "Home services franchise: what the category actually is";
+const RETITLE_WHY =
+  'Ahrefs retitle, directed: "Retitle the existing article for home services franchise"';
+
+/* Every value of a field across a whole capture, built once, on first use. */
+const valueIndex = { before: null, after: null };
+function valuesOf(side, field) {
+  if (!valueIndex[side]) {
+    const source = side === "before" ? before : after;
+    const index = {};
+    for (const [name, get] of FIELDS) {
+      const all = new Set();
+      for (const route of Object.values(source.routes)) {
+        for (const value of get(route) ?? []) all.add(value);
+      }
+      index[name] = all;
+    }
+    valueIndex[side] = index;
+  }
+  return valueIndex[side][field] ?? new Set();
+}
+
+const APPROVED_RULES = [
+  {
+    kind: "removed",
+    field: "*",
+    why: RETITLE_WHY,
+    test: (v, field) =>
+      v.includes(RETITLE_FROM) &&
+      valuesOf("after", field).has(v.split(RETITLE_FROM).join(RETITLE_TO)),
+  },
+  {
+    kind: "added",
+    field: "*",
+    why: RETITLE_WHY,
+    test: (v, field) =>
+      v.includes(RETITLE_TO) &&
+      valuesOf("before", field).has(v.split(RETITLE_TO).join(RETITLE_FROM)),
+  },
+  /*
+    The retitled article is also the one article whose title lost the brand
+    suffix in the same pass, so neither the substitution rule above nor the
+    suffix rule below can see it on its own: the removed string differs from
+    every added string by two changes at once. Both halves are listed here as
+    literals, which is the right treatment for a value that two approved
+    decisions landed on together.
+  */
+  /* ---- the four call to action positions that came off every article ---- */
+  {
+    kind: "removed",
+    field: "*",
+    why: 'CTA pattern, directed: "One position, two links, last block before the footer"',
+    test: (v, field) => {
+      if (field === "mainWords") return CTA_WORDS.has(v);
+      if (CTA_BLOCKS.has(v)) return true;
+      /* "H3:Evaluating a franchise?" and "All insights -> /insights". */
+      const heading = v.replace(/^H[1-6]:/, "");
+      if (heading !== v && CTA_BLOCKS.has(heading)) return true;
+      const anchor = v.split(" -> ")[0];
+      return v.includes(" -> ") && CTA_BLOCKS.has(anchor);
+    },
+  },
+
+  /* ---- the four descriptions ---- */
+  {
+    kind: "removed",
+    field: "metas",
+    why: 'description lengths, directed: "Fix the short home description and the three long descriptions"',
+    test: (v) => META_KEY.test(v) && OLD_DESCRIPTIONS.has(v.replace(META_KEY, "")),
+  },
+  {
+    kind: "added",
+    field: "metas",
+    why: 'description lengths, directed: "Fix the short home description and the three long descriptions"',
+    test: (v) => META_KEY.test(v) && NEW_DESCRIPTIONS.has(v.replace(META_KEY, "")),
+  },
+
+  {
+    kind: "removed",
+    field: "title",
+    why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
+    test: (v) => v === `${RETITLE_FROM}${BRAND_SUFFIX}`,
+  },
+  {
+    kind: "added",
+    field: "title",
+    why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
+    test: (v) => v === RETITLE_TO,
+  },
+  /*
+    WORD LEVEL, DERIVED FROM THE RETITLE AND NOTHING ELSE.
+
+    A word is approved only if it is a word of the old headline (on the removed
+    side) or of the new one (on the added side). Nothing else passes.
+
+    THE LIMIT, STATED RATHER THAN GLOSSED. These are multisets, so if some
+    unrelated change removed a further instance of a common word like "the",
+    this rule would approve that instance too. What stops that mattering is
+    that the block inventory is the stricter check and it is already clean:
+    mainBlocks reports zero unapproved, so no new or missing sentence exists
+    for a stray word to belong to. Word level is the backstop here, not the
+    authority.
+  */
+  {
+    kind: "removed",
+    field: "mainWords",
+    why: `${RETITLE_WHY} (word of the previous headline)`,
+    test: (v) => RETITLE_FROM.split(" ").includes(v),
+  },
+  {
+    kind: "added",
+    field: "mainWords",
+    why: `${RETITLE_WHY} (word of the new headline)`,
+    test: (v) => RETITLE_TO.split(" ").includes(v),
+  },
+  {
+    kind: "removed",
+    field: "title",
+    why: 'title suffix: "Drop | Craftline Brands from article titles"',
+    test: (v) =>
+      v.endsWith(BRAND_SUFFIX) &&
+      titlesAfter.has(v.slice(0, -BRAND_SUFFIX.length)),
+  },
+  {
+    kind: "added",
+    field: "title",
+    why: 'title suffix: "Drop | Craftline Brands from article titles"',
+    test: (v) => titlesBefore.has(v + BRAND_SUFFIX),
+  },
+  {
+    kind: "removed",
+    field: "jsonLd",
+    why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
+    test: (v) =>
+      v === "url=https://craftlinebrands.com/" ||
+      v === "itemListElement[0].item=https://craftlinebrands.com/",
+  },
+  {
+    kind: "added",
+    field: "jsonLd",
+    why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
+    test: (v) =>
+      v === "url=https://craftlinebrands.com" ||
+      v === "itemListElement[0].item=https://craftlinebrands.com",
+  },
+  {
+    kind: "added",
+    field: "jsonLd",
+    why: 'FAQPage on /franchising, from FRANCHISE_FAQ, already rendered on the page',
+    /*
+      ANCHORED ON THE ACTUAL FAQ VALUES, NOT ON THE FIELD NAME.
+
+      The first version matched name= and text= as prefixes, which approved any
+      question and any answer. A tenth entry added to FRANCHISE_FAQ would have
+      walked straight past Rule One, which is exactly the check that exists to
+      stop content appearing without a decision behind it. The values are read
+      from the same config export the page and the schema both read, so this
+      approves the nine that were decided and nothing else.
+    */
+    test: (v) =>
+      FAQ_UNCHANGED &&
+      (v === "@type=FAQPage" ||
+        /^mainEntity\[\d+\]\.@type=Question$/.test(v) ||
+        /^mainEntity\[\d+\]\.acceptedAnswer\.@type=Answer$/.test(v) ||
+        FAQ_VALUES.has(v.replace(/^mainEntity\[\d+\]\./, "")) ||
+        v === "@id=https://craftlinebrands.com/franchising#faq" ||
+        v === "isPartOf.@id=https://craftlinebrands.com/#website"),
+  },
+  {
+    kind: "added",
+    field: "jsonLd",
+    why: 'breadcrumb schema on /privacy and /terms, directed',
+    test: (v) =>
+      /*
+        Anchored at both ends. The first version left the name alternation
+        open, so "name=Home services franchise: what the category actually is"
+        matched on the word "Home" and an article retitle was quietly approved
+        as a breadcrumb. An allowlist that approves by prefix is not one.
+      */
+      /^itemListElement\[\d+\]\.(name=(Home|Privacy policy|Terms of use)$|item=https:\/\/craftlinebrands\.com(\/privacy|\/terms)?$|@type=ListItem$|position=\d+$)/.test(
+        v,
+      ) ||
+      v === "@type=BreadcrumbList" ||
+      /*
+        The context line of a node this rule already approved. On its own this
+        string is generic enough to cover a context added by any new schema
+        type, so it is scoped to the count: three nodes were added on two
+        routes, and a fourth would show up as an unapproved @type beside it.
+      */
+      v === "@context=https://schema.org",
+  },
+];
+
+function ruleFor(field, kind, value) {
+  for (const rule of APPROVED_RULES) {
+    if (rule.field !== "*" && rule.field !== field) continue;
+    if (rule.kind !== kind) continue;
+    if (rule.test(value, field)) return rule.why;
+  }
+  return null;
+}
 
 const flat = (o) =>
   Object.fromEntries(
@@ -150,6 +626,10 @@ function approvalFor(field, kind, value) {
   const table = kind === "removed" ? APPROVED_REMOVED : APPROVED_ADDED;
   const hit = table[field]?.get(value);
   if (hit) return hit;
+  const byRule = ruleFor(field, kind, value);
+  if (byRule) return byRule;
+  const bySwap = swapFor(field, kind, value);
+  if (bySwap) return bySwap;
   if (kind === "added" && WORD_FIELDS.has(field) && APPROVED_WORDS.has(value)) {
     return "word of an approved block";
   }

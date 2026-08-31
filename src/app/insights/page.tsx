@@ -14,7 +14,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Insights",
   description:
-    "Guides on franchising and skilled trade service businesses: what a Franchise Disclosure Document is, how royalties and territory work, what a home services franchise involves, and how to check a franchisor before you sign.",
+    "Guides on franchising and skilled trade businesses: what a Franchise Disclosure Document is, how royalties and territory work, and how to check a franchisor.",
   path: "/insights",
 });
 

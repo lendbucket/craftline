@@ -385,19 +385,8 @@ export const CATEGORY_POSITIONING = [
   "veteran franchise",
 ] as const;
 
-/**
- * Primary navigation. Single source so the header, the footer, and the sitemap
- * cannot drift apart.
- */
-export const NAV = [
-  { href: "/about", label: "About" },
-  { href: "/brands", label: "Brands" },
-  { href: "/franchising", label: "Franchising" },
-  { href: "/insights", label: "Insights" },
-  { href: "/contact", label: "Contact" },
-] as const;
-
-export const LEGAL_NAV = [
-  { href: "/privacy", label: "Privacy policy" },
-  { href: "/terms", label: "Terms" },
-] as const;
+/*
+  NAV and LEGAL_NAV moved to src/config/nav.ts. The reason is in that file:
+  the header is a client component, it imported NAV from here, and that pulled
+  this module across the client boundary on all 27 routes. Nothing else left.
+*/

@@ -28,7 +28,7 @@ import {
   FRANCHISE_GLOSSARY,
 } from "@/data/franchising";
 import { ORDERED_INSIGHTS } from "@/data/insights";
-import { breadcrumbSchema } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema } from "@/lib/schema";
 import { pageMetadata } from "@/lib/seo";
 
 /**
@@ -41,7 +41,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Franchising",
   description:
-    "How franchising works, explained plainly: what a franchisor and a franchisee each do, what royalties and brand standards mean, what a Franchise Disclosure Document is and why it exists, and what Craftline Brands looks for in an operator. Information and inquiry only.",
+    "How franchising works: what a franchisor and a franchisee each do, what royalties and territory mean, and why disclosure comes before any offer. Inquiry only.",
   path: "/franchising",
 });
 
@@ -407,6 +407,13 @@ export default function FranchisingPage() {
           </div>
         </div>
       </Section>
+
+      {/*
+        The nine pairs rendered in the FAQ band above, marked up from the same
+        array they are rendered from. See faqSchema in src/lib/schema.ts for
+        why the articles carry none of this.
+      */}
+      <JsonLd data={faqSchema(FRANCHISE_FAQ, "/franchising")} />
 
       <JsonLd
         data={breadcrumbSchema([{ name: "Franchising", path: "/franchising" }])}

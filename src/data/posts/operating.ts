@@ -45,7 +45,7 @@ export const OPERATING_POSTS: Insight[] = [
         kind: "paragraph",
         text: "Buying a franchise follows a sequence that is broadly the same across systems, partly by convention and partly because a federal rule dictates the shape of the middle of it. Knowing the order makes it much easier to tell an ordinary process from a rushed one.",
       },
-      { kind: "heading", text: "One: an enquiry, which commits you to nothing" },
+      { kind: "heading", text: "One: an enquiry, which commits you to nothing", step: 1 },
       {
         kind: "paragraph",
         text: [
@@ -54,7 +54,7 @@ export const OPERATING_POSTS: Insight[] = [
           ".",
         ],
       },
-      { kind: "heading", text: "Two: conversations in both directions" },
+      { kind: "heading", text: "Two: conversations in both directions", step: 2 },
       {
         kind: "paragraph",
         text: "You ask about the brand, the method, and the support. The franchisor asks how you intend to run a business. Either side can decide it is not a fit, and that is a normal outcome rather than a failure.",
@@ -63,7 +63,7 @@ export const OPERATING_POSTS: Insight[] = [
         kind: "paragraph",
         text: "A franchisor that only sells during this stage, and never asks you anything searching, is not evaluating you. That is worth noticing, because a system indifferent to who joins it is telling you what the operator standard is going to be.",
       },
-      { kind: "heading", text: "Three: disclosure, and a waiting period" },
+      { kind: "heading", text: "Three: disclosure, and a waiting period", step: 3 },
       {
         kind: "paragraph",
         text: [
@@ -80,7 +80,7 @@ export const OPERATING_POSTS: Insight[] = [
           ", and take it to a franchise attorney and an accountant who work for you.",
         ],
       },
-      { kind: "heading", text: "Four: negotiation, within limits" },
+      { kind: "heading", text: "Four: negotiation, within limits", step: 4 },
       {
         kind: "paragraph",
         text: "Franchise agreements are less negotiable than commercial contracts generally, because a system that varies its terms per franchisee becomes impossible to administer and creates disclosure problems of its own. Some terms move and many do not.",
@@ -89,7 +89,7 @@ export const OPERATING_POSTS: Insight[] = [
         kind: "paragraph",
         text: "Where there is room, it is usually around territory definition and timing rather than around fees. Your attorney will know which is which in the jurisdiction.",
       },
-      { kind: "heading", text: "Five: signing, funding, and opening" },
+      { kind: "heading", text: "Five: signing, funding, and opening", step: 5 },
       {
         kind: "paragraph",
         text: [

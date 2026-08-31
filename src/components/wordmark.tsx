@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { COMPANY } from "@/config/company";
 
 /**
  * The Craftline lockup in the header and footer.
@@ -33,6 +32,22 @@ const LOGO_HEIGHT = 783;
 
 export function Wordmark({
   as = "link",
+  /**
+   * THE COMPANY NAME ARRIVES AS A PROP, AND THAT IS A BUNDLING DECISION.
+   *
+   * This component used to import COMPANY from src/config/company.ts for one
+   * string, the link's accessible name. It renders inside site-header.tsx,
+   * which is a client component, so that one import pulled the whole config
+   * module across the client boundary on all 27 routes. Tree shaking kept the
+   * prose out, but a 10.7 KB chunk carrying the capital brackets and the
+   * domain shipped to every page including the ones with no form on them.
+   *
+   * A prop crosses the boundary as serialised data rather than as a module, so
+   * the config stays on the server where it belongs. The server call sites
+   * read COMPANY themselves; the client one is handed the string by the
+   * layout, which is a server component.
+   */
+  name,
   /*
     Sized by screenshot against the nav rather than by guess. The delivered
     lockup stacks BRANDS under the wordmark, so a given pixel height buys much
@@ -45,6 +60,8 @@ export function Wordmark({
 }: {
   /** The footer already sits inside a landmark, so it renders the inert form. */
   as?: "link" | "plain";
+  /** COMPANY.name, passed rather than imported. See the note above. */
+  name: string;
   className?: string;
 }) {
   const mark = (
@@ -52,6 +69,21 @@ export function Wordmark({
       src={LOGO_SRC}
       width={LOGO_WIDTH}
       height={LOGO_HEIGHT}
+      /*
+        WITHOUT THIS, THE BROWSER FETCHED A 2048 PIXEL IMAGE TO DRAW 146.
+
+        next/image builds its srcset from the declared width when no sizes
+        attribute is given, so the delivered 2042 by 783 lockup was served at
+        w=2048, and the head preloaded a w=3840 variant for 2x displays. The
+        rendered box is 48 to 56 pixels tall, which is about 146 wide.
+
+        The value is the widest the mark is ever drawn, which is the desktop
+        h-14 case. Removing the preload entirely was measured separately at
+        -4ms with a confidence interval spanning zero, so this buys bytes and
+        not time: about 10.7 KB down to roughly 2. It is one attribute and the
+        previous state was plainly wrong, which is the whole argument for it.
+      */
+      sizes="146px"
       priority
       /*
         Decorative at every call site. The company name is always present as
@@ -69,7 +101,7 @@ export function Wordmark({
   return (
     <Link
       href="/"
-      aria-label={`${COMPANY.name} home`}
+      aria-label={`${name} home`}
       className="inline-flex min-h-11 items-center transition-opacity hover:opacity-80"
     >
       {mark}

@@ -79,8 +79,45 @@ export type Inline = string | { text: string; href: string; external?: boolean }
 
 export type Block =
   | { kind: "paragraph"; text: string | Inline[] }
-  | { kind: "heading"; text: string }
+  | {
+      kind: "heading";
+      text: string;
+      /**
+       * POSITION IN A GENUINE SEQUENCE, AND THE ONLY THING THAT EARNS A
+       * NUMERAL IN THIS SECTION.
+       *
+       * Numerals are reserved for content where the order is load bearing.
+       * That is the rule the Steps component is built under and it holds here:
+       * numbering a set of four things that are not four steps tells a reader
+       * something untrue about them.
+       *
+       * Exactly one article qualifies today. Its headings already carry their
+       * ordinal in the prose, which is what makes the rendered numeral safe to
+       * hide from assistive technology: it repeats a word the heading already
+       * says, so a reader who cannot see it loses nothing. That is the exact
+       * inverse of the failure Rule One caught in Phase 2A, where a decorative
+       * numeral was the only thing carrying the sequence.
+       *
+       * If you are about to set this on a list of features, capabilities, or
+       * reasons, it is not a sequence and this field is not for it.
+       */
+      step?: number;
+    }
   | { kind: "list"; items: (string | Inline[])[] };
+
+/**
+ * THE CLOSING SECTION EVERY ARTICLE IN THIS SECTION IS SUPPOSED TO HAVE.
+ *
+ * Rule 5 above requires each post to state plainly what it does not establish.
+ * Fifteen of the eighteen carry this exact heading, and the article template
+ * lifts it out of the reading column into its own band, because it is the one
+ * passage a careful reader and a generative engine both go looking for.
+ *
+ * Matched as an exact string rather than flagged per post. There is one
+ * spelling of it and it is here; a post that spells it differently simply
+ * keeps it inline, which is a degradation rather than a break.
+ */
+export const LIMITS_HEADING = "What this does not establish";
 
 export interface Insight {
   slug: string;
