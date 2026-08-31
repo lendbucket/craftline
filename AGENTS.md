@@ -81,6 +81,37 @@ The record lives in the audit file, states the exact plant and the exact
 output, and is updated whenever the rule changes. A rule whose plants are not
 written down is treated as unverified.
 
+**A verification that reads a captured artifact must prove the artifact
+postdates the build it describes, and must fail loudly rather than proceed when
+it cannot.** No exceptions, and no falling back to a warning.
+
+This is a separate rule because it is a worse failure than anything the checks
+themselves guard against. It happened on the Phase 3 merge gate. A build failed
+after the compile step, so the capture threw and wrote nothing; the comparison
+then ran against a leftover file from an earlier state and printed CLEAN, with a
+plausible table, about a site that no longer existed. Nothing in the numbers
+looked wrong, because the numbers were true, about the wrong thing. The only
+tell was a label in the output header reading `after` instead of the label that
+had just been asked for.
+
+A defect that ships is expensive. A gate that reports CLEAN when it has verified
+nothing is worse, because it ends the review. Anything downstream of it stops
+looking.
+
+What this requires in practice:
+
+- The capture side records the build it came from. `rule-one-capture.mjs`
+  stores the mtime of `.next/server/app/index.html` and its own timestamp.
+- The reading side compares that against the build on disk and exits non zero
+  on a mismatch, and also on a capture written before the format existed, which
+  cannot be checked and therefore cannot be trusted.
+- It exits rather than warns. A warning above a green table is read as green.
+
+The same applies to any future harness that compares against something it did
+not just produce: a stored baseline, a golden file, a screenshot set, a
+serialised crawl. If the artifact cannot be shown to describe the current build,
+the run fails.
+
 **Why this is a rule and not a preference.** An audit that passes while looking
 at the wrong thing is the defect this project has produced more often than any
 other:
