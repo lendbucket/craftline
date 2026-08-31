@@ -6,6 +6,63 @@ reason and, where one exists, the concrete incident that produced it.
 
 Items are removed when they ship, not when they are attempted.
 
+## Phase 3: the Rule One verification, method fixed in advance
+
+Not yet run. The method is written down here before the results exist so that it
+can be reviewed for what it covers rather than judged by whether it came back
+clean.
+
+**Why it is specified rather than improvised.** The Phase 1 string comparison
+used a 40 character floor and a nine word prefix window, and that definition
+missed three real claims: "Flagship brand", "flagship market" and "1 operating
+brand" are 14, 15 and 17 characters. All three were caught by a separate grep,
+not by the scan. A verification that inherits that floor would inherit the hole.
+
+### What is compared
+
+Both branches are built and served. All 27 routes are crawled on each. For every
+route the crawler extracts a typed inventory, and every item is compared as an
+**exact, complete, normalised string**. No length floor. No prefix window.
+
+1. `<title>`, in full.
+2. Every `<meta>` `content` value: description, Open Graph, Twitter.
+3. `<link rel="canonical">` href, and the robots directives.
+4. Every heading, `h1` through `h6`, carrying its level so a demotion is visible.
+5. Every anchor: its text and its `href`, as a pair.
+6. Every button and submit control: its text.
+7. Every attribute that reaches a person: `alt`, `aria-label`, `title`, and the
+   text of each `aria-describedby` and `aria-labelledby` target.
+8. Every JSON-LD block, flattened to sorted key and string value pairs.
+9. The complete visible text of `<main>`, and of the header and footer
+   separately, normalised for whitespace only.
+10. The set of prerendered routes, and the sitemap entries, as sets.
+
+Items 5, 6 and 7 are the ones Phase 1 could not see at all: the tag stripping
+removed attributes wholesale, and short labels fell under the floor.
+
+### How the two failure modes I named are handled
+
+**Prefix matching that diverges.** There is no window. Strings are compared
+whole, so a sentence that opens identically and ends differently is a mismatch
+rather than a match.
+
+**Meaning changed by relocation.** Comparison runs at two levels. Per route,
+which catches a string leaving a page. And as a site wide multiset, which
+distinguishes the two cases that a per route diff confuses: a string that
+disappears from route A and appears on route B is reported as **moved**, and a
+string that disappears from route A and appears nowhere is reported as
+**removed**. A move is not automatically a violation, but it is never silent,
+and every one has to be justified as presentation rather than waved through.
+
+### What a pass looks like
+
+Zero removed, zero added, zero routes gained or lost, zero canonical or schema
+differences. Moves are enumerated individually with the route they left and the
+route they arrived on, and each is signed off or reverted. Anything else fails.
+
+The crawl output is kept as the proof rather than summarised, so the claim can be
+rechecked without rerunning it.
+
 ## Rejected import behaviours
 
 These are not deferred work. They are things the Claude Design import does that
