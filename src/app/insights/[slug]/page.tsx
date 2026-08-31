@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Cta, CtaRow } from "@/components/cta";
 import { JsonLd } from "@/components/json-ld";
 import { PageHeader } from "@/components/page-header";
-import { CtaBand, CtaPrompt } from "@/components/cta-band";
+import { CtaBand } from "@/components/cta-band";
 import { Cell, HairlineGrid } from "@/components/system/grid";
 import { SplitBar } from "@/components/system/rule";
 import { Section } from "@/components/system/section";
@@ -298,15 +297,23 @@ export default async function InsightPage({
   const limits = limitsAt === -1 ? [] : insight.body.slice(limitsAt + 1);
 
   /*
-    Where the in-body prompt goes. Biased to 40% rather than the midpoint,
-    because block INDEX is not block HEIGHT: a heading is a fraction of a
-    paragraph, so a true index midpoint lands well past the visual middle. The
-    CTA audit caught exactly that on the third article.
+    ONE ASK PER ARTICLE, AND IT IS THE LAST BLOCK BEFORE THE FOOTER.
 
-    Measured against the reading body rather than the whole post, now that the
-    closing limits section has left it.
+    An article used to carry five call to action positions and eight links:
+    two in the page header above its own opening paragraph, a prompt at forty
+    per cent, another at the end of the body, two more under the further
+    reading grid, and the closing band. The first ask arrived before the piece
+    had given a reader anything, which is the opposite of what this section is
+    for. The band is the ask now, and nothing above it competes with it.
+
+    The site header keeps its inquiry link and the phone keeps its persistent
+    bar. Those are furniture, present on all 27 routes, and they are excluded
+    from the article count by node in the audit rather than by position.
+
+    The contextual links inside the prose stay. They are written into the
+    sentences that earn them, they point where the sentence is already
+    pointing, and a link a reader chose to follow is not an interruption.
   */
-  const midpoint = Math.floor(body.length * 0.4);
 
   return (
     <>
@@ -323,10 +330,6 @@ export default async function InsightPage({
             </time>
           </p>
         }
-        ctaHref="/franchising#inquiry"
-        ctaLabel="Franchise inquiry"
-        secondaryHref="/franchising"
-        secondaryLabel="How franchising works"
       />
 
       <Section ground="white">
@@ -343,21 +346,8 @@ export default async function InsightPage({
               ) : (
                 <BlockView block={block} first={index === 0} />
               )}
-              {index === midpoint ? (
-                <CtaPrompt
-                  className="mt-14"
-                  title="Evaluating a franchise?"
-                  lead="Craftline is developing its programme and no Franchise Disclosure Document has been issued. An inquiry starts a conversation and nothing else."
-                />
-              ) : null}
             </div>
           ))}
-
-          <CtaPrompt
-            className="mt-14"
-            title="Questions this raised?"
-            lead="An inquiry is read by a person and commits you to nothing. No Franchise Disclosure Document has been issued, so there is nothing to apply for yet."
-          />
         </article>
       </Section>
 
@@ -411,12 +401,16 @@ export default async function InsightPage({
             ))}
           </HairlineGrid>
 
-          <CtaRow className="mt-12">
-            <Cta href="/franchising">How franchising works</Cta>
-            <Cta href="/insights" variant="secondary">
-              All insights
-            </Cta>
-          </CtaRow>
+          {/*
+            NO CONTROLS UNDER THE FURTHER READING GRID.
+
+            It carried two, and a reader who has reached this point is choosing
+            what to read next rather than deciding whether to make contact. The
+            grid itself is seventeen links to the rest of the section, the site
+            header carries the index, and the ask is one section below. Three
+            competing destinations in the space of one screen is the shape this
+            template is being taken out of.
+          */}
         </Section>
       ) : null}
 

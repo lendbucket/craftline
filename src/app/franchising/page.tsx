@@ -41,7 +41,7 @@ import { pageMetadata } from "@/lib/seo";
 export const metadata: Metadata = pageMetadata({
   title: "Franchising",
   description:
-    "How franchising works, explained plainly: what a franchisor and a franchisee each do, what royalties and brand standards mean, what a Franchise Disclosure Document is and why it exists, and what Craftline Brands looks for in an operator. Information and inquiry only.",
+    "How franchising works: what a franchisor and a franchisee each do, what royalties and territory mean, and why disclosure comes before any offer. Inquiry only.",
   path: "/franchising",
 });
 

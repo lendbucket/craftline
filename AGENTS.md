@@ -64,6 +64,45 @@ The four stock slots in `src/data/images.ts` stay tracked and pending as the
 record of that decision. Do not fill them. Do not delete them either: a tracked
 empty slot is what stops somebody re-solving this from scratch.
 
+## Audits, standing rule
+
+Every audit rule is injection verified at the time it is written, and two
+plants are recorded in the file beside it:
+
+- a string the rule MUST catch, and
+- a near miss it MUST NOT catch.
+
+Both, always. A plant that only proves a rule fires proves the easy half:
+firing is easy, firing on the right thing is not. The near miss is what pins a
+rule to the boundary it claims to be checking, and it is the half that would
+have caught every failure listed below.
+
+The record lives in the audit file, states the exact plant and the exact
+output, and is updated whenever the rule changes. A rule whose plants are not
+written down is treated as unverified.
+
+**Why this is a rule and not a preference.** An audit that passes while looking
+at the wrong thing is the defect this project has produced more often than any
+other:
+
+- Five of the nine voice audit rules had never fired once. The string rules
+  read only the `main` element, so the footer disclaimer, which is the most
+  repeated prose on the property, was never checked at all. The density rule
+  ignored `dt`. The bold lead-in rule tested a tag name when the tell is
+  weight. The parallel phrasing rule could not see subheads. Every one of them
+  would have passed a "does it catch anything" test.
+- The triad rule counted sentences when the tell was clauses, and passed a
+  three clause triad on all eighteen articles for a whole phase.
+- The CTA gap rule could only fail a page for too FEW controls, so an article
+  carrying five asks and eight links was a pass twice over.
+- An unlayered `h1..h6` base rule beat `text-white` and shipped graphite on red
+  at 2.98:1 across 23 routes, because nothing was checking the cascade.
+- `first:mt-0` inside a per item wrapper cancelled the margin above every
+  subhead in the insights section, from the day the template was written.
+
+Each of those is the same shape: the check was real, the thing it pointed at
+was not. Recording both plants is the cheapest structural defence available.
+
 ## Engineering
 
 - Next.js App Router, TypeScript strict, Tailwind v4, static generation.

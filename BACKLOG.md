@@ -348,13 +348,25 @@ name when the tell is weight, and the parallel phrasing rule could not see
 subheads because an article wraps every block in its own div. All five are
 fixed and every rule is injection verified in the file header.
 
-### Two audits are red on this branch on purpose
+### One audit is red on this branch, on two counts, both waiting on a decision
 
-`voice-audit` fails 18 times on one string, the closing band lead, which
-Workstream B replaces. `cta-audit` fails 6 times at 3.52 to 3.58 viewports,
-which is the rule that is being rewritten for the new CTA pattern. Neither was
-worked around, and neither should be closed by touching anything other than the
-approved Workstream B change.
+`cta-audit` is green. The rule was rewritten into three route classes and the
+articles now carry exactly one ask.
+
+`voice-audit` fails 19 times.
+
+Eighteen are the closing band lead, "An inquiry is read by a person, reserves
+nothing, and commits you to nothing." The replacement was proposed and not
+shipped, because rewriting that string was gated separately from the CTA
+placement it sits inside.
+
+The nineteenth is new, and it is the rule earning its place. Removing the mid
+article prompt took away the thing that was breaking a run of consecutive
+subheads on one article: `what-to-look-for-in-a-home-services-franchise` opens
+three headings in a row with "Look at". That was true before this pass and the
+audit could not see it, first because the rule only looked at siblings, and
+then because a call to action was sitting in the middle of the run. It is
+article prose, so it is a copy decision rather than a template one.
 
 ### Not done, and not forgotten: three length fixes were never approved
 

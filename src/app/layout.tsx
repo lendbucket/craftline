@@ -177,6 +177,16 @@ const serif = Source_Serif_4({
   preload: false,
 });
 
+/**
+ * The home page's own description, composed rather than written.
+ *
+ * Every clause traces to src/config/company.ts: the descriptor, the founding
+ * statement, and the two entities in LEGAL_ENTITIES. Composed here rather than
+ * added to that file because it is a sentence about the home page, not a new
+ * fact about the company, and the config holds facts.
+ */
+const HOME_DESCRIPTION = `${COMPANY.descriptor} Veteran founded, and held through two Wyoming entities.`;
+
 export const metadata: Metadata = {
   /**
    * Absolute base for every relative URL Next resolves in metadata, including
@@ -193,7 +203,18 @@ export const metadata: Metadata = {
      */
     template: `%s | ${COMPANY.name}`,
   },
-  description: COMPANY.descriptor,
+  /*
+    THE HOME DESCRIPTION IS LONGER THAN THE DESCRIPTOR, ON PURPOSE.
+
+    COMPANY.descriptor is 84 characters, which is 26 under the point a result
+    snippet stops being cut off, and this was the only route on the site giving
+    away space rather than losing it. The descriptor itself does not change:
+    it is the committed one line statement of what this company is, and the
+    schema, the llms files and the social cards all read it. What changes is
+    the home page's own description, composed from it and two more facts that
+    are already in the same config.
+  */
+  description: HOME_DESCRIPTION,
   applicationName: COMPANY.name,
   alternates: { canonical: "/" },
   openGraph: {
@@ -206,13 +227,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     title: `${COMPANY.name} | Skilled trade brand and franchise development`,
-    description: COMPANY.descriptor,
+    description: HOME_DESCRIPTION,
     images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: `${COMPANY.name} | Skilled trade brand and franchise development`,
-    description: COMPANY.descriptor,
+    description: HOME_DESCRIPTION,
     images: [OG_IMAGE.url],
   },
   /**
