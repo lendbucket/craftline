@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Barlow, Big_Shoulders, Source_Serif_4 } from "next/font/google";
+import { Big_Shoulders, Source_Sans_3, Source_Serif_4 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { JsonLd } from "@/components/json-ld";
 import { MobileCta, MobileCtaSpacer } from "@/components/mobile-cta";
@@ -30,24 +30,54 @@ import "./globals.css";
  *   failed silently to a system fallback, which is exactly the class of bug the
  *   *-family naming note below exists to prevent.
  *
- *   `axes: ["opsz"]` is requested deliberately, and it is free. Measured: the
- *   emitted woff2 is 58,296 bytes with the axis, without it, and with specific
- *   static weights requested instead. Google serves the same variable file
- *   either way, so declining the axis would have bought nothing and lost the
- *   thing the face is drawn for: at the 88px page title it wants the display
- *   drawing, at the 16px eyebrow it wants the text drawing. With the axis
- *   present, `font-optical-sizing: auto` in globals.css maps it from the
- *   rendered size and no component ever sets it by hand.
+ *   `axes: ["opsz"]` IS REQUESTED, AND IT IS NOT FREE. An earlier version of
+ *   this comment said it was, on a measurement that was simply wrong: the
+ *   comparison summed all preloaded fonts rather than isolating this one, and a
+ *   change in a different file masked the change in this one. Isolated and
+ *   remeasured, the emitted woff2 is:
  *
- * SANS, Barlow. Body copy, form controls, captions, small labels.
+ *     axes: ["opsz"]            58,296 bytes    shipped
+ *     no axes, wght only        36,480 bytes
+ *     weight: ["700", "800"]    36,480 bytes    identical to the line above
  *
- *   Barlow is NOT a variable family on Google Fonts, so each weight is a
- *   separate file and every weight requested is bytes shipped. Two are
- *   requested: 400 for reading and 600 for labels, emphasis, and form labels.
- *   The import uses four. The other two were dropped because the display face
- *   now carries everything that would have needed 700, and 500 was doing
- *   nothing 400 does not. If a design need for a third weight appears, add it
- *   here rather than reaching for a synthetic bold.
+ *   So the optical size axis costs 21,816 bytes, about sixty per cent on top of
+ *   the weight only file. Requesting static weights does not produce static
+ *   instances: next/font emits the same weight only variable file either way.
+ *
+ *   It is kept because the difference is visible where this face is largest.
+ *   With the axis, "A FRANCHISE DEVELOPMENT" at 88px sets 861px wide; without
+ *   it, 933px, eight per cent looser, because the whole family renders at the
+ *   default optical size of 14 and an 88px headline gets letterforms drawn for
+ *   small text. With the axis present, `font-optical-sizing: auto` in
+ *   globals.css maps it from the rendered size and no component sets it by hand.
+ *
+ *   THIS IS A LIVE TRADE, NOT A SETTLED ONE. 21,816 bytes on the critical path
+ *   of every route is the same kind of cost that got Barlow removed. The
+ *   difference is that Barlow bought a body grotesque this design did not need,
+ *   and the axis buys the display face behaving the way it was drawn, on the
+ *   face that carries the system's character. Drop the axis if the payload
+ *   matters more; nothing else in the build depends on it.
+ *
+ * SANS, Source Sans 3. Body copy, form controls, captions, small labels.
+ *
+ *   THE IMPORT SPECIFIES BARLOW AND THE OWNER OVERRODE IT, ON PAYLOAD. Barlow
+ *   is not a variable family on Google Fonts, so every weight is a separate
+ *   file. Shipping it at the two weights this design needs cost two requests
+ *   and 31,488 bytes, and the site went from two font files to four. That
+ *   landed as a measured regression on /franchising, which is the most
+ *   important franchise facing route on the property, in exchange for a body
+ *   grotesque nobody had asked for.
+ *
+ *   Source Sans 3 is one variable file covering 200 to 900. It was already this
+ *   site's face before Phase 2A and it is the operating brand's property's face
+ *   as well, so the two read as one company. The character of this design is in
+ *   the display face and in the structural devices, not in the body grotesque,
+ *   and swapping the grotesque does not touch either.
+ *
+ *   Weights are no longer enumerated because a variable family does not need
+ *   them: 400 for reading and 600 for labels both come out of the same file at
+ *   no extra cost, and a future need for 500 is a class name rather than a
+ *   build change.
  *
  * SERIF, Source Serif 4. Long form reading only, through .prose-body: the
  * franchising education prose, the eighteen articles, and the two legal
@@ -57,17 +87,16 @@ import "./globals.css";
  *   GETTING RIGHT. The import has no reading face at all and sets four thousand
  *   word articles in the same grotesque as its buttons. The articles are the
  *   longest continuous reading on this property and the audience for them is a
- *   prospect's attorney and accountant. Barlow is a UI grotesque with a large
- *   x-height and tight apertures; it is a good interface face and a poor
- *   sustained reading face at that length. Source Serif 4 is drawn for exactly
- *   this and is already here.
+ *   prospect's attorney and accountant. A UI sans with a large x-height is a
+ *   good interface face and a poor sustained reading face at that length.
+ *   Source Serif 4 is drawn for exactly this and is already here.
  *
- *   It no longer shares a superfamily with the sans, which was the original
- *   reason for choosing it. What replaces that argument is a plainer one: a
- *   condensed gothic for structure, a grotesque for interface, and a
- *   transitional serif for reading is the stack trade and technical publishing
- *   has used for a century, and the three do not compete because they are never
- *   asked to do each other's job.
+ *   With the body face back to Source Sans 3 it also recovers its original
+ *   argument: the two are the same superfamily and are drawn to sit together.
+ *   The wider argument holds on its own anyway. A condensed gothic for
+ *   structure, a humanist sans for interface, and a transitional serif for
+ *   reading is the stack trade and technical publishing has used for a century,
+ *   and the three do not compete because none is asked to do another's job.
  *
  * PRELOADING. The display face and the body sans are preloaded. The serif is
  * not, because it appears only inside a reading column that is always below the
@@ -115,8 +144,8 @@ import "./globals.css";
  *   sets it at 2229px. It is doing its job. Its job is simply narrower than
  *   "no shift".
  *
- * CLS. All three take `display: "swap"`. Barlow and Source Serif 4 get their
- * metric matched fallback from `adjustFontFallback`, which is on by default.
+ * CLS. All three take `display: "swap"`. Source Sans 3 and Source Serif 4 each
+ * get a metric matched fallback from `adjustFontFallback`, on by default.
  * The display face does not, because next/font has no metrics for it, so its
  * fallback is declared by hand in globals.css from measurements taken by
  * `npm run font-metrics`. That is the mechanism that keeps the swap from moving
@@ -135,9 +164,8 @@ const display = Big_Shoulders({
   display: "swap",
 });
 
-const sans = Barlow({
+const sans = Source_Sans_3({
   subsets: ["latin"],
-  weight: ["400", "600"],
   variable: "--font-sans-family",
   display: "swap",
 });

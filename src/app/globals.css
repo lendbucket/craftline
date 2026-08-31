@@ -153,9 +153,12 @@
       so `font-optical-sizing: auto` gives an 88px title the display drawing and
       a 16px eyebrow the text drawing without either being set by hand.
 
-    - SANS, Barlow. Body copy, form controls, captions, and everything a reader
-      reads at paragraph size. A low contrast grotesque with the same squared
-      terminals as the display face, so the two sit together without a seam.
+    - SANS, Source Sans 3. Body copy, form controls, captions, and everything a
+      reader reads at paragraph size. One variable file. It was already this
+      site's face and it is the operating brand property's face too, so the two
+      read as one company. The import specifies Barlow; the owner overrode that
+      on payload, because Barlow is not a variable family and shipping it cost
+      two extra requests. See the note in the root layout.
 
     - SERIF, Source Serif 4. Long form reading only: the franchising education
       prose, the eighteen articles, and the two legal documents. See the note in
@@ -191,7 +194,7 @@
   ===========================================================
 
   next/font normally generates one of these per family and inserts it into the
-  stack. It did for Barlow and for Source Serif 4. It did not for the display
+  stack. It did for Source Sans 3 and Source Serif 4. It did not for the display
   face, and the build says so out loud:
 
     Failed to find font override values for font `Big Shoulders`
