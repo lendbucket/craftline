@@ -103,9 +103,44 @@ and every one has to be justified as presentation rather than waved through.
 
 ### What a pass looks like
 
-Zero removed, zero added, zero routes gained or lost, zero canonical or schema
-differences. Moves are enumerated individually with the route they left and the
-route they arrived on, and each is signed off or reverted. Anything else fails.
+**Zero removed. Zero UNAPPROVED added.** Zero routes gained or lost, zero
+canonical, robots, meta or schema differences. Moves are enumerated individually
+with the route they left and the route they arrived on, and each is signed off
+or reverted.
+
+**THE ADDITIONS THRESHOLD WAS ORIGINALLY WRITTEN AS ZERO, AND THAT WAS WRONG.**
+It was set by the owner before the first run and corrected by him after it. Zero
+added is the right bar for a pure refactor. It is the wrong bar for a redesign
+that the owner has explicitly asked to include new elements, because it fails
+the run on the very things he asked for and it teaches whoever reads the result
+that a red table is normal. A check that is expected to fail stops being a
+check.
+
+So additions are classified rather than counted:
+
+- **Approved.** Traceable to a written instruction from the owner. Phase 2A's 59
+  additions were the hero eyebrow, the tricolour headline spans, the two fact
+  strip cells and their labels, and the brand block's status pill, attribute
+  pills and Trade and Market labels. Every one of those was directed in writing
+  and each is listed against its instruction in the report.
+- **Unapproved.** Everything else. One is a failure.
+
+Removals are not classified and there is no equivalent softening. Nothing on
+this site is allowed to quietly stop rendering, and the first run proved why:
+"Step 1" through "Step 4" had left the franchising page entirely, taking the
+only statement that the inquiry process is ordered with them, and nothing else
+in the pipeline had noticed.
+
+### One reclassification the tool makes, and why it is not a softening
+
+A leaf block whose element boundaries changed but whose every word still renders
+on the same route is reported as SPLIT rather than REMOVED. Wrapping two phrases
+of the home page headline in spans to colour them does exactly this: the block
+inventory loses one entry and the page loses nothing.
+
+The assertion moves to the word inventory, which cannot be fooled by element
+boundaries. A genuinely deleted phrase fails on `mainWords` whatever happens to
+the markup around it.
 
 The crawl output is kept as the proof rather than summarised, so the claim can be
 rechecked without rerunning it.

@@ -6,6 +6,8 @@ import { PageHeader } from "@/components/page-header";
 import { CtaPrompt } from "@/components/cta-band";
 import { NumberedGrid, NumberedStatements } from "@/components/system/grid";
 import {
+  RuledHeadingRow,
+  RuledHeadingRows,
   RuledItem,
   RuledRow,
   RuledRows,
@@ -216,13 +218,20 @@ export default function FranchisingPage() {
           lead="This is the single most important document in the decision, and most people evaluating a franchise have never seen one. Craftline has not issued one, so there is nothing to offer yet. Understanding it now is what makes the eventual reading useful."
         />
 
-        <RuledRows className="mt-14">
+        {/*
+          Headings, not definition terms. These five are the explainer a
+          prospect and their attorney read to understand the document that
+          governs the decision, and they belong in the heading outline. Same
+          ruled presentation as the vocabulary above; different semantics,
+          because the content is different. See RuledHeadingRows.
+        */}
+        <RuledHeadingRows className="mt-14">
           {FDD_EXPLAINER.map((entry) => (
-            <RuledRow key={entry.heading} term={entry.heading}>
+            <RuledHeadingRow key={entry.heading} heading={entry.heading}>
               {entry.body}
-            </RuledRow>
+            </RuledHeadingRow>
           ))}
-        </RuledRows>
+        </RuledHeadingRows>
 
         <CtaPrompt
           className="mt-14 max-w-3xl"

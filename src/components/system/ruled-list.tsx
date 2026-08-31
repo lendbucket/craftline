@@ -70,6 +70,57 @@ export function RuledRow({
 }
 
 /**
+ * THE SAME RULED ROW, BUT THE TERM IS A REAL HEADING.
+ *
+ * Identical presentation to RuledRow: same grid, same rules, same weights. The
+ * difference is semantic and it is not optional for the content that uses it.
+ *
+ * WHY THIS EXISTS. The FDD explainer moved from five <h3> cards into <dt> when
+ * this section became ruled rows. The strings all still rendered, so nothing
+ * looked wrong, but five pieces of the most franchise-facing explainer content
+ * on the property had left the heading outline. That is exactly the content a
+ * generative engine lifts by heading, so it works directly against the
+ * extractability work Phase 3 is for.
+ *
+ * A <dt> CANNOT SIMPLY CONTAIN AN <h3>. The content model for <dt> is flow
+ * content with no heading content descendants, so keeping the <dl> and nesting
+ * a heading inside it is invalid rather than merely unusual. The container has
+ * to change, and it does: a plain sectioned list of <h3> and <p>, styled to be
+ * indistinguishable from the definition list beside it.
+ *
+ * USE THE DEFINITION LIST WHERE THE CONTENT REALLY IS DEFINITIONS. The
+ * glossary, the vocabulary and the corporate entities are term and definition
+ * pairs and stay <dl>. This is for explainer prose whose headings a reader, or
+ * a machine, should be able to find.
+ */
+export function RuledHeadingRows({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`border-graphite border-t-2 ${className}`}>{children}</div>
+  );
+}
+
+export function RuledHeadingRow({
+  heading,
+  children,
+}: {
+  heading: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="border-line grid gap-x-10 gap-y-3 border-b py-6 md:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]">
+      <h3 className="d3">{heading}</h3>
+      <p className="text-steel max-w-[68ch] leading-relaxed">{children}</p>
+    </div>
+  );
+}
+
+/**
  * A ruled row carrying only body text, with no heading of its own.
  *
  * Used for the due diligence list, which is five complete instructions rather
@@ -186,20 +237,29 @@ export function Steps({
       {steps.map((step, index) => (
         <li
           key={step.title}
-          className="border-line grid gap-x-8 gap-y-3 border-b py-7 sm:grid-cols-[4rem_minmax(0,1fr)]"
+          className="border-line grid gap-x-8 gap-y-3 border-b py-7 sm:grid-cols-[7rem_minmax(0,1fr)]"
         >
-          <span
-            aria-hidden="true"
-            className="text-signal font-display text-4xl leading-none font-extrabold tabular-nums"
-          >
-            {String(index + 1).padStart(2, "0")}
-          </span>
+          {/*
+            "Step 1" AS RENDERED TEXT, NOT A DECORATIVE NUMERAL.
+
+            This marker was a large aria-hidden "01" through "04". The Rule One
+            verification caught what that cost: the strings "Step 1" through
+            "Step 4" left the page entirely, and because the numeral was hidden
+            they left the accessibility tree with them. A bare "01" does not say
+            that this is an ordered process, and a reader who cannot see it was
+            told nothing at all.
+
+            One element, one text node, no nested spans, and the label is built
+            with a template literal rather than as Step {index + 1}. React emits
+            adjacent JSX expressions as separate text nodes with a comment
+            marker between them, so the first attempt put "Step 1" in the DOM
+            and left it absent from the served bytes. A verification that greps
+            the built HTML has to be able to find it there too.
+          */}
+          <p className="text-signal font-display text-2xl leading-none font-extrabold tracking-[0.06em] uppercase tabular-nums">
+            {`Step ${index + 1}`}
+          </p>
           <div>
-            {/*
-              The visible numeral is decorative because the ordered list already
-              conveys position to assistive technology. Announcing "zero one"
-              before every title would be noise on top of the list semantics.
-            */}
             <h3 className="d3">{step.title}</h3>
             <p className="text-steel mt-3 max-w-[68ch] leading-relaxed">
               {step.body}
