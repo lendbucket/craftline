@@ -17,9 +17,34 @@ import type { Insight } from "@/data/insights";
  *   the three part definition of a franchise        16 CFR 436.1
  *   Item 19 is permitted and not required           FTC, Consumer's Guide
  *
- * The 7 day rule was the one worth the effort. It is in the regulation, it is
- * the single most useful thing a prospect can know about the days before a
- * signature, and almost nothing ranking for these terms mentions it.
+ * ADDED WITH ARTICLES 3 AND 4, same standard, same method:
+ *
+ *   the outlet count in an area development
+ *   agreement is a substantive term that
+ *   triggers the 7 day review period               FTC Compliance Guide, p 23
+ *   no disclosure document is owed to a
+ *   franchisee exercising a right to open new
+ *   outlets, or keeping an outlet post term,
+ *   unless the new relationship is materially
+ *   different                                      FTC Compliance Guide, p 19
+ *   renewal means a new agreement on then
+ *   current terms in some systems and a simple
+ *   extension in others, and Item 17 must say
+ *   which                                          FTC Compliance Guide, p 81
+ *   Item 17 must warn that renewal terms may
+ *   differ materially from the original            FTC Compliance Guide, p 81
+ *   Item 17 rows b and c cover renewal             16 CFR 436.5(q)
+ *
+ * The 7 day rule was the one worth the effort in the first pair. It is in the
+ * regulation, it is the single most useful thing a prospect can know about the
+ * days before a signature, and almost nothing ranking for these terms mentions
+ * it.
+ *
+ * The renewal find is its counterpart in the second pair. A reader who knows
+ * that renewal and extension are two different deals wearing one word, and
+ * that the franchisor is required to say which one it is selling, can read
+ * Item 17 properly. Very little ranking for these terms draws the distinction
+ * at all.
  *
  * WHAT IS DELIBERATELY GENERALISED RATHER THAN ASSERTED. How many states have
  * franchise relationship statutes, and what those statutes require, is not
@@ -294,6 +319,221 @@ export const AGREEMENT_POSTS: Insight[] = [
         kind: "paragraph",
         text: [
           "This describes how franchise agreements generally handle endings. It is not legal advice, it makes no claim about any particular system including Craftline, and state law may change the answer in ways this cannot cover. Craftline has issued no Franchise Disclosure Document and is not offering anything. ",
+          {
+            text: "What Craftline does and does not claim to do",
+            href: "/about",
+          },
+          " is set out plainly on the about page, limits included.",
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "what-an-area-development-agreement-is",
+    title: "Area development agreement: what it commits you to",
+    eyebrow: "The agreement",
+    description:
+      "Area development agreement: why the schedule is the operative clause, what a missed deadline puts at risk, and where the seven day rule reaches this document.",
+    lead: "A franchise agreement grants one business. An area development agreement grants the right to open several, and attaches a date to each one.",
+    published: "2026-09-21",
+    body: [
+      {
+        kind: "paragraph",
+        text: "An area development agreement is a contract to open a set number of franchised outlets inside a defined area, on dates fixed in advance. It is sometimes called a multi unit development agreement. Whatever it is called, the substance is a quantity, a geography, and a calendar.",
+      },
+      {
+        kind: "paragraph",
+        text: [
+          "It is not the document that governs any of those outlets. ",
+          {
+            text: "What is actually in a franchise agreement",
+            href: "/insights/what-is-in-a-franchise-agreement",
+          },
+          " covers the contract that does. This one decides how many there will be and by when.",
+        ],
+      },
+
+      { kind: "heading", text: "The schedule is the operative clause" },
+      {
+        kind: "paragraph",
+        text: "Most of an area development agreement is unremarkable. The part doing the work is the development schedule, usually a short table setting a date beside a cumulative number of open outlets. Almost everything else in the document exists either to support that table or to say what happens when it is not met.",
+      },
+      {
+        kind: "paragraph",
+        text: "So read it as a set of deadlines rather than as a grant of rights. The rights are real and they are conditional on the dates, and the dates do not move because a market turned out harder than expected. A schedule built on the assumption that every site is found, permitted and opened on the first attempt is a schedule that has never met a building department.",
+      },
+
+      { kind: "heading", text: "One development agreement, several franchise agreements" },
+      {
+        kind: "paragraph",
+        text: "The development agreement by itself does not let you operate anything. Each outlet opened under it is normally governed by its own franchise agreement, signed at or near the time that outlet opens, on the form the franchisor is using at that date.",
+      },
+      {
+        kind: "paragraph",
+        text: "That has a consequence worth sitting with. The terms governing your fourth outlet may not be the terms governing your first, because the form can change in between. Whether the development agreement fixes the form at signing or leaves each later unit to whatever form exists then is a term you can read, and comparing it across two systems is informative about both.",
+      },
+      {
+        kind: "paragraph",
+        text: "The fee structure divides along the same line. There is usually a development fee paid for the area and the schedule, and then an initial franchise fee for each outlet, often credited in part against the first. How the two interact is written down and it differs between systems.",
+      },
+
+      { kind: "heading", text: "What a missed deadline does" },
+      {
+        kind: "paragraph",
+        text: "Missing the schedule does not usually unwind what is already built. Outlets already open are governed by their own agreements and continue operating. What is at risk is the forward half of the deal, and the document will say which of the following applies.",
+      },
+      {
+        kind: "list",
+        items: [
+          "Loss of exclusivity in the area, so the franchisor may develop it or award it to somebody else, while the open outlets carry on.",
+          "Loss of the right to open the remaining outlets, ending the development agreement without touching the franchise agreements already signed.",
+          "A cure right, typically a payment or a shortened extension. Some agreements grant one, some grant it once, and some do not have one at all.",
+          "Acceleration, where development fees for the unopened outlets become payable whether or not those outlets are ever built.",
+        ],
+      },
+
+      { kind: "heading", text: "Where the seven day rule reaches this document" },
+      {
+        kind: "paragraph",
+        text: [
+          "Under the federal Franchise Rule a prospective franchisee must receive the disclosure document at least ",
+          {
+            text: "14 calendar days",
+            href: "https://www.law.cornell.edu/cfr/text/16/436.2",
+            external: true,
+          },
+          " before signing a binding agreement or paying anything. A second and shorter period applies after that. Where the franchisor unilaterally makes a material change to an agreement that was already disclosed, the prospect must be given 7 calendar days with the revised version, and the Federal Trade Commission's own compliance guide names this document in its example of what counts: ",
+          {
+            text: "the actual number of stores to be opened pursuant to an area development agreement",
+            href: "https://www.ftc.gov/system/files/documents/plain-language/bus70-franchise-rule-compliance-guide.pdf",
+            external: true,
+          },
+          " is a substantive term whose addition triggers the seven day review period.",
+        ],
+      },
+
+      { kind: "heading", text: "What this does not establish" },
+      {
+        kind: "paragraph",
+        text: [
+          "This describes how area development agreements are generally built. It is not legal advice, every term in one is negotiated and differs between systems, and state law may change the answer. Craftline has issued no Franchise Disclosure Document, operates no development programme, and is not offering anything in any area. ",
+          {
+            text: "What Craftline does and does not claim to do",
+            href: "/about",
+          },
+          " is set out plainly on the about page, limits included.",
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "how-franchise-renewal-works",
+    title: "Franchise renewal: what happens at the end of a term",
+    eyebrow: "The agreement",
+    description:
+      "Franchise renewal often means signing the current agreement, not continuing the old one. What Item 17 must tell you, and when a new disclosure document is owed.",
+    lead: "A franchise term ends on a date written into the contract. What happens next is decided by a clause most people read once, quickly, years before it matters.",
+    published: "2026-09-21",
+    body: [
+      {
+        kind: "paragraph",
+        text: "Franchise agreements run for a fixed term, commonly ten years, and the end of that term is automatic in neither direction. The agreement says whether there is a right to continue, what has to be true to exercise it, and what continuing actually means.",
+      },
+      {
+        kind: "paragraph",
+        text: [
+          {
+            text: "How a franchise agreement ends",
+            href: "/insights/how-a-franchise-agreement-ends",
+          },
+          " covers termination and expiry. This is the other branch: what a renewal right is, and what it is not.",
+        ],
+      },
+
+      { kind: "heading", text: "Renewal and extension are not the same thing" },
+      {
+        kind: "paragraph",
+        text: [
+          "The Federal Trade Commission says outright that the word is used differently from one system to another. Its compliance guide describes two arrangements that both get called renewal: in many systems a right of renewal means the franchisee, on expiry of the original term, ",
+          {
+            text: "has the right to enter into a new agreement according to the then-current terms and conditions",
+            href: "https://www.ftc.gov/system/files/documents/plain-language/bus70-franchise-rule-compliance-guide.pdf",
+            external: true,
+          },
+          ", while in others the franchisee has a simple right to extend the existing agreement on the same terms for a further period. Those are materially different deals wearing one word.",
+        ],
+      },
+
+      { kind: "heading", text: "Item 17 has to tell you which one it is" },
+      {
+        kind: "paragraph",
+        text: [
+          "This is not left to the franchisor to volunteer. ",
+          {
+            text: "Item 17 of the disclosure document",
+            href: "https://www.law.cornell.edu/cfr/text/16/436.5",
+            external: true,
+          },
+          " is a table of the relationship's key provisions, and two of its rows are about the end of the term: renewal or extension of the term, and the requirements for the franchisee to renew or extend.",
+        ],
+      },
+      {
+        kind: "paragraph",
+        text: "The Rule requires the franchisor to explain in the summary column what renewal means in its own system, and the Commission is explicit about why. The requirement exists to stop prospective franchisees being confused or misled about a term that is applied differently from one system to another.",
+      },
+
+      { kind: "heading", text: "The warning a franchisor is required to give" },
+      {
+        kind: "paragraph",
+        text: "Where the franchisor's policy is that franchisees may be asked to sign the current form of agreement, Item 17 must also carry a statement alerting them that the terms and conditions of the renewal contract may differ materially from those of their initial contract.",
+      },
+      {
+        kind: "paragraph",
+        text: "The wording is left to the franchisor as long as it conveys that idea, so the sentence will not look the same in two documents and it is worth finding rather than skimming past. It is the franchisor telling you, under a legal obligation, that the deal being agreed today has a defined shelf life.",
+      },
+      {
+        kind: "paragraph",
+        text: "What can change is not small. Royalty rate, advertising contribution, territory definition, technology requirements, remodel obligations and dispute resolution have all moved between generations of agreements in systems that publish both.",
+      },
+
+      { kind: "heading", text: "When a renewal owes you a new disclosure document" },
+      {
+        kind: "paragraph",
+        text: [
+          "A renewal does not automatically arrive with a fresh disclosure document. The compliance guide is specific: a franchisor is not required to provide one to a franchisee who keeps its existing outlet after the term, either by extending the present agreement or by entering a new one, ",
+          {
+            text: "unless the new relationship is under terms and conditions materially different from the present agreement",
+            href: "https://www.ftc.gov/system/files/documents/plain-language/bus70-franchise-rule-compliance-guide.pdf",
+            external: true,
+          },
+          ".",
+        ],
+      },
+      {
+        kind: "list",
+        items: [
+          "Where the renewal continues the same deal, expect no new disclosure document, and do not read its absence as a signal about anything else.",
+          "Where the renewal is on a materially different agreement, the disclosure obligation attaches, and with it the 14 calendar days before you can be asked to sign or pay.",
+        ],
+      },
+
+      { kind: "heading", text: "What renewal usually costs" },
+      {
+        kind: "paragraph",
+        text: "Renewal is rarely free, and the conditions live in the agreement rather than in general practice. A renewal fee is common. So is a requirement to remodel or re-equip to the current standard, which is frequently the larger number and is easy to miss because nothing labels it as a fee.",
+      },
+      {
+        kind: "paragraph",
+        text: "Other common conditions are being in good standing with no uncured default, signing a release of claims against the franchisor, and holding a lease that runs at least as long as the new term. Each of those is readable years before it is due, which is the only useful time to read it.",
+      },
+
+      { kind: "heading", text: "What this does not establish" },
+      {
+        kind: "paragraph",
+        text: [
+          "This describes how renewal is generally handled and what the federal rule requires to be disclosed about it. It is not legal advice, the terms differ between systems, and state relationship statutes may add requirements this cannot cover. Craftline has issued no Franchise Disclosure Document and is not offering anything. ",
           {
             text: "What Craftline does and does not claim to do",
             href: "/about",
