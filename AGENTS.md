@@ -177,6 +177,38 @@ reachable from a commit, and the owner set them up. CODEOWNERS is the one place
 the recursion works in our favour, because editing it is itself a CODEOWNERS
 change requiring the same review.
 
+**A one-off check is run against a known positive before its result is
+cited.**
+
+On 21 September a session reported twice that article 5 served none of its
+three threshold figures inside a link. The check was
+
+    grep -o '<a[^>]*>\$[0-9,]*</a>'
+
+and it could not match anything, ever. Every one of those anchors contains an
+`sr-only` span, so the closing tag never follows the figure directly. The
+figure was reported as 0 of 3 on a page that had all three, and the number was
+quoted as evidence in two reports.
+
+It was not caught by anything, because a check that returns zero returns a
+plausible answer. A rule that finds nothing and a rule that cannot find
+anything are indistinguishable from their output, and the second one is
+silent by construction.
+
+**The rule. Before citing the result of a check written for one occasion, run
+it against a case it must find.** Not a case it must ignore, which proves only
+that it is not wildly over-broad. A case where the answer is known to be
+non-zero, and the check has to produce it. If nothing on hand is a known
+positive, make one: plant the thing, see the check name it, take the plant out
+again. That is the same two-plant discipline the audit rules are held to, and
+the reason a one-off escapes it is only that nobody wrote it down.
+
+**Where this bites hardest.** Greps and regexes over rendered HTML, because
+markup nests and a pattern written against the shape in a person's head
+matches nothing in the shape a framework emits. Also any check whose pass
+condition is a zero, a count of none, or an empty list, because those are the
+answers a broken check gives for free.
+
 **A state check is only true at the moment it runs, and a report is not that
 moment.**
 
