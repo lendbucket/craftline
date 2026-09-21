@@ -39,7 +39,7 @@ import type { Insight } from "@/data/insights";
  *   the large franchisee exemption turns on
  *   five years in business and a net worth
  *   threshold readjusted every four years      16 CFR 436.8(a)(5)(ii);
- *                                              FTC, 11 July 2024
+ *                                              FTC, 12 July 2024
  *
  * THE TRANSFER FIND IS THE ONE WORTH THE EFFORT HERE. Buying an existing
  * franchise is widely described as the lower risk route, and almost nothing
@@ -65,7 +65,7 @@ export const SCALE_POSTS: Insight[] = [
     eyebrow: "Scale",
     description:
       "Master franchise: the right to sub-franchise an area makes you a franchisor under the federal rule, with disclosure obligations of your own.",
-    lead: "A master franchise is usually sold as a territory. What it grants is the right to sell franchises, and that changes what you are rather than how much you have.",
+    lead: "A master franchise is sold as a territory. What it grants is the right to sell franchises, and that changes what you are rather than how much you have.",
     published: "2026-09-21",
     body: [
       {
@@ -174,7 +174,7 @@ export const SCALE_POSTS: Insight[] = [
     eyebrow: "The process",
     description:
       "Buying an existing franchise often comes with no disclosure document, and one specific act by the franchisor changes that. What to read in its place.",
-    lead: "Buying a unit that already trades removes most of the unknowns in a new franchise and adds one that catches people out. You may not be entitled to a disclosure document.",
+    lead: "Buying a unit that already trades removes most of the unknowns in a new franchise and adds one. You may not be entitled to a disclosure document at all.",
     published: "2026-09-21",
     body: [
       {

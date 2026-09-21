@@ -31,7 +31,7 @@ import type { Insight } from "@/data/insights";
  *   four years. Verified: $735, $1,469,600 and
  *   $7,348,000. Cited rather than printed, for
  *   the reason set out below                       FTC press release,
- *                                                  11 July 2024; 16 CFR 436.8
+ *                                                  12 July 2024; 16 CFR 436.8
  *   23 items, fixed order, franchisor prepares     16 CFR 436.5; 436.3
  *   Item 19 permitted rather than required         16 CFR 436.5(s)
  *   audited financial statements with a phase in   16 CFR 436.5(u)
@@ -96,7 +96,7 @@ export const DEFINITION_POSTS: Insight[] = [
     title: "Franchise vs license: what legally separates them",
     eyebrow: "The definition",
     description:
-      "Franchise vs license: the three elements that decide it, why the name on the document is irrelevant, and why the payment figure most pages quote is out of date.",
+      "Franchise vs license: the three elements that decide it, why the name on the document is irrelevant, and the current payment threshold with the date it carries.",
     lead: "Calling an arrangement a license does not make it one. The federal test has three elements and it does not read the title page.",
     published: "2026-09-21",
     body: [
@@ -249,7 +249,7 @@ export const DEFINITION_POSTS: Insight[] = [
     eyebrow: "Becoming a franchisor",
     description:
       "How to franchise a business in the order the obligations bite: the three part test, the disclosure document, the audit, and registration before any offer.",
-    lead: "Most of what is written about franchising a business is about selling franchises. The part that comes first is a document, an auditor, and in some states a regulator.",
+    lead: "Franchising a business starts with a document, an auditor, and in some states a regulator. Selling franchises is what happens after all three are in place.",
     published: "2026-09-21",
     body: [
       {
