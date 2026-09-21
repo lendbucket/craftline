@@ -170,8 +170,12 @@ export const OPERATING_POSTS: Insight[] = [
       { kind: "heading", text: "A caution about the statistics" },
       {
         kind: "paragraph",
+        text: "This category attracts confident numbers about veteran business performance and franchise success rates. Most of them cannot be traced to a primary source.",
+      },
+      {
+        kind: "paragraph",
         text: [
-          "This category attracts confident numbers about veteran business performance and franchise success rates. Most of them cannot be traced to a primary source. The handling is the same as everywhere else on this site: ",
+          "The handling is the same as everywhere else on this site: ",
           { text: "ask for the source and open it", href: "/insights/how-to-check-a-franchisor" },
           ", and treat a figure that fails that as though it had not been given to you.",
         ],

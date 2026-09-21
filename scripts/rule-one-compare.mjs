@@ -562,7 +562,120 @@ function valuesOf(side, field) {
   return valueIndex[side][field] ?? new Set();
 }
 
+
+/**
+ * THE FOUR APPROVED PARAGRAPH SPLITS, RESTRUCTURE OF THE THREE UNIFORM ARTICLES.
+ *
+ * Authorising decision, quoted: "Restructure the three, do not exempt them. An
+ * exemption list is a moved threshold with a record attached... Change block
+ * boundaries only. Merge where two paragraphs are one thought, split where one
+ * paragraph carries two. No new sentences and no removed words, so the word
+ * inventory stays identical across all three and Rule One sees only block
+ * movement."
+ *
+ * These are literals taken from the two captures, not derived from the article
+ * data. Deriving an allowlist from the thing it is checking is the mirror
+ * pattern that let a planted tenth FAQ question through, and it is not repeated
+ * here.
+ *
+ * WHAT THE RULE ACTUALLY ASSERTS, which is more than membership of a list. An
+ * added block is approved only if it is one half of a recorded pair, its
+ * sibling half is also on the page, the two halves rejoin with a single space
+ * into exactly the original string, and that original is in the before
+ * inventory and gone from the after one. A block that merely resembles an
+ * approved half fails all four. The word level says the same thing from the
+ * other direction: mainWords is zero in both directions, so no word was added
+ * or lost anywhere on the property.
+ *
+ * INJECTION VERIFIED, both plants, per the standing rule.
+ *
+ * MUST CATCH. One word inserted into an approved half in the after capture:
+ * "franchising is the wrong tool" -> "franchising is usually the wrong tool",
+ * with "usually" added to mainWords, which is what a session slipping a word in
+ * under cover of a boundary move would look like.
+ *
+ *   mainBlocks     0         2       0       6
+ *   mainWords      0         1       0       0
+ *   NOT CLEAN. unexplained removed=0 unapproved added=3
+ *
+ * Three, not one: the doctored half fails, its sibling fails with it because
+ * the pair no longer rejoins into the original, and the word fails on its own
+ * at word level. The rule does not degrade to approving the half that was left
+ * alone.
+ *
+ * MUST NOT CATCH. The four genuine splits as deployed:
+ *
+ *   CLEAN. Zero unexplained removals, zero unapproved additions, no route or
+ *   sitemap delta. 8 approved delta(s) under 1 allowlist entry.
+ */
+const APPROVED_SPLITS = [
+  {
+    path: "/insights/franchising-for-veterans",
+    original:
+      "This category attracts confident numbers about veteran business performance and franchise success rates. Most of them cannot be traced to a primary source. The handling is the same as everywhere else on this site:",
+    halves: [
+      "This category attracts confident numbers about veteran business performance and franchise success rates. Most of them cannot be traced to a primary source.",
+      "The handling is the same as everywhere else on this site:",
+    ],
+  },
+  {
+    path: "/insights/what-veteran-operators-bring-to-trade-services",
+    original:
+      "That is very close to the hardest problem in a trade service business. Skilled technicians are scarce, and the ones who exist are already employed. Any trade business that intends to grow has to be able to bring in apprentices and develop them, which means someone has to be willing to train, to supervise closely, to correct without discouraging, and to hold a line on standards while somebody is still learning. Plenty of excellent technicians are poor at this and dislike doing it. People who came up through a training culture usually understand what developing somebody actually involves, and they are more likely to treat it as part of the job rather than as an interruption to it.",
+    halves: [
+      "That is very close to the hardest problem in a trade service business. Skilled technicians are scarce, and the ones who exist are already employed. Any trade business that intends to grow has to be able to bring in apprentices and develop them, which means someone has to be willing to train, to supervise closely, to correct without discouraging, and to hold a line on standards while somebody is still learning.",
+      "Plenty of excellent technicians are poor at this and dislike doing it. People who came up through a training culture usually understand what developing somebody actually involves, and they are more likely to treat it as part of the job rather than as an interruption to it.",
+    ],
+  },
+  {
+    path: "/insights/why-trade-services-suit-franchise-systems",
+    original:
+      "It means the natural unit of the business is one crew serving one metro area. You cannot consolidate the work into a call centre or a warehouse and serve everyone from there, the way retail and software consolidated. Every market needs its own vans, its own licensed people, and its own relationships with suppliers and inspectors. That is a lot of independent local units doing recognisably the same job, which is the shape a franchise system exists to serve. Where a business can be centralised, it usually should be, and franchising is the wrong tool. Where it cannot, the choice is between a company that opens branches and a system that licenses operators.",
+    halves: [
+      "It means the natural unit of the business is one crew serving one metro area. You cannot consolidate the work into a call centre or a warehouse and serve everyone from there, the way retail and software consolidated. Every market needs its own vans, its own licensed people, and its own relationships with suppliers and inspectors. That is a lot of independent local units doing recognisably the same job, which is the shape a franchise system exists to serve.",
+      "Where a business can be centralised, it usually should be, and franchising is the wrong tool. Where it cannot, the choice is between a company that opens branches and a system that licenses operators.",
+    ],
+  },
+  {
+    path: "/insights/why-trade-services-suit-franchise-systems",
+    original:
+      "Compare that to categories where a franchisor has to invent the standard, publish it, and then police it alone. Those systems spend enormous effort on quality control because there is no external referee. In the trades a large part of the standard is external and mandatory. A playbook does not have to define what good wiring is. It has to define how the business consistently produces work that passes, how it prices that work before starting, and how it trains people to that level. That is a much narrower and much more solvable problem.",
+    halves: [
+      "Compare that to categories where a franchisor has to invent the standard, publish it, and then police it alone. Those systems spend enormous effort on quality control because there is no external referee.",
+      "In the trades a large part of the standard is external and mandatory. A playbook does not have to define what good wiring is. It has to define how the business consistently produces work that passes, how it prices that work before starting, and how it trains people to that level. That is a much narrower and much more solvable problem.",
+    ],
+  },
+];
+
+const SPLIT_HALVES = new Map();
+for (const r of APPROVED_SPLITS) {
+  if (r.halves.join(" ") !== r.original) {
+    throw new Error(`approved split does not rejoin: ${r.path}`);
+  }
+  for (const h of r.halves) SPLIT_HALVES.set(h, r);
+}
+const SPLIT_WHY =
+  'restructure of the three uniform articles, directed: "Restructure the three, do not exempt them... Change block boundaries only"';
+
 const APPROVED_RULES = [
+  /* ---- the four approved paragraph splits, block movement only ---- */
+  {
+    kind: "added",
+    field: "mainBlocks",
+    why: SPLIT_WHY,
+    test: (v) => {
+      const r = SPLIT_HALVES.get(v);
+      if (!r) return false;
+      const after = valuesOf("after", "mainBlocks");
+      const before = valuesOf("before", "mainBlocks");
+      return (
+        r.halves.every((h) => after.has(h)) &&
+        before.has(r.original) &&
+        !after.has(r.original)
+      );
+    },
+  },
+
   {
     kind: "removed",
     field: "*",

@@ -554,3 +554,23 @@ consultant` at 1,500 and KD 39 is the same subject from the other side, and
 `franchise lawyer` and `franchise attorney`, at 1,700 and 1,200 with KD 0 and
 a $6.00 CPC, are local_pack "find me a lawyer" queries that Craftline cannot
 satisfy at all.
+
+## Closed: three merged articles failed the section rhythm rule
+
+`voice-audit` rule 9 failed three articles that were already on main when it
+was written. The owner ruled restructure rather than exempt: an exemption list
+is a moved threshold with a record attached, and the audit would knowingly pass
+articles it had correctly identified as uniform.
+
+| article | before | after |
+|---|---|---|
+| `why-trade-services-suit-franchise-systems` | 2,2,2,2,2,3 | 3,2,3,2,2,3 |
+| `what-veteran-operators-bring-to-trade-services` | 2,2,2,2,1,3 | 2,3,2,2,1,3 |
+| `franchising-for-veterans` | 1,2,1,1,1 | 1,2,1,2,1 |
+
+Four paragraphs split at a sentence boundary, no merges, no sentence written
+or deleted. The word inventory is identical on all twenty articles before and
+after, and Rule One reports a zero word delta in both directions with the four
+originals classified SPLIT rather than REMOVED.
+
+The threshold was not moved. That is the whole point of the entry.
