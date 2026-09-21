@@ -160,7 +160,11 @@ const FOUNDING_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "It means the natural unit of the business is one crew serving one metro area. You cannot consolidate the work into a call centre or a warehouse and serve everyone from there, the way retail and software consolidated. Every market needs its own vans, its own licensed people, and its own relationships with suppliers and inspectors. That is a lot of independent local units doing recognisably the same job, which is the shape a franchise system exists to serve. Where a business can be centralised, it usually should be, and franchising is the wrong tool. Where it cannot, the choice is between a company that opens branches and a system that licenses operators.",
+        text: "It means the natural unit of the business is one crew serving one metro area. You cannot consolidate the work into a call centre or a warehouse and serve everyone from there, the way retail and software consolidated. Every market needs its own vans, its own licensed people, and its own relationships with suppliers and inspectors. That is a lot of independent local units doing recognisably the same job, which is the shape a franchise system exists to serve.",
+      },
+      {
+        kind: "paragraph",
+        text: "Where a business can be centralised, it usually should be, and franchising is the wrong tool. Where it cannot, the choice is between a company that opens branches and a system that licenses operators.",
       },
       { kind: "heading", text: "Demand is a problem, not a preference" },
       {
@@ -178,7 +182,11 @@ const FOUNDING_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "Compare that to categories where a franchisor has to invent the standard, publish it, and then police it alone. Those systems spend enormous effort on quality control because there is no external referee. In the trades a large part of the standard is external and mandatory. A playbook does not have to define what good wiring is. It has to define how the business consistently produces work that passes, how it prices that work before starting, and how it trains people to that level. That is a much narrower and much more solvable problem.",
+        text: "Compare that to categories where a franchisor has to invent the standard, publish it, and then police it alone. Those systems spend enormous effort on quality control because there is no external referee.",
+      },
+      {
+        kind: "paragraph",
+        text: "In the trades a large part of the standard is external and mandatory. A playbook does not have to define what good wiring is. It has to define how the business consistently produces work that passes, how it prices that work before starting, and how it trains people to that level. That is a much narrower and much more solvable problem.",
       },
       { kind: "heading", text: "The customer cannot check the work" },
       {
@@ -248,7 +256,11 @@ const FOUNDING_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "That is very close to the hardest problem in a trade service business. Skilled technicians are scarce, and the ones who exist are already employed. Any trade business that intends to grow has to be able to bring in apprentices and develop them, which means someone has to be willing to train, to supervise closely, to correct without discouraging, and to hold a line on standards while somebody is still learning. Plenty of excellent technicians are poor at this and dislike doing it. People who came up through a training culture usually understand what developing somebody actually involves, and they are more likely to treat it as part of the job rather than as an interruption to it.",
+        text: "That is very close to the hardest problem in a trade service business. Skilled technicians are scarce, and the ones who exist are already employed. Any trade business that intends to grow has to be able to bring in apprentices and develop them, which means someone has to be willing to train, to supervise closely, to correct without discouraging, and to hold a line on standards while somebody is still learning.",
+      },
+      {
+        kind: "paragraph",
+        text: "Plenty of excellent technicians are poor at this and dislike doing it. People who came up through a training culture usually understand what developing somebody actually involves, and they are more likely to treat it as part of the job rather than as an interruption to it.",
       },
       { kind: "heading", text: "Maintenance and accountability for equipment" },
       {
