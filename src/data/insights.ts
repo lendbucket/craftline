@@ -1,3 +1,4 @@
+import { AGREEMENT_POSTS } from "@/data/posts/agreement";
 import { DISCLOSURE_POSTS } from "@/data/posts/disclosure";
 import { MONEY_POSTS } from "@/data/posts/money";
 import { CATEGORY_POSTS } from "@/data/posts/category";
@@ -410,6 +411,7 @@ export const INSIGHTS: Insight[] = [
   ...MONEY_POSTS,
   ...CATEGORY_POSTS,
   ...OPERATING_POSTS,
+  ...AGREEMENT_POSTS,
 ];
 
 /**
