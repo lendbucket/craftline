@@ -51,6 +51,14 @@
  *      commas instead of full stops. This is the rule that was missing, and
  *      the note beside it records what it missed and for how long.
  *
+ *   9. UNIFORM SECTION RHYTHM, IN BLOCKS PER SECTION. Rule 7 measures
+ *      paragraph word counts, which is a different unit: an article can vary
+ *      its paragraph lengths freely while building every section to the same
+ *      pattern, and two drafts did exactly that and passed rule 7 at 0.48.
+ *      Fails on a run of four consecutive sections of one size, or on more
+ *      than 70 per cent of sections sharing a size where there are at least
+ *      five. Both numbers and what they cost are argued where the rule runs.
+ *
  * WHAT IT CANNOT CHECK, STATED SO NOBODY TREATS A PASS AS A CLEAN BILL
  * -------------------------------------------------------------------
  * One standing tell is not mechanically decidable and is not attempted here:
@@ -112,6 +120,36 @@
  *   The en dash check shares its code path with the em dash check and differs
  *   only in the literal. It was read rather than planted, and that is stated
  *   here rather than implied by a list that looks complete.
+ *
+ *   RULE 9, UNIFORM SECTION RHYTHM. Both plants were real drafts rather than
+ *   synthetic pages, because the rule exists to catch something that actually
+ *   got written.
+ *
+ *     catch  the two agreement articles restored to their first draft shapes,
+ *            rebuilt and run
+ *            -> what-is-in-a-franchise-agreement:
+ *               "5 consecutive sections of the same size, shape 2,2,2,2,2,1"
+ *            -> how-a-franchise-agreement-ends:
+ *               "5 of 7 sections the same size (71%), shape 2,2,3,2,2,2,1"
+ *            Each test caught one. That is why there are two of them: the
+ *            first article is a run, the second is a distribution, and either
+ *            test alone would have passed one of them.   BOTH CAUGHT
+ *
+ *     miss   the same two articles as restructured, 2,3,2,1,2,1 and
+ *            3,2,3,2,1,2,1                                       SILENT
+ *     miss   fifteen of the eighteen existing articles, including three that
+ *            sit close to the line and read fine: inside-an-fdd at 4 of 6 and
+ *            a run of three, how-a-franchise-brand-system at 4 of 6, and
+ *            what-a-franchisor-owes at 3 of 5. The near miss is live content
+ *            rather than a fixture, which is a stronger statement than a
+ *            synthetic page.                                     SILENT
+ *
+ *   WHAT IT CATCHES ON MAIN, REPORTED RATHER THAN TUNED AWAY. Three already
+ *   merged articles fail: why-trade-services-suit-franchise-systems at
+ *   2,2,2,2,2,3, what-veteran-operators-bring at 2,2,2,2,1,3, and
+ *   franchising-for-veterans at 1,2,1,1,1. All three are genuinely uniform. A
+ *   threshold moved until existing work passes is a threshold that measures
+ *   nothing, so the number stayed and the three are an open item.
  */
 import { chromium } from "playwright";
 import { startNextServer } from "./lib/dev-server.mjs";
@@ -266,6 +304,42 @@ try {
             .join(" "),
         );
 
+      /*
+        BLOCKS PER SECTION, WHICH IS THE UNIT RULE 7 DOES NOT MEASURE.
+
+        Rule 7 takes the coefficient of variation of paragraph WORD COUNTS. A
+        piece whose paragraphs vary in length passes it comfortably while every
+        section is built to the same pattern, and that is what happened: the
+        first drafts of the two agreement articles ran 2,2,2,2,2,1 and
+        2,2,3,2,2,2,1 blocks per section and rule 7 read 0.48 against a 0.25
+        floor and passed both.
+
+        An article's own sections are the display subheads and the closing
+        limits band. The further reading grid and the closing call to action
+        are page furniture rather than sections of the piece, so the grid is
+        excluded by its hairline container and the band by its type class.
+      */
+      const sectionSizes = (() => {
+        const nodes = [
+          ...root.querySelectorAll("h2.d3-prose, h2.d3, p.prose-body, ul"),
+        ].filter((el) => !el.closest(".hairline-grid") && !el.closest("[data-faq]"));
+        const sizes = [];
+        let count = 0;
+        let started = false;
+        for (const el of nodes) {
+          const isHead = el.tagName === "H2";
+          if (isHead) {
+            if (started) sizes.push(count);
+            count = 0;
+            started = true;
+          } else if (started) {
+            count += 1;
+          }
+        }
+        if (started) sizes.push(count);
+        return sizes;
+      })();
+
       const paragraphs = [...root.querySelectorAll("p")]
         .filter((p) => !p.closest("[data-faq]"))
         .map((p) => (p.textContent ?? "").trim())
@@ -336,6 +410,7 @@ try {
         shellText,
         headings,
         headingRun,
+        sectionSizes,
         faqTerms,
         paragraphs,
         siblingRuns,
@@ -541,6 +616,75 @@ try {
           `clause level triad: "${sentence.trim().slice(0, 110)}"`,
         );
         break;
+      }
+    }
+
+    /*
+      9. UNIFORM SECTION RHYTHM, MEASURED IN BLOCKS PER SECTION.
+
+      THE UNIT RULE 7 DOES NOT MEASURE. Rule 7 takes the coefficient of
+      variation of paragraph word counts. Both first drafts of the agreement
+      articles ran 2,2,2,2,2,1 and 2,2,3,2,2,2,1 blocks per section, rule 7
+      read 0.48 against a 0.25 floor, and passed them. The paragraphs varied
+      in length; the sections did not vary in shape. Different unit, same
+      defect class as the five rules fixed before it.
+
+      TWO TESTS, BECAUSE UNIFORMITY ARRIVES IN TWO SHAPES.
+
+      A RUN of four or more consecutive sections of identical size. A run is
+      what a reader feels scrolling, which a distribution is not, and four is
+      where it stops reading as coincidence. This catches 2,2,2,2,2,1.
+
+      A DOMINANT SIZE, more than 70 per cent of sections sharing one size, on
+      an article with at least five sections. This catches uniformity that is
+      spread out rather than consecutive, which is 2,2,3,2,2,2,1 at five of
+      seven.
+
+      WHERE THE NUMBERS CAME FROM, INCLUDING WHAT THEY COST. All twenty
+      articles were measured before either threshold was chosen, so these are
+      not fitted to the two drafts that prompted the rule. Existing modal
+      share runs from 40 to 83 per cent, so the choice is a real trade:
+
+        at 65 per cent, eight of twenty existing articles flag, several of
+        which read fine
+        at 70 per cent, two flag
+        at 75 per cent, pre-draft two at 71 per cent slips through
+
+      Seventy is a convention, not a measurement, and it is stated as one. The
+      five section floor is not a convention: below that, three identical
+      sections out of four is 75 per cent on a sample too small to tell a
+      rhythm from a short article, and four section pieces are a third of this
+      section.
+
+      THE RULE CATCHES TWO ALREADY MERGED ARTICLES AND THAT IS REPORTED RATHER
+      THAN TUNED AWAY. why-trade-services-suit-franchise-systems runs
+      2,2,2,2,2,3, which is a run of five and 83 per cent. franchising-for-
+      veterans runs 1,2,1,1,1, which is 80 per cent. Both are genuinely
+      uniform. A threshold moved until existing work passes is a threshold
+      that measures nothing.
+    */
+    if (data.sectionSizes.length >= 3) {
+      const sizes = data.sectionSizes;
+      let run = 1;
+      let longest = 1;
+      for (let i = 1; i < sizes.length; i++) {
+        if (sizes[i] === sizes[i - 1]) { run += 1; longest = Math.max(longest, run); }
+        else run = 1;
+      }
+      if (longest >= 4) {
+        problems.push(
+          `uniform section rhythm: ${longest} consecutive sections of the same size, shape ${sizes.join(",")}`,
+        );
+      } else if (sizes.length >= 5) {
+        const counts = new Map();
+        for (const s of sizes) counts.set(s, (counts.get(s) ?? 0) + 1);
+        const modal = Math.max(...counts.values());
+        const share = modal / sizes.length;
+        if (share > 0.7) {
+          problems.push(
+            `uniform section rhythm: ${modal} of ${sizes.length} sections the same size (${Math.round(share * 100)}%), shape ${sizes.join(",")}`,
+          );
+        }
       }
     }
 
