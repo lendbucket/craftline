@@ -51,6 +51,14 @@
  *      commas instead of full stops. This is the rule that was missing, and
  *      the note beside it records what it missed and for how long.
  *
+ *  10. A PAGE COUNTING ITS OWN SOURCES. A count governing a citation noun,
+ *      in a sentence carrying a verb of citing, cross checked against the
+ *      distinct external destinations the page actually links. Two sentences
+ *      on one article said it quoted four sources after it had grown to nine.
+ *      Deliberately narrow: it does not fire on counts of things in the world,
+ *      and it cannot catch a page describing what it does rather than what it
+ *      holds. Both limits are argued where the rule runs.
+ *
  *   9. UNIFORM SECTION RHYTHM, IN BLOCKS PER SECTION. Rule 7 measures
  *      paragraph word counts, which is a different unit: an article can vary
  *      its paragraph lengths freely while building every section to the same
@@ -405,9 +413,32 @@ try {
         })
         .map((li) => (li.textContent ?? "").trim().slice(0, 60));
 
+      /*
+        Distinct external destinations inside main. A page that counts its own
+        sources is counting these, so the check needs the number the page can
+        actually be held to rather than a count of anchor tags: three links to
+        one notice are one source, and the same statute linked twice is one
+        statute.
+      */
+      const citedHosts = new Set();
+      const citedHrefs = new Set();
+      for (const a of root.querySelectorAll("a[href]")) {
+        const href = a.getAttribute("href") ?? "";
+        if (!/^https?:/i.test(href)) continue;
+        if (/craftlinebrands\.com/i.test(href)) continue;
+        citedHrefs.add(href.split("#")[0]);
+        try {
+          citedHosts.add(new URL(href).host);
+        } catch {
+          /* A malformed href is somebody else's failure, not this rule's. */
+        }
+      }
+
       return {
         text,
         shellText,
+        citedHrefs: [...citedHrefs],
+        citedHosts: [...citedHosts],
         headings,
         headingRun,
         sectionSizes,
@@ -663,6 +694,83 @@ try {
       uniform. A threshold moved until existing work passes is a threshold
       that measures nothing.
     */
+    /*
+      10. A PAGE COUNTING ITS OWN SOURCES, CROSS CHECKED AGAINST THE LINKS.
+
+      Two sentences on franchise-registration-states said the page quoted four
+      sources. Both were true when written. The page then grew to nine, and
+      both sentences stayed. No rule caught it, because every rule here reads
+      how a page is written and none of them reads what it claims about
+      itself.
+
+      WHAT THIS MATCHES, AND WHY IT IS THIS NARROW. A count, in digits or
+      words, governing a noun that names a citation, in a sentence that also
+      carries a verb of citing. All three have to be present:
+
+        four sources quoted above          count + noun + verb   FLAGGED
+        quotes four sources in full        count + noun + verb   FLAGGED
+        All three statutes define the word the same way          not flagged
+        the guide gives three examples                           not flagged
+
+      The last two are counts of things in the world rather than counts of the
+      page's own contents, and a rule that fired on them would be a rule
+      nobody trusts. The citing verb is what separates them, and it is the
+      whole of the discrimination this rule can do.
+
+      THE CROSS CHECK. The claimed number is compared against the distinct
+      external destinations inside main. Distinct destinations rather than
+      anchor tags: article 5 links the same FTC notice three times and that is
+      one source, not three.
+
+      WHAT IT CANNOT DO, stated because the gap is bigger than the rule. It
+      cannot catch a page describing what it does rather than what it holds.
+      "This page gives the source instead of the number" went false when a
+      sibling commit added the numbers, and there is no count in it to check.
+      Separating that from "This page gives both", which is true, needs a
+      model of what the page now asserts. That stays a human read, as the
+      header says of explanatory helper text.
+
+      INJECTION VERIFIED, both halves, on the sentence that prompted the rule.
+
+        catch  "quotes four sources in full" restored into article 11, which
+               links nine distinct external sources
+               -> counts its own sources: says "four sources" and links 9
+                  distinct external sources                          CAUGHT
+
+        miss   "quotes nine sources in full", the true count
+               -> ALL GREEN                                          SILENT
+
+        miss   "All three statutes define the word the same way", live on the
+               same page throughout both runs. A count of things in the world
+               with no citing verb beside it.
+               -> never fired                                        SILENT
+    */
+    {
+      const WORD_NUMBERS = {
+        one: 1, two: 2, three: 3, four: 4, five: 5,
+        six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+      };
+      const COUNT = "(\\d+|one|two|three|four|five|six|seven|eight|nine|ten)";
+      const NOUN = "(sources?|statutes?|citations?|quotations?|authorities)";
+      const CITING = /\b(quot(e|es|ed|ing)|cit(e|es|ed|ing)|link(s|ed)? to|referenced?)\b/i;
+      const claim = new RegExp(`\\b${COUNT}\\s+${NOUN}\\b`, "gi");
+
+      for (const sentence of data.text.split(/(?<=[.!?])\s+/)) {
+        if (!CITING.test(sentence)) continue;
+        for (const m of sentence.matchAll(claim)) {
+          const raw = m[1].toLowerCase();
+          const claimed = WORD_NUMBERS[raw] ?? Number(raw);
+          if (!Number.isFinite(claimed)) continue;
+          const actual = data.citedHrefs.length;
+          if (claimed !== actual) {
+            problems.push(
+              `counts its own sources: says "${m[0]}" and links ${actual} distinct external source${actual === 1 ? "" : "s"} in "${sentence.trim().slice(0, 90)}"`,
+            );
+          }
+        }
+      }
+    }
+
     if (data.sectionSizes.length >= 3) {
       const sizes = data.sectionSizes;
       let run = 1;

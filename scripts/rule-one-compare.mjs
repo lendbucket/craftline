@@ -1066,6 +1066,95 @@ const ARTICLE_FURNITURE_2 = new Set([
 ]);
 const CARD_COMPOSITIONS_2 = cardCompositions(APPROVED_ARTICLES_2);
 
+/**
+ * PROPOSED, NOT BUILT. THE THREE CHANGES, AND WHAT EACH ONE BREAKS.
+ * =================================================================
+ *
+ * Proposed by the owner after a sweep found two entries approving work their
+ * decisions did not cover:
+ *
+ *   the articles 3 to 6 entry claimed 5 instances of the block
+ *   "September 21, 2026" and the 15 words they funded, all of them cards
+ *   belonging to articles 7 to 11, which carry the same date
+ *
+ *   the CTA pattern entry claimed the removed words "there" and "apply",
+ *   which came out of articles 1 and 2 in the cleanup and have nothing to do
+ *   with any call to action
+ *
+ * The proposal is three parts. Written here rather than built because two of
+ * the three are larger than they look and one of them is not a deletion.
+ *
+ * (a) AN ENTRY WHOSE DECISION IS ALREADY IN THE BASELINE APPROVES NOTHING.
+ *
+ * Half built already. batchIsNew does it for the two article entries by
+ * asking whether any of their routes is in routesGainedAll, and
+ * substitutionIsLive does it for the retitle and the heading swaps by asking
+ * whether the old string is still in the before capture. Generalising it
+ * means giving every entry a liveness signal, and every entry has one
+ * available: the literal table can ask whether its removed value is in the
+ * baseline, the description swap already knows OLD_DESCRIPTIONS, the CTA
+ * entry can ask whether its strings are still there, and the one time schema
+ * additions are inert once present.
+ *
+ * WHAT IT BREAKS. On its own, it converts the 20 over-claimed values from
+ * wrongly approved into unapproved. That is better than today and it is not
+ * the goal: those values are real propagation caused by a real approved
+ * batch, and they should be approved by the entry that caused them. (a)
+ * without (b) turns a mis-attribution into a red gate, and a red gate that
+ * nobody can clear without writing a bad entry is how bad entries get
+ * written. These two ship together or not at all.
+ *
+ * (b) FURNITURE BY COUNT DERIVED FROM THE TEMPLATES, NEVER BY VALUE ALONE.
+ *
+ * One per card per article in the entry per surface. The surfaces and their
+ * shapes, from the templates rather than from any capture:
+ *
+ *   src/app/insights/page.tsx            eyebrow, date, title, description,
+ *                                        "Read this" and an sr-only suffix
+ *   src/app/insights/[slug]/page.tsx     eyebrow, title, description
+ *   src/app/franchising/page.tsx         title, one separator
+ *
+ * So an entry covering N articles funds N eyebrows and N dates on the hub, N
+ * eyebrows on each article page, N separators on /franchising, and nothing
+ * else. A second entry carrying the same date funds its own N and the two
+ * cannot borrow from each other.
+ *
+ * WHAT IT BREAKS, and this is the real cost. It hardcodes the template shape
+ * into the allowlist. Today that is three surfaces and two card layouts. Add
+ * a date to the related card, add a fourth surface, or drop the separator on
+ * /franchising, and the count is wrong: the gate goes red with a number
+ * rather than a name, which is a worse error message than any it prints now.
+ * Every template change becomes an allowlist change, and that coupling does
+ * not exist today.
+ *
+ * It also has to be an exact match rather than a ceiling. "Up to N" would
+ * over-fund the moment a surface stops rendering a card, which is the
+ * dangerous direction. Exact means a rendering bug that drops one related
+ * card turns the gate red for a reason that is not a content change, and
+ * somebody will have to read the difference between those two reds.
+ *
+ * (c) REMOVED SIDE VOCABULARY MATCHING IS DELETED.
+ *
+ * This is the one that is not a deletion. CTA_WORDS and the retitle's word
+ * lists are the only thing currently approving removals at word level, and
+ * the word budget funds the ADDED side only: it is filled from blocks that
+ * this run approved as additions. Delete the vocabularies and every
+ * legitimate removal's words become unapproved. The CTA removal alone was
+ * hundreds of words across every article.
+ *
+ * WHAT IT BREAKS. It requires a removed side budget first, funded from
+ * approved removed blocks the way the added side is funded from approved
+ * added blocks, with the same per entry attribution. That is a real piece of
+ * work and it has a wrinkle the added side does not: a block whose words all
+ * survive elsewhere is already reclassified SPLIT and never reaches the
+ * removed bucket, so the budget has to be funded after that reclassification
+ * rather than before it, or it will fund words that were never removed.
+ *
+ * ORDER, IF THIS IS BUILT. The removed side budget first, because it is
+ * standalone and it is the prerequisite for (c). Then (a) and (b) in one
+ * change, because either alone leaves the gate in a worse state than it is
+ * now. Then (c), which becomes a deletion once its replacement exists.
+ */
 const APPROVED_RULES = [
   /* ---- the four approved paragraph splits, block movement only ---- */
   {

@@ -177,6 +177,36 @@ reachable from a commit, and the owner set them up. CODEOWNERS is the one place
 the recursion works in our favour, because editing it is itself a CODEOWNERS
 change requiring the same review.
 
+**A commit message described a comment change and the commit carried four
+content edits.**
+
+On 21 September a session applied a metadata sweep to four files, then staged
+two of them for a separate commit about citation dates using `git add`
+followed by `git stash --keep-index`. The stash held back the unstaged files,
+not the unstaged hunks, so `9d311ba` went in carrying its two date fixes and
+four of the eight metadata strings, under a message saying it changed nothing
+but comments. `5d670d0` then carried the other four under a message claiming
+nine.
+
+The branch was already pushed and the project forbids force pushing, so the
+history was not rewritten. The pull request body was corrected to say what
+each commit actually contains, and this entry exists because a corrected body
+is not where somebody looks when reading `git log`.
+
+**What this costs.** Every separation rule on this property is enforced by a
+human reading commit messages: content apart from approvals, harness apart
+from content, records apart from both. A message that misdescribes its own
+diff defeats all of them at once, and nothing in the repository checks it. The
+approval gate is the clearest case: an approval commit is trusted because its
+message says it contains no content, and that claim has never been verified by
+anything.
+
+**What to do instead.** Stage hunks, not files, when a working tree holds more
+than one change: `git add -p`, or commit the changes in the order they were
+made. And before any commit whose message makes a claim about its own scope,
+read `git diff --cached` rather than trusting the file list. The claim in the
+message is the thing being made, so it is the thing to check.
+
 **A one-off check is run against a known positive before its result is
 cited.**
 
