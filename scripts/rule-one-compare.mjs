@@ -2017,6 +2017,69 @@ const routesLost = [...routesBefore].filter((r) => !routesAfter.has(r));
 const routesGainedAll = [...routesAfter].filter((r) => !routesBefore.has(r));
 const routesGained = routesGainedAll.filter((r) => !APPROVED_NEW_ROUTES.has(r));
 const routesGainedApproved = routesGainedAll.filter((r) => APPROVED_NEW_ROUTES.has(r));
+/**
+ * THE DATE THE SITEMAP GIVES EACH ROUTE.
+ *
+ * lastmod is a claim about the page, made to every crawler that reads the
+ * file, and until this was written nothing compared it. The route set was
+ * captured and the dates beside it were dropped, so every lastmod on the
+ * property could move and fifteen inventories would report no change.
+ *
+ * A MOVE IS A DELTA LIKE ANY OTHER AND NEEDS A DECISION. Moving a lastmod
+ * forward tells crawlers a page was rewritten. If it was not, that is a false
+ * claim made at scale, and it is exactly the sort of change that arrives as a
+ * side effect of something else.
+ *
+ * NOT COMPARABLE IS NOT THE SAME AS NO CHANGE, and the verdict says which it
+ * got. Captures written before this field existed carry no dates, and the
+ * baseline this project compares against is one of them. Rather than treat a
+ * missing inventory as agreement, the run reports that the sixteenth
+ * inventory was not compared and the verdict line names the gap, because a
+ * CLEAN that silently skipped an inventory asserts more than it checked.
+ *
+ * INJECTION VERIFIED, all three paths, against local captures of the same
+ * build taken through the new capture path. Every sample below is from a
+ * plant or a self comparison, none from production:
+ *
+ *   catch  scratch/lastmod-b.json, a copy of scratch/lastmod-a.json with the
+ *          lastmod of /insights/what-item-19-is edited from 2026-09-21 to
+ *          2026-10-01 and nothing else touched
+ *          -> "  sitemap lastmod moved 1"
+ *             "### sitemap lastmod moved"
+ *             "  /insights/what-item-19-is"
+ *             "      before: 2026-09-21T00:00:00.000Z"
+ *             "      after:  2026-10-01T00:00:00.000Z"
+ *             NOT CLEAN ... lastmodMoved=1                          CAUGHT
+ *
+ *   miss   scratch/lastmod-a.json against itself
+ *          -> "  sitemap lastmod moved 0", no section, CLEAN        SILENT
+ *
+ *   gap    scratch/rule-one-prod-check.json against itself, a capture written
+ *          before this field existed
+ *          -> "  sitemap lastmod  NOT COMPARED, a capture predates the field"
+ *             "CLEAN ON FIFTEEN INVENTORIES, the sitemap lastmod was not
+ *              compared because a capture predates the field. ..."
+ *          The gap is in the verdict line, not only above it.
+ */
+const lastmodComparable =
+  Array.isArray(before.sitemapDates) && Array.isArray(after.sitemapDates);
+const lastmodBefore = new Map(
+  (before.sitemapDates ?? []).map((e) => [e.slice(0, e.indexOf(" ")), e.slice(e.indexOf(" ") + 1)]),
+);
+const lastmodAfter = new Map(
+  (after.sitemapDates ?? []).map((e) => [e.slice(0, e.indexOf(" ")), e.slice(e.indexOf(" ") + 1)]),
+);
+const lastmodMoved = [];
+if (lastmodComparable) {
+  for (const [route, date] of lastmodAfter) {
+    const was = lastmodBefore.get(route);
+    /* A route that is new here has no previous date to have moved. */
+    if (was === undefined || was === date) continue;
+    lastmodMoved.push({ route, was, now: date });
+  }
+  lastmodMoved.sort((a, b) => a.route.localeCompare(b.route));
+}
+
 const sitemapLost = minus(before.sitemap, after.sitemap);
 const sitemapGainedAll = minus(after.sitemap, before.sitemap);
 const sitemapGained = sitemapGainedAll.filter((r) => !APPROVED_NEW_ROUTES.has(r));
@@ -2224,6 +2287,11 @@ for (const route of routesGainedApproved) {
   console.log(`  ok  new route   ${route}`);
 }
 console.log(`  sitemap lost   ${sitemapLost.length}  ${sitemapLost.join(" ")}`);
+console.log(
+  lastmodComparable
+    ? `  sitemap lastmod moved ${lastmodMoved.length}`
+    : `  sitemap lastmod  NOT COMPARED, a capture predates the field`,
+);
 console.log(`  sitemap gained ${sitemapGained.length}  ${sitemapGained.join(" ")}`);
 
 for (const [field] of FIELDS) {
@@ -2306,7 +2374,8 @@ const clean =
   routesLost.length === 0 &&
   routesGained.length === 0 &&
   sitemapLost.length === 0 &&
-  sitemapGained.length === 0;
+  sitemapGained.length === 0 &&
+  lastmodMoved.length === 0;
 
 /*
   FURNITURE OUTSIDE ITS TEMPLATE BUDGET, NAMED WITH THE SURFACE AND BOTH
@@ -2327,6 +2396,15 @@ if (FURNITURE_UNPAID.size) {
     console.log(
       `      expected: ${FURNITURE_FUNDED.get(value) ?? 0}   found: ${FURNITURE_SEEN.get(value)}`,
     );
+  }
+}
+
+if (lastmodMoved.length) {
+  console.log(`\n### sitemap lastmod moved`);
+  for (const m of lastmodMoved) {
+    console.log(`  ${m.route}`);
+    console.log(`      before: ${m.was}`);
+    console.log(`      after:  ${m.now}`);
   }
 }
 
@@ -2361,12 +2439,12 @@ console.log(`\n================ RESULT ================`);
 if (clean) {
   console.log(
     movedTotal === 0
-      ? `CLEAN. Zero unexplained removals, zero unapproved additions, no route or sitemap delta. ${approvedTotal} approved delta(s) under ${entriesUsed.size} allowlist entr${entriesUsed.size === 1 ? "y" : "ies"}, each against a written decision. THE ALLOWLIST IS SELF CERTIFYING: read the entries above, not this line.`
+      ? `CLEAN${lastmodComparable ? "" : " ON FIFTEEN INVENTORIES, the sitemap lastmod was not compared because a capture predates the field"}. Zero unexplained removals, zero unapproved additions, no route or sitemap delta. ${approvedTotal} approved delta(s) under ${entriesUsed.size} allowlist entr${entriesUsed.size === 1 ? "y" : "ies"}, each against a written decision. THE ALLOWLIST IS SELF CERTIFYING: read the entries above, not this line.`
       : `CLEAN on removals and additions. ${movedTotal} move(s) listed above need signing off.`,
   );
 } else {
   console.log(
-    `NOT CLEAN. unexplained removed=${removedTotal} unapproved added=${addedTotal} routesLost=${routesLost.length} routesGained=${routesGained.length}`,
+    `NOT CLEAN. unexplained removed=${removedTotal} unapproved added=${addedTotal} routesLost=${routesLost.length} routesGained=${routesGained.length} lastmodMoved=${lastmodComparable ? lastmodMoved.length : "not compared"}`,
   );
   process.exitCode = 1;
 }
