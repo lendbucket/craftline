@@ -64,7 +64,7 @@ export const AGREEMENT_POSTS: Insight[] = [
     title: "Franchise agreement: what is actually in one",
     eyebrow: "The agreement",
     description:
-      "Franchise agreement: what each part of the contract does, the seven day rule beside the fourteen, and where the disclosure stops and the obligation starts.",
+      "Franchise agreement: what each part of the contract does, the 14 day and seven day waiting periods, and where the disclosure stops and the obligation starts.",
     lead: "The disclosure document is what you are shown. The agreement is what you sign. They are two different documents doing two different jobs, and only one of them binds you.",
     published: "2026-09-20",
     body: [
