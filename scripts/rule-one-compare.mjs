@@ -1041,7 +1041,7 @@ function furnitureBudget(articles, why) {
     budget.set(a.date, (budget.get(a.date) ?? 0) + hub);
     where.set(a.date, "the hub card only");
   }
-  return { budget, where, why, spent: new Map() };
+  return { budget, where, why, spent: new Map(), seen: new Map() };
 }
 
 /**
@@ -1055,6 +1055,16 @@ function spendFurniture(book, value) {
   if (!book) return false;
   const allowed = book.budget.get(value);
   if (allowed === undefined) return false;
+  /*
+    SEEN COUNTS EVERY INSTANCE PRESENTED, SPENT ONLY THE ONES FUNDED.
+
+    The first version reported found as spent + 1, and spent stops climbing at
+    the budget, so every refusal recorded the same number: a value presented
+    nine times against a budget of four reported "expected 4, found 5" five
+    times over. The one number the owner asked this message to carry was the
+    one it got wrong. Counting presentations separately is the fix.
+  */
+  book.seen.set(value, (book.seen.get(value) ?? 0) + 1);
   const used = book.spent.get(value) ?? 0;
   if (used >= allowed) {
     FURNITURE_LEDGER.push({
@@ -1062,7 +1072,7 @@ function spendFurniture(book, value) {
       value,
       surface: book.where.get(value),
       expected: allowed,
-      found: used + 1,
+      found: book.seen.get(value),
     });
     return false;
   }
