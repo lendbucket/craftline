@@ -177,6 +177,35 @@ reachable from a commit, and the owner set them up. CODEOWNERS is the one place
 the recursion works in our favour, because editing it is itself a CODEOWNERS
 change requiring the same review.
 
+**A separate failure class: the data was right and the reader was not.**
+
+This is not the audit-checking-the-wrong-thing pattern above, and it is on the
+record as its own thing because the remedy is different.
+
+Fifteen article candidates were proposed. One of them, `franchise resale`, was
+the only keyword in the entire Ahrefs pull flagged `transactional: true`. That
+flag was in the response, in context, and it was read past. The candidate went
+into an approved batch and was only caught later when a SERP check showed every
+top result was a marketplace listing units for sale, which Craftline cannot
+publish without making a territory availability claim.
+
+Nothing was broken. No check was pointed at the wrong unit, no rule passed while
+looking elsewhere. The correct signal was present, retrieved, and displayed, and
+the person reading it did not act on it.
+
+**Why it matters more than it looks.** Every defence this project has built is a
+mechanism that surfaces a signal. That is the right investment, and it has a
+ceiling: a surfaced signal still has to be read. Adding another audit does not
+address this class, and reaching for one is the tempting wrong answer.
+
+**What does address it.** When a tool returns a field that would disqualify a
+result, say what the field says before proposing the result, in the same
+sentence. Not in a footnote, not in a column the reader may skim. If a pull
+returns an intent, a flag, a status or a warning, that value is part of the
+recommendation and not metadata beside it. The candidate table should have read
+"transactional intent, cannot satisfy" in the row rather than carrying a
+difficulty score and a beatability argument as though the row were viable.
+
 **What the in-repo work is for, so nobody mistakes it for a fix.** The verdict
 line prints how many allowlist entries a run leaned on and says outright that
 the list is self certifying, and the gap is recorded in the harness as a plant
