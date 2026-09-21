@@ -555,6 +555,44 @@ consultant` at 1,500 and KD 39 is the same subject from the other side, and
 a $6.00 CPC, are local_pack "find me a lawyer" queries that Craftline cannot
 satisfy at all.
 
+## Open: the capture holds no whole string for text beside an element child
+
+`rule-one-capture.mjs` builds its block inventories from leaf text. An
+element that carries its own text *and* has an element child is not a leaf,
+so its own text reaches `mainWords` and no block, anchor or heading holds it
+as a whole string. Nothing is checking those strings at block level.
+
+A scan of the built site found 108 such elements in 34 distinct shapes. Three
+account for 71 of them:
+
+| shape | count | where |
+|---|---|---|
+| `p.label-sm` carrying `Published` beside a `<time>` | 24 | every article page |
+| `p.text-datum` carrying `Read this` beside an `sr-only` span | 24 | every hub card |
+| `span` carrying `,` beside a title link | 23 | the `/franchising` title run |
+
+`Published` plus its date is the clearest case: it appears on 24 routes and
+**no inventory holds it as a string at all**. If it changed, only word level
+would notice, and word level cannot say what changed.
+
+The other 25 are article body links whose own text sits beside an `sr-only`
+"(opens in a new tab)". Those are covered, because `anchors` holds the
+combined text as one value.
+
+**The fix is in the capture, not the comparator.** `leafBlocks` should emit an
+element's own text as its own block when that element also has element
+children, so the string exists to be compared. That is a change to what every
+capture contains, so it invalidates stored captures and belongs in its own
+pull request, after #3 merges, with a fresh capture on both sides.
+
+**This retires the twelve token bound, and that bound is temporary because of
+this entry.** `rule-one-compare.mjs` currently funds `Read`, `this` and the
+comma at one of each per article in a batch, because those three tokens reach
+the word inventory with nothing behind them to pay for them. Once the capture
+emits the text as a block, the block funds its own words like any other and
+the special case has no work left to do. Delete it then rather than carrying
+it forward: a hand sized allowance for a capture defect outlives the defect
+unless somebody writes down that it should not.
 ## Ruled: one article spells license the American way
 
 House style is British and stays British. `franchise-vs-license` is a scoped
