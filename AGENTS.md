@@ -144,6 +144,47 @@ not just produce: a stored baseline, a golden file, a screenshot set, a
 serialised crawl. If the artifact cannot be shown to describe the current build,
 the run fails.
 
+**The approval allowlist is self certifying, no in-repo mechanism can close
+that, and the control is on GitHub rather than in this repository.**
+
+A session can add content it was not asked for AND add the allowlist entry that
+excuses it, in the same commit, and `rule-one-compare.mjs` prints CLEAN. The
+verdict becomes indistinguishable from a run where nothing needed approving. It
+is not specific to one entry: it applies to the literal lists, every approval
+rule, the string swaps and the FAQ count pin alike.
+
+**Why nothing written here fixes it.** Every control would be a file in the
+same repository as the thing it controls, editable in the same commit. A check
+that diffs the allowlist against the baseline can be deleted, and the
+acknowledgement flag it introduces can be passed. A verdict string can be
+changed back. A recorded plant is a comment. A signed approval token still needs
+in-repo code to verify it. An allowlist fetched from outside still needs an
+in-repo fetch that can be stubbed. Every design reduces to the same place: the
+checker and the checked are in one trust domain, and a verification cannot
+authorise itself. Moving the authorisation into the repository does not move it
+outside.
+
+A third proposal, having the harness diff its own allowlist and refuse to print
+CLEAN silently, was declined for introducing a new bypass in the act of closing
+one while buying little over the cheap changes, given that neither stops a
+determined session.
+
+**What actually controls it**, and it is deliberately not code: branch
+protection on `main` requiring a pull request and the owner's review, plus
+CODEOWNERS on `scripts/` so a harness change cannot merge without the owner
+looking at it specifically. Both are GitHub repository settings, neither is
+reachable from a commit, and the owner set them up. CODEOWNERS is the one place
+the recursion works in our favour, because editing it is itself a CODEOWNERS
+change requiring the same review.
+
+**What the in-repo work is for, so nobody mistakes it for a fix.** The verdict
+line prints how many allowlist entries a run leaned on and says outright that
+the list is self certifying, and the gap is recorded in the harness as a plant
+that does not pass. That is legibility, not control. It is good against
+carelessness, which is what has actually failed here every time, and worth
+nothing against intent. Do not write a control that only looks like one: say
+what a mechanism cannot do, next to what it can.
+
 **Why this is a rule and not a preference.** An audit that passes while looking
 at the wrong thing is the defect this project has produced more often than any
 other:

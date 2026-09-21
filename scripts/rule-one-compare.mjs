@@ -119,6 +119,61 @@ function minus(a, b) {
  * because a run went red, stop: the question is whether the owner asked for it,
  * not whether it is defensible.
  *
+ * THIS LIST IS SELF CERTIFYING AND THAT HOLE IS NOT CLOSED
+ * -------------------------------------------------------
+ * A session can add a page it was not asked for AND add the approval entry for
+ * it IN THE SAME COMMIT, and this tool prints CLEAN. The verdict becomes
+ * indistinguishable from a run where nothing needed approving.
+ *
+ * It is not specific to any one entry. It applies to the literal lists above,
+ * to every rule below, to the string swaps and to the FAQ count pin. Every one
+ * of them can be extended by the same session whose change it excuses.
+ *
+ * Route additions are NOT approvable and there is no list for them. A
+ * mechanism to approve a new route by name was built in September 2026 to let
+ * a founder page through, the page was ruled against, and the mechanism went
+ * with the branch. Any route delta fails the run again, in both directions,
+ * which is the original and stricter behaviour. If a future phase needs to add
+ * a route, the honest options are to let the gate go red and explain it in the
+ * report, or to build the mechanism again deliberately and read this note
+ * first.
+ *
+ * NOTHING IN THIS REPOSITORY CAN FIX IT, and the reasoning is worth keeping so
+ * nobody spends a day rediscovering it. Any control written here is a file in
+ * the same repository as the thing it controls, editable in the same commit:
+ *
+ *   - A check that diffs this allowlist against the baseline commit can be
+ *     deleted, and the acknowledgement flag it would introduce can be passed.
+ *   - A verdict string can be changed back.
+ *   - A recorded plant is a comment.
+ *   - A signed approval token still needs in-repo code to verify it.
+ *   - An allowlist fetched from outside still needs an in-repo fetch to stub.
+ *
+ * The checker and the checked are in one trust domain. A verification cannot
+ * authorise itself, and moving the authorisation into the same repository does
+ * not move it outside.
+ *
+ * WHAT ACTUALLY CONTROLS IT lives on GitHub and not here: branch protection on
+ * main requiring a pull request and the owner's review, plus CODEOWNERS on
+ * scripts/ so a harness change cannot merge without the owner looking at it
+ * specifically. Both are repository settings, neither is reachable from a
+ * commit, and the owner set them up. CODEOWNERS is the one place the recursion
+ * works in our favour: editing it is itself a CODEOWNERS change requiring the
+ * same review.
+ *
+ * WHAT THE IN-REPO WORK HERE IS FOR, stated so nobody mistakes it for a fix.
+ * The verdict line now prints how many allowlist entries a run leaned on and
+ * says outright that the list is self certifying. That is LEGIBILITY. It is
+ * good against carelessness, which is what has actually failed on this project
+ * every time: the stale capture, five voice rules pointed at the wrong unit, a
+ * CTA rule bounded in one direction. It is worth nothing against intent.
+ *
+ * A third fix was proposed and declined by the owner: having this script diff
+ * its own allowlist against the baseline commit and refuse to print CLEAN
+ * silently. It was declined on the grounds that it introduces a new bypass, an
+ * acknowledgement flag, in the act of closing one, and buys little over the
+ * two cheap changes once neither stops a determined session anyway.
+ *
  * Word level entries are derived rather than listed. A word is approved only if
  * it appears inside an approved block, so a genuinely new sentence cannot pass
  * by being made of familiar words.
@@ -221,6 +276,21 @@ const APPROVED = {
  * is approved only when the exact transformed string is present on the other
  * side. Both were exercised by the run they were written for, 36 and 146
  * deltas respectively, and neither approved anything else.
+ *
+ *   THE PLANT THAT DOES NOT PASS, RECORDED BECAUSE IT DOES NOT
+ *     plant  a session adds content it was never asked for, and adds the
+ *            allowlist entry for it in the same commit
+ *     result SILENT. The run prints CLEAN and the verdict is
+ *            indistinguishable from a run where nothing needed approving.
+ *     status NOT FIXED, AND NOT FIXABLE HERE. See the self certification note
+ *            in the header of this file.
+ *
+ *     It is written down as a failing plant rather than left out, because the
+ *     passing plants below read as complete coverage and they are not. That
+ *     assumption is what produced this gap: every plant in this file verifies
+ *     ENFORCEMENT and none of them says anything about AUTHORISATION, and the
+ *     near miss recorded for each one, "the approved value, present", is
+ *     precisely the shape a bad approval wears.
  *
  *   THE STRING SWAP LIST
  *     catch  a sixth heading rewritten with no SWAPS entry
@@ -550,6 +620,21 @@ const APPROVED_RULES = [
       v === "itemListElement[0].item=https://craftlinebrands.com",
   },
   {
+    /*
+      THIS ENTRY IS A LIVE EXAMPLE OF THE HOLE DOCUMENTED IN THE HEADER.
+
+      The same session that added legalName to the Organization node added this
+      line to excuse it. The run then prints CLEAN. Nothing here verified that
+      the owner asked for it; the only thing that did is the owner reading the
+      diff. Left with this note attached rather than written silently, because
+      the note is the whole of what in-repo work can contribute.
+    */
+    kind: "added",
+    field: "jsonLd",
+    why: 'entity work, directed: "legalName from existing config", LEGAL_ENTITIES[1], the franchisor entity',
+    test: (v) => v === "legalName=Craftline Brands Franchising LLC",
+  },
+  {
     kind: "added",
     field: "jsonLd",
     why: 'FAQPage on /franchising, from FRANCHISE_FAQ, already rendered on the page',
@@ -837,6 +922,22 @@ writeFileSync(
   ),
 );
 
+/*
+  HOW MANY ALLOWLIST ENTRIES THIS RUN LEANED ON.
+
+  Counted so the verdict can say it. See the note on self certification in the
+  header: this number is legibility, not control, and the reason it is in the
+  verdict line rather than further up is that the verdict line is the one that
+  gets quoted into a report.
+*/
+const entriesUsed = new Set();
+for (const [field] of FIELDS) {
+  for (const kind of ["removedApproved", "addedApproved"]) {
+    for (const item of report[field][kind] ?? []) {
+      entriesUsed.add(`${field}:${item.why}`);
+    }
+  }
+}
 const clean =
   removedTotal === 0 &&
   addedTotal === 0 &&
@@ -849,7 +950,7 @@ console.log(`\n================ RESULT ================`);
 if (clean) {
   console.log(
     movedTotal === 0
-      ? `CLEAN. Zero unexplained removals, zero unapproved additions, no route or sitemap delta. ${approvedTotal} approved delta(s), each against a written decision.`
+      ? `CLEAN. Zero unexplained removals, zero unapproved additions, no route or sitemap delta. ${approvedTotal} approved delta(s) under ${entriesUsed.size} allowlist entr${entriesUsed.size === 1 ? "y" : "ies"}, each against a written decision. THE ALLOWLIST IS SELF CERTIFYING: read the entries above, not this line.`
       : `CLEAN on removals and additions. ${movedTotal} move(s) listed above need signing off.`,
   );
 } else {

@@ -517,3 +517,40 @@ exists.
 its own site and its own entity, and the connection to the owner is carried by
 the Person node on the founder page rather than by widening Craftline's story
 until it stops saying anything specific.
+
+## Later targets, with the reasoning intact
+
+### franchise broker, 500 volume, KD 48
+
+Cut from the approved article batch by the owner on the grounds that KD 48
+against a DR 0 site with zero organic keywords is a multi-year play and will
+not earn its place in this batch. Kept here because the subject is worth
+writing eventually and the argument for it should not have to be rebuilt.
+
+**Why it is worth writing.** How franchise brokers are paid, and the conflict
+that creates, is something Craftline can say plainly from working knowledge
+and most of the category will not say at all. A broker is typically paid by
+the franchisor on a placement, which means the person presenting themselves to
+a prospect as an impartial guide is compensated by one side of the
+transaction. That is a fact about the structure, not an accusation about any
+individual, and it is exactly the kind of thing the eighteen existing articles
+already handle well: the FDD article, the royalty article and the due
+diligence article all work by explaining a mechanism rather than warning about
+a villain.
+
+**Why not now.** Difficulty 48 is the highest in the whole candidate pull.
+The site ranks for nothing today, has no referring domains worth counting, and
+the realistic path to that SERP runs through first establishing authority on
+the KD 0 to KD 9 targets in the approved batch. Writing it now spends the same
+effort for a ranking that will not arrive for years.
+
+**When to revisit.** Once the approved batch has been live long enough to show
+whether the low-difficulty targets rank at all. If they do, the domain has
+some authority to spend and this becomes a reasonable next target. If they do
+not, difficulty is not the constraint and this would not have worked either.
+
+Related and also declined, on intent rather than difficulty: `franchise
+consultant` at 1,500 and KD 39 is the same subject from the other side, and
+`franchise lawyer` and `franchise attorney`, at 1,700 and 1,200 with KD 0 and
+a $6.00 CPC, are local_pack "find me a lawyer" queries that Craftline cannot
+satisfy at all.

@@ -3,6 +3,7 @@ import {
   CATEGORY_POSITIONING,
   COMPANY,
   CONTACT_EMAIL,
+  LEGAL_ENTITIES,
   SITE_URL,
 } from "@/config/company";
 
@@ -88,6 +89,23 @@ export function organizationSchema() {
     "@id": ORGANIZATION_ID,
     name: COMPANY.name,
     alternateName: COMPANY.shortName,
+    /**
+     * THE FILED NAME, TIED TO THE MARKETING NAME.
+     *
+     * The node carried `name` and `alternateName` and nothing that connects
+     * "Craftline Brands" to a registered entity. This site has no press, no
+     * profiles and no reviews, so it has unusually few ways for a search engine
+     * to tell this company apart from another using a similar name, and the
+     * legal name is the strongest one available that costs nothing and names
+     * no person.
+     *
+     * The franchisor entity, not the IP holding entity. A prospect, an attorney
+     * or a lender asking "who would I actually be dealing with" is asking about
+     * the franchisor, and the about page already renders both entities with
+     * their roles. LEGAL_ENTITIES[1] is the franchisor; the order is asserted
+     * there and this reads it rather than repeating the string.
+     */
+    legalName: LEGAL_ENTITIES[1].name,
     url: ENTITY_URL,
     logo: ORGANIZATION_LOGO,
     description: COMPANY.descriptor,
