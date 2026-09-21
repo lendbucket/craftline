@@ -67,7 +67,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
     eyebrow: "Disclosure",
     description:
       "Item 19 is the only place a franchisor may publish financial performance, and a franchisor with a blank one is forbidden to publish figures anywhere else.",
-    lead: "Item 19 is where a disclosure document is allowed to talk about money. It is also the only place it is allowed to, and that second part is the one nobody mentions.",
+    lead: "Item 19 is where a disclosure document is allowed to talk about money. It is also the only place, and a franchisor with a blank one may not talk about it anywhere.",
     published: "2026-09-21",
     body: [
       {
