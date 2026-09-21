@@ -64,7 +64,7 @@ export const AGREEMENT_POSTS: Insight[] = [
     title: "Franchise agreement: what is actually in one",
     eyebrow: "The agreement",
     description:
-      "Franchise agreement: what each part of the contract does, the seven day rule almost nobody mentions, and where the disclosure stops and the obligation starts.",
+      "Franchise agreement: what each part of the contract does, the 14 day and seven day waiting periods, and where the disclosure stops and the obligation starts.",
     lead: "The disclosure document is what you are shown. The agreement is what you sign. They are two different documents doing two different jobs, and only one of them binds you.",
     published: "2026-09-20",
     body: [
@@ -229,7 +229,7 @@ export const AGREEMENT_POSTS: Insight[] = [
     eyebrow: "The agreement",
     description:
       "Franchise termination is governed by the contract and by state law, not by the federal rule. The three ways an agreement ends, and what survives it.",
-    lead: "Most writing about franchising covers the beginning. The ending is where the agreement was drafted most carefully, and it is the part a prospect reads last if at all.",
+    lead: "A franchise agreement describes a relationship working and then describes it failing. The second half is where the asymmetries between the two sides are written down.",
     published: "2026-09-19",
     body: [
       {
@@ -458,7 +458,7 @@ export const AGREEMENT_POSTS: Insight[] = [
     eyebrow: "The agreement",
     description:
       "Franchise renewal often means signing the current agreement, not continuing the old one. What Item 17 must tell you, and when a new disclosure document is owed.",
-    lead: "A franchise term ends on a date written into the contract. What happens next is decided by a clause most people read once, quickly, years before it matters.",
+    lead: "A franchise term ends on a date written into the contract. What happens next is decided by a clause signed years before the date it governs arrives.",
     published: "2026-09-21",
     body: [
       {

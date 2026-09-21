@@ -593,6 +593,68 @@ emits the text as a block, the block funds its own words like any other and
 the special case has no work left to do. Delete it then rather than carrying
 it forward: a hand sized allowance for a capture defect outlives the defect
 unless somebody writes down that it should not.
+## Open: three exemption figures are hardcoded in two places and they age
+
+`franchise-vs-license` states the Commission's three exemption thresholds and
+links each to the notice that set them. The Rule requires the Commission to
+readjust them for inflation **every four years**, and the figures on the page
+are the ones effective **12 July 2024**. The next adjustment replaces all
+three, and this site does not find out on its own.
+
+**Both places have to change together:**
+
+| file | what it holds |
+|---|---|
+| `src/data/posts/definition.ts` | the three figures in the rendered text, each linked to the notice |
+| `scripts/llms-audit.mjs` | `ALLOWED_MONEY`, the literal allowlist that lets exactly those three reach `llms.txt` and `llms-full.txt` |
+
+**The failure mode is benign and that is the design.** If the article is
+updated and the allowlist is not, `llms-audit` goes red and names the new
+figure. If the allowlist is updated and the article is not, the page carries
+stale numbers under a link that contradicts them. The first is loud and the
+second is quiet, so the order is: change the article first, watch the audit go
+red, then change the allowlist. Never the other way round.
+
+**What nobody should do instead.** Widening `ALLOWED_MONEY` to a pattern that
+matches any regulatory looking amount would remove the friction and the whole
+point of it. The list is three literals because a figure that ages should stop
+the gate until a person has looked at it.
+
+This entry exists because the page previously cited the source without giving
+the number, which never went stale. Printing the figures was the right call
+for the reader and it bought a maintenance obligation that did not exist
+before.
+## Open: a merged article title carries a word on the owner's banned list
+
+| | |
+|---|---|
+| route | `/insights/buying-a-franchise-with-limited-capital` |
+| title | `Buying a franchise without much capital, honestly` |
+| file | `src/data/posts/money.ts` |
+| flagged by | the owner, 21 September 2026 |
+
+The owner has identified a word in this title as one he does not want on the
+property. He named the title, not the word. The only candidate that is not
+plain description is the closing adverb, but that is an inference and the
+entry does not treat it as the finding.
+
+**It is protected and it needs his word before anything moves.** The title is
+live on production, it is in the sitemap, it propagates onto every other
+article page as a related card, and it appears in `llms.txt`. Changing it is a
+retitle: it moves the string in nine inventories at once, exactly as the
+Ahrefs retitle did, and Rule One goes red until an approval entry exists.
+
+**Its search position is unknown and this session did not look.** No Ahrefs
+calls were made. Whether the current title earns anything, and what a
+replacement would cost or gain, is unmeasured. That matters because this is
+the one article in the section whose title reads as a voice choice rather
+than as a term, so the trade is real rather than free.
+
+**What a decision needs, in order.** The owner names the word. Somebody pulls
+the search data for the existing title. A replacement is drafted that leads
+with the target term and stays in the length band. Then the retitle and its
+approval entry go in separate commits, the approval citing the message that
+gave the word, which is how every retitle on this property has been handled.
 ## Ruled: one article spells license the American way
 
 House style is British and stays British. `franchise-vs-license` is a scoped

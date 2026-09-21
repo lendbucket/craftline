@@ -67,7 +67,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
     eyebrow: "Disclosure",
     description:
       "Item 19 is the only place a franchisor may publish financial performance, and a franchisor with a blank one is forbidden to publish figures anywhere else.",
-    lead: "Item 19 is where a disclosure document is allowed to talk about money. It is also the only place it is allowed to, and that second part is the one nobody mentions.",
+    lead: "Item 19 is where a disclosure document is allowed to talk about money. It is also the only place, and a franchisor with a blank one may not talk about it anywhere.",
     published: "2026-09-21",
     body: [
       {
@@ -227,7 +227,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
         items: [
           "Registration. A state examines a franchise offering and issues an effective registration before the franchisor may offer or sell there.",
           "Filing or notice. A state requires a document, or a notice claiming an exemption, to be filed before offering, without examining or approving the offering itself.",
-          "Relationship law. A state regulates what happens after the sale, typically restricting termination, non-renewal and transfer, and says nothing about registration at all.",
+          "Relationship law. A state regulates what happens after the sale. Where it has one, it restricts termination, non-renewal or transfer, and says nothing about registration at all.",
         ],
       },
 
@@ -267,7 +267,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
             href: "https://app.leg.wa.gov/rcw/default.aspx?cite=19.100.020",
             external: true,
           },
-          ". Three statutes written decades and a continent apart, and all three attach to the offer.",
+          ". All three attach to the offer.",
         ],
       },
 
@@ -340,7 +340,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "No list of registration states has a column for that. Texas appears on such a list, when it appears at all, as a state with nothing to do, and a franchisor reading it that way would be offering unlawfully while believing it had checked.",
+        text: "No list of registration states has a column for that. Texas appears on such a list, when it appears at all, as a state with nothing to do, and a franchisor reading it that way would not have filed the notice the Secretary of State says must be filed before offering or selling.",
       },
 
       { kind: "heading", text: "How to check a single state properly" },
@@ -352,7 +352,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
       { kind: "heading", text: "What changes, and how often" },
       {
         kind: "paragraph",
-        text: "Statutes are amended, forms and fees change, and an exemption available one year can acquire conditions the next. Anything on this page could be out of date by the time it matters to a particular plan, including the four sources quoted above.",
+        text: "Statutes are amended, forms and fees change, and an exemption available one year can acquire conditions the next. Anything on this page could be out of date by the time it matters to a particular plan, including every statute and agency page quoted on it.",
       },
       {
         kind: "paragraph",
@@ -363,7 +363,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
       {
         kind: "paragraph",
         text: [
-          "This describes how state franchise registration works in general terms and quotes four sources in full. It is not legal advice, it is not a complete survey of any state, and it does not cover relationship statutes, franchise taxes or business licensing. Craftline has issued no Franchise Disclosure Document, is registered in no state as a franchisor, and is not offering anything anywhere. ",
+          "This describes how state franchise registration works in general terms and quotes its sources in full. It is not legal advice, it is not a complete survey of any state, and it does not cover relationship statutes, franchise taxes or business licensing. Craftline has issued no Franchise Disclosure Document, is registered in no state as a franchisor, and is not offering anything anywhere. ",
           {
             text: "What Craftline does and does not claim to do",
             href: "/about",
