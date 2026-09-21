@@ -423,3 +423,97 @@ against a leftover file and printed CLEAN. The only tell was the label in the
 output header. Captures now record the build they came from and the compare half
 refuses to run against one that predates the build on disk. Both halves planted
 and verified.
+
+## Closed, do not re-open
+
+### The Bing "missing alt attribute" warning on 27 of 27 pages is a false positive
+
+Bing Site Scan flags a missing alt attribute on every route. It is wrong, and
+the finding is recorded here so a future session does not re-open it and
+"fix" it by adding redundant alt text.
+
+**Measured from the served bytes on the apex, all 27 live routes:**
+
+- Images with no alt attribute at all: **zero**.
+- Images with `alt=""`: **54**, two per route, both the Craftline lockup, one
+  in the header and one in the footer. An empty alt is the WCAG sanctioned way
+  to mark an image decorative. It is not a missing attribute.
+- SVG elements with no accessible name: **zero**. Every one carries
+  `aria-hidden="true"`.
+
+**axe-core, WCAG 2.1 A and AA, run against the live production home page:**
+
+- `image-alt` matched both images and **passed** both.
+- `link-name` passed on 25 nodes.
+- Total violations: **zero**.
+
+**Both images have a genuine accessible name by another mechanism:**
+
+- Header: the `<img alt="">` sits inside
+  `<a aria-label="Craftline Brands home" href="/">`. The link carries the name.
+- Footer: no link wrapper, but the footer's own visible text renders the
+  literal string "Craftline Brands" **four times**, in the descriptor, the
+  brands column and the two legal entity names. The mark is decorative by
+  redundancy, which is exactly when `alt=""` is correct.
+
+**Why axe passing is correct rather than a miss.** The `image-alt` rule is
+written to pass an empty alt, because empty alt is the standard. It is not
+looking at the wrong thing. This is NOT another instance of the defect class in
+the audits section above, and it was checked specifically for that: the thing
+that would have made it a real gap is the footer mark being the only carrier of
+the company name, and it is not.
+
+**Why the fix is not to add alt text.** `alt="Craftline Brands"` would make a
+screen reader announce the company twice inside one control in the header, and
+add a fifth announcement in the footer. That is a WCAG regression dressed as a
+fix, shipped to satisfy a scanner using a cruder heuristic than the standard.
+
+Owner ruling: accepted as a false positive, do not add redundant alt text.
+
+### 254 Engineering stays off this site
+
+Considered as a second Craftline brand and declined by the owner. The analysis
+is recorded so it is not redone.
+
+**The structural finding.** 254engineering.com describes a Texas engineering
+firm delivering "field work to a written protocol, reviewed and sealed by a
+licensed Texas Professional Engineer in responsible charge", across eight
+sealed service lines. Its schema type is `ProfessionalService`. It is a
+professional services firm working under a licensed PE, not a skilled trade
+service brand, and it carries a regulatory shape no trade service franchise
+has: several states restrict ownership of engineering firms to licensed
+engineers.
+
+**What adding it would have touched.** The site was built plural, so most of it
+absorbs a second brand as a data edit: `BrandRow`, `/brands`, `/brands/[slug]`,
+the sitemap, `subOrganization` and `brand` in the Organization schema, and both
+llms files all loop over `BRANDS` and need no code change.
+
+The cost is not mechanical. Four load bearing identity strings and one FAQ
+answer would have had to change:
+
+1. `COMPANY.descriptor`, "A franchise development company building and
+   operating **skilled trade service** brands." It renders in seven places
+   including the home hero, the footer on every route, the web manifest,
+   `Organization.description`, the home meta description and both llms files.
+2. `CATEGORY_POSITIONING`, four trade phrases emitted as `knowsAbout` in the
+   Organization schema on all 28 routes. None of them covers engineering.
+3. The `FRANCHISE_FAQ` entry "Why is there only one brand?" and its whole
+   answer, which becomes false. It renders on /franchising and sits in the
+   FAQPage schema, and the Rule One allowlist pins the FAQ at exactly nine
+   entries, so this trips the gate by design.
+4. "the first brand" in the `building-wattsmith-electric` title, description
+   and lead.
+5. Six `const [wattsmith] = BRANDS` destructures in about, brands, contact,
+   home, privacy and terms, each needing review. The privacy page says "It does
+   not cover Wattsmith Electric, which operates its own website", and with two
+   brands that sentence becomes an incomplete disclosure on a legal page.
+
+Plus a new `BrandLockup` case, a new inline SVG component, and a tracked slot
+in `src/data/images.ts`, which the placeholder audit fails until real artwork
+exists.
+
+**The decision.** Craftline stays a skilled trade franchise developer. 254 keeps
+its own site and its own entity, and the connection to the owner is carried by
+the Person node on the founder page rather than by widening Craftline's story
+until it stops saying anything specific.
