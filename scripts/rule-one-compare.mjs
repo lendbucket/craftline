@@ -309,6 +309,72 @@ const APPROVED = {
  */
 const BRAND_SUFFIX = " | Craftline Brands";
 
+/**
+ * WHAT THE TWO APPROVED ARTICLES PUT ONTO PAGES THAT ALREADY EXISTED.
+ *
+ * Adding an article to this section is not a local act. Its title and
+ * description render on the insights hub, in the further reading grid on every
+ * other article, and in the comma separated run of every title on the
+ * franchising page. Two articles moved 1,494 values across 27 existing routes
+ * and not one of them touched an existing page's own title, metas, canonical,
+ * robots, schema, header or footer. That was verified separately before these
+ * entries were written.
+ *
+ * THE VALUES ARE LITERALS, NOT READ OUT OF THE ARTICLE DATA. Deriving a
+ * content approval from the content file is the mirror pattern: the FAQPage
+ * entry did exactly that, read the whole array it was approving, and therefore
+ * approved a planted tenth question. Writing the strings out means a third
+ * article cannot be approved by this entry however the data changes, and it
+ * means a reviewer can see what was approved without opening another file.
+ */
+const APPROVED_ARTICLES = [
+  {
+    slug: "what-is-in-a-franchise-agreement",
+    title: "Franchise agreement: what is actually in one",
+    description:
+      "Franchise agreement: what each part of the contract does, the seven day rule almost nobody mentions, and where the disclosure stops and the obligation starts.",
+    eyebrow: "The agreement",
+    date: "September 20, 2026",
+  },
+  {
+    slug: "how-a-franchise-agreement-ends",
+    title: "Franchise termination: how an agreement ends",
+    description:
+      "Franchise termination is governed by the contract and by state law, not by the federal rule. The three ways an agreement ends, and what survives it.",
+    eyebrow: "The agreement",
+    date: "September 19, 2026",
+  },
+];
+
+const ARTICLE_STRINGS = new Set();
+const ARTICLE_WORDS = new Set();
+for (const a of APPROVED_ARTICLES) {
+  ARTICLE_STRINGS.add(a.title);
+  ARTICLE_STRINGS.add(a.description);
+  ARTICLE_STRINGS.add(`/insights/${a.slug}`);
+  for (const w of `${a.title} ${a.description}`.split(/\s+/)) if (w) ARTICLE_WORDS.add(w);
+}
+
+/*
+  Per card furniture that scales with the article count rather than with these
+  two articles specifically: the eyebrow, the formatted publication date, and
+  the hub's "Read this" label with its screen reader suffix. The franchising
+  page lists every title in one comma separated run, so two more articles add
+  two more separators. Each class is named rather than matched loosely.
+*/
+const ARTICLE_FURNITURE = new Set([
+  ...APPROVED_ARTICLES.map((a) => a.eyebrow),
+  ...APPROVED_ARTICLES.map((a) => a.date),
+  "Read this",
+]);
+const FURNITURE_WORDS = new Set([
+  ...APPROVED_ARTICLES.flatMap((a) => `${a.eyebrow} ${a.date}`.split(/\s+/)),
+  "Read",
+  "this",
+  ":",
+  ",",
+]);
+
 /*
   The nine decided question and answer strings, read from the same export the
   franchising page renders and the FAQPage schema is built from. Used to anchor
@@ -521,6 +587,24 @@ const APPROVED_RULES = [
     literals, which is the right treatment for a value that two approved
     decisions landed on together.
   */
+  /* ---- the two approved articles, propagating onto existing pages ---- */
+  {
+    kind: "added",
+    field: "*",
+    why: 'articles 1 and 2, directed: "Approve the two new routes and their propagation"',
+    test: (v, field) => {
+      if (field === "mainWords") {
+        return ARTICLE_WORDS.has(v) || FURNITURE_WORDS.has(v);
+      }
+      if (ARTICLE_FURNITURE.has(v)) return true;
+      /* "H2:<title>" on the hub, and "<title> -> /insights/<slug>" anchors. */
+      const bare = v.replace(/^H[1-6]:/, "").split(" -> ")[0];
+      if (ARTICLE_STRINGS.has(bare)) return true;
+      /* Card blocks concatenate eyebrow, date, title and description. */
+      return [...ARTICLE_STRINGS].some((s) => s.length > 30 && v.includes(s));
+    },
+  },
+
   /* ---- the four call to action positions that came off every article ---- */
   {
     kind: "removed",
@@ -749,10 +833,72 @@ const FIELDS = [
 /* ---------- route set ---------- */
 const routesBefore = new Set(before.routeList);
 const routesAfter = new Set(after.routeList);
+/**
+ * NEW ROUTES, APPROVED BY NAME. ROUTE LOSSES, NEVER APPROVABLE.
+ *
+ * THIS MECHANISM EXISTED ONCE AND WAS DELETED, AND THAT HISTORY IS THE POINT.
+ * It was first built in September 2026 to let a founder page through, in the
+ * same commit as the page. The page was ruled against, the branch was deleted,
+ * and the mechanism went with it. The note left behind said that a future
+ * phase needing a route had two honest options: let the gate go red and
+ * explain it in the report, or rebuild this deliberately having read the note.
+ *
+ * The first option was taken for the two agreement articles. This is the
+ * second, and the difference from the first time is the whole of what the
+ * self certification finding was about:
+ *
+ *   - It is authorised by a specific instruction, quoted in each entry.
+ *   - It is in a commit that contains NO content, only approvals, so the
+ *     approval and the thing approved cannot be read as one act.
+ *   - It was written after the owner read the drafts, not before.
+ *
+ * None of that is enforced by anything here. It is still self certifying and
+ * the header says so. What changed is the sequence, and the sequence is the
+ * only part a person reviewing this can check.
+ *
+ * THE ASYMMETRY IS DELIBERATE. An added route is approvable because somebody
+ * decided to add it. A LOST route is never approvable: a page that stops
+ * existing takes its content, its inbound links and its rankings with it.
+ * Sitemap deltas are checked against the same list, so a route cannot be
+ * approved into existence and quietly left out of the sitemap.
+ *
+ * INJECTION VERIFIED, both halves:
+ *   catch  an unapproved route planted into the after capture
+ *          -> "routes gained 1 /insights/planted", NOT CLEAN        CAUGHT
+ *   catch  an APPROVED route deleted, proving approval does not work in the
+ *          losing direction
+ *          -> "routes lost 1 ...", NOT CLEAN                        CAUGHT
+ *   miss   the two approved routes present as intended
+ *          -> CLEAN, 1,494 approved deltas                          SILENT
+ *
+ * A THIRD CHECK THAT IS NOT A PLANT, and is worth more than either. The
+ * propagation was verified a second time by a separately written script that
+ * asked a narrower question: for each of the 27 pre-existing routes, is every
+ * added value attributable to one of the two new articles? It answered 1,494
+ * attributable, zero unattributable, zero removals, and zero changes to any
+ * existing page's own title, metas, canonical, robots, schema, header or
+ * footer. That number matches the approved count here exactly. Two checks
+ * written independently agreeing on a figure is a stronger statement than
+ * either making it alone.
+ */
+const APPROVED_NEW_ROUTES = new Map([
+  [
+    "/insights/what-is-in-a-franchise-agreement",
+    'articles 1 and 2, directed: "Voice approved on both drafts. Approve the two new routes and their propagation."',
+  ],
+  [
+    "/insights/how-a-franchise-agreement-ends",
+    'articles 1 and 2, directed: "Voice approved on both drafts. Approve the two new routes and their propagation."',
+  ],
+]);
+
 const routesLost = [...routesBefore].filter((r) => !routesAfter.has(r));
-const routesGained = [...routesAfter].filter((r) => !routesBefore.has(r));
+const routesGainedAll = [...routesAfter].filter((r) => !routesBefore.has(r));
+const routesGained = routesGainedAll.filter((r) => !APPROVED_NEW_ROUTES.has(r));
+const routesGainedApproved = routesGainedAll.filter((r) => APPROVED_NEW_ROUTES.has(r));
 const sitemapLost = minus(before.sitemap, after.sitemap);
-const sitemapGained = minus(after.sitemap, before.sitemap);
+const sitemapGainedAll = minus(after.sitemap, before.sitemap);
+const sitemapGained = sitemapGainedAll.filter((r) => !APPROVED_NEW_ROUTES.has(r));
 
 /* ---------- per field, per route, then site wide ---------- */
 const report = {};
@@ -872,6 +1018,9 @@ console.log(
 );
 console.log(`\n  routes lost    ${routesLost.length}  ${routesLost.join(" ")}`);
 console.log(`  routes gained  ${routesGained.length}  ${routesGained.join(" ")}`);
+for (const route of routesGainedApproved) {
+  console.log(`  ok  new route   ${route}`);
+}
 console.log(`  sitemap lost   ${sitemapLost.length}  ${sitemapLost.join(" ")}`);
 console.log(`  sitemap gained ${sitemapGained.length}  ${sitemapGained.join(" ")}`);
 
