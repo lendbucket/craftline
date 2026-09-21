@@ -177,6 +177,89 @@ reachable from a commit, and the owner set them up. CODEOWNERS is the one place
 the recursion works in our favour, because editing it is itself a CODEOWNERS
 change requiring the same review.
 
+**The control was reported as in place, and it was not.**
+
+On 20 September 2026 the owner said both were being set up on GitHub, and this
+file was written on that basis: branch protection on `main` requiring a pull
+request and review, plus CODEOWNERS on `scripts/`. The paragraph above was
+written as though that had happened.
+
+It had not. On 21 September a session pushed four commits straight to `main`
+and the push succeeded. Checking afterwards: `main` returned "Branch not
+protected", the repository rulesets list was empty, and no CODEOWNERS file
+existed anywhere in the tree. So for the whole of the intervening period the
+only control against a session approving its own work was a sentence in this
+file describing a control that did not exist.
+
+That is worse than having no control, and it is the same shape as the stale
+capture: something reported a state it had not verified, and everything
+downstream read the report instead of the state. A rule recorded as enforced is
+read as enforced.
+
+**What is required for the control to mean anything.** Branch protection alone
+does not close this. The owner and the agent were operating under the same
+GitHub credentials, and GitHub cannot distinguish two actors who authenticate
+as one. A rule requiring review by somebody other than the author is satisfied
+by the owner's own identity whoever is driving it, and a CODEOWNERS entry
+naming the owner is satisfied the same way. The agent needs its own GitHub
+identity before either control can tell the two apart, and the owner is setting
+that up alongside the ruleset and CODEOWNERS on `scripts/` and this file.
+
+**Until the owner says it is done, no session pushes to `main`, even where
+the push would succeed.** A push succeeding is not evidence that it was
+allowed; on 21 September it was evidence of the opposite. Feature branches and
+pull requests only, and the fact that a direct push works is a finding to
+report rather than a route to take.
+
+**And do not build either control from inside a session.** A CODEOWNERS file
+written by the session it is meant to constrain, in the commit it is meant to
+gate, is the control that only looks like one. This belongs to the owner, on
+GitHub, under an identity the agent does not hold.
+
+**Two checks agreeing is worth less than it sounds when they share a half.**
+
+Rule One has two halves, a capture and a comparison, and there are two tools
+that read the capture: `rule-one-compare.mjs` and
+`article-propagation-check.mjs`. They were written separately, they share no
+code, and on 21 September they returned the same figure, 3,602, for the same
+run. The overnight report presented that as two independent checks agreeing.
+
+That overstated it, and the overstatement is the point of this entry. Only the
+comparison logic is independent. Both read the same two JSON files, produced by
+the same capture, from the same build. Any defect in the capture is invisible
+to both of them, and they will agree about it confidently. An agreement between
+two readers of one artifact is evidence about the readers, not about the
+artifact.
+
+It was also weaker than that at the time. Planting two words onto a route,
+`the` and `Franchise`, was caught by the comparator and missed by the
+propagation check, because the second was still matching a vocabulary at word
+level. So the matching totals partly reflected the looser predicate agreeing
+with the stricter one, which is not corroboration at all.
+
+What to say instead, when both are green: the comparison was checked two ways
+against one capture. If the capture is the thing in doubt, neither of them
+helps, and the answer is a fresh capture from a fresh build rather than a
+second opinion on the old one.
+
+**Record a bound in the order it was actually arrived at.**
+
+Three tokens reach the word inventories with no block behind them, and the
+allowance for them is one of each per article in a batch. The order that number
+was arrived at is part of the record, because it was not derived and then
+checked.
+
+Twelve instances came back unfunded. A bound of one of each per article, for a
+four article batch, is twelve. The number was chosen because it matched, and
+only afterwards verified against the two card templates, which do turn out to
+emit exactly one "Read this" label per hub card and one separator per title on
+`/franchising`. The justification holds. The sequence was observe, size, then
+justify, and a bound sized to a result is worth less than one derived from a
+template even when the two agree.
+
+Anyone changing it should re-derive from the templates first and compare
+afterwards, which is the order this one missed.
+
 **A separate failure class: the data was right and the reader was not.**
 
 This is not the audit-checking-the-wrong-thing pattern above, and it is on the
