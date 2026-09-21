@@ -1282,6 +1282,91 @@ let FURNITURE_BOOK_2 = null;
  * change, because either alone leaves the gate in a worse state than it is
  * now. Then (c), which becomes a deletion once its replacement exists.
  */
+
+/**
+ * ARTICLES 7 TO 11, APPROVED AFTER THE OWNER READ THEM ON PRODUCTION.
+ *
+ * The word, recorded in BACKLOG.md under "Ruled: articles 7 to 11 approved":
+ * "I read articles 7 to 11 on production and approve all five, as served at
+ * c21a9c5. Do not write the approval entries yet. They go in after PR #9 and
+ * (c) land, one approval commit, citing this message, against the 1ae77a3
+ * baseline."
+ *
+ * BOTH CONDITIONS MET BEFORE THIS WAS WRITTEN. PR #9 merged at 40475b4 and
+ * (c) at 37afad2. And the five route hashes recorded in BACKLOG.md were
+ * rechecked against production immediately before this commit: all five match,
+ * so the text approved is the text served.
+ *
+ *   655ff549ccfe793b  what-a-master-franchise-is
+ *   38b70e446f11bceb  what-item-19-is
+ *   2b9945a1d2f1c3a1  buying-an-existing-franchise
+ *   742323a59deccb52  what-a-multi-unit-franchise-is
+ *   fddfcdd755cb62ac  franchise-registration-states
+ *
+ * THIS IS THE FIRST APPROVAL ON THIS PROPERTY WRITTEN AFTER THE CONTENT WAS
+ * READ ON THE LIVE SITE RATHER THAN IN A DIFF, and the hash check is what
+ * makes that claim checkable by somebody who was not here. The batch 3 to 6
+ * entry above was written on a word given in advance, which its own comment
+ * says proves less.
+ *
+ * Literals again, not derived from the article data.
+ */
+const APPROVED_ARTICLES_3 = [
+  {
+    slug: "what-a-master-franchise-is",
+    title: "Master franchise: what you actually become",
+    description:
+      "Master franchise: the right to sub-franchise an area makes you a franchisor under the federal rule, with disclosure obligations of your own.",
+    eyebrow: "Scale",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "buying-an-existing-franchise",
+    title: "Buying an existing franchise: what changes",
+    description:
+      "Buying an existing franchise often comes with no disclosure document, and one specific act by the franchisor changes that. What to read in its place.",
+    eyebrow: "The process",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "what-a-multi-unit-franchise-is",
+    title: "Multi unit franchise: the three ways it happens",
+    description:
+      "Multi unit franchise ownership arrives by three different contracts with three different obligations, and one of them changes what the rule requires of you.",
+    eyebrow: "Scale",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "what-item-19-is",
+    title: "Item 19: what a franchisor may and may not say",
+    description:
+      "Item 19 is the only place a franchisor may publish financial performance, and a franchisor with a blank one is forbidden to publish figures anywhere else.",
+    eyebrow: "Disclosure",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "franchise-registration-states",
+    title: "Franchise registration states: how to check one",
+    description:
+      "Franchise registration states: why the counts disagree, what the statutes actually make unlawful, and the state that needs a filing while appearing on no list.",
+    eyebrow: "Registration",
+    date: "September 21, 2026",
+  },
+];
+
+const ARTICLE_STRINGS_3 = new Set();
+for (const a of APPROVED_ARTICLES_3) {
+  ARTICLE_STRINGS_3.add(a.title);
+  ARTICLE_STRINGS_3.add(a.description);
+  ARTICLE_STRINGS_3.add(`/insights/${a.slug}`);
+}
+const ARTICLE_FURNITURE_3 = new Set([
+  ...APPROVED_ARTICLES_3.map((a) => a.eyebrow),
+  ...APPROVED_ARTICLES_3.map((a) => a.date),
+]);
+const CARD_COMPOSITIONS_3 = cardCompositions(APPROVED_ARTICLES_3);
+let FURNITURE_BOOK_3 = null;
+
 const APPROVED_RULES = [
   /* ---- the four approved paragraph splits, block movement only ---- */
   {
@@ -1373,6 +1458,21 @@ const APPROVED_RULES = [
       if (ARTICLE_FURNITURE_2.has(v)) return spendFurniture(FURNITURE_BOOK_2, v);
       if (v.includes(" -> ")) return CARD_COMPOSITIONS_2.has(v);
       return ARTICLE_STRINGS_2.has(v.replace(/^H[1-6]:/, "")) || CARD_COMPOSITIONS_2.has(v);
+    },
+  },
+
+  /* ---- articles 7 to 11, propagating onto existing pages ---- */
+  {
+    kind: "added",
+    field: "*",
+    scope: ARTICLE_SURFACES,
+    live: () => batchIsNew(APPROVED_ARTICLES_3.map((a) => a.slug)),
+    why: "articles 7 to 11, directed: \"I read articles 7 to 11 on production and approve all five, as served at c21a9c5\", recorded in BACKLOG.md with a hash per route",
+    test: (v, field) => {
+      if (WORD_FIELDS.has(field)) return false;
+      if (ARTICLE_FURNITURE_3.has(v)) return spendFurniture(FURNITURE_BOOK_3, v);
+      if (v.includes(" -> ")) return CARD_COMPOSITIONS_3.has(v);
+      return ARTICLE_STRINGS_3.has(v.replace(/^H[1-6]:/, "")) || CARD_COMPOSITIONS_3.has(v);
     },
   },
 
@@ -1853,6 +1953,16 @@ const APPROVED_NEW_ROUTES_2 = new Map([
 ]);
 for (const [route, why] of APPROVED_NEW_ROUTES_2) APPROVED_NEW_ROUTES.set(route, why);
 
+/**
+ * The five routes of the third batch. Approved after the owner read them on
+ * production, with the five hashes in BACKLOG.md rechecked and matching
+ * immediately before this was written.
+ */
+const APPROVED_NEW_ROUTES_3 = new Map(
+  APPROVED_ARTICLES_3.map((a) => [`/insights/${a.slug}`, "articles 7 to 11, directed: \"I read articles 7 to 11 on production and approve all five, as served at c21a9c5\", recorded in BACKLOG.md with a hash per route"]),
+);
+for (const [route, why] of APPROVED_NEW_ROUTES_3) APPROVED_NEW_ROUTES.set(route, why);
+
 const routesLost = [...routesBefore].filter((r) => !routesAfter.has(r));
 const routesGainedAll = [...routesAfter].filter((r) => !routesBefore.has(r));
 const routesGained = routesGainedAll.filter((r) => !APPROVED_NEW_ROUTES.has(r));
@@ -1879,6 +1989,12 @@ if (batchIsNew(APPROVED_ARTICLES_2.map((a) => a.slug))) {
   FURNITURE_BOOK_2 = furnitureBudget(APPROVED_ARTICLES_2, WHY_2);
 }
 fundBatchFurniture(APPROVED_ARTICLES_2, WHY_2);
+
+const WHY_3 = "articles 7 to 11, directed: \"I read articles 7 to 11 on production and approve all five, as served at c21a9c5\", recorded in BACKLOG.md with a hash per route";
+if (batchIsNew(APPROVED_ARTICLES_3.map((a) => a.slug))) {
+  FURNITURE_BOOK_3 = furnitureBudget(APPROVED_ARTICLES_3, WHY_3);
+}
+fundBatchFurniture(APPROVED_ARTICLES_3, WHY_3);
 
 const report = {};
 const splits = {};
@@ -2168,6 +2284,7 @@ if (FURNITURE_LEDGER.length) {
   const books = [
     ['articles 1 and 2', FURNITURE_BOOK],
     ['articles 3 to 6', FURNITURE_BOOK_2],
+    ['articles 7 to 11', FURNITURE_BOOK_3],
   ];
   const short = [];
   for (const [label, book] of books) {
