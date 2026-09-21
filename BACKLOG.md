@@ -555,6 +555,25 @@ consultant` at 1,500 and KD 39 is the same subject from the other side, and
 a $6.00 CPC, are local_pack "find me a lawyer" queries that Craftline cannot
 satisfy at all.
 
+## Ruled: one article spells license the American way
+
+House style is British and stays British. `franchise-vs-license` is a scoped
+exception covering that article's slug, title, description, heading and body,
+plus the anchor text and href in `how-to-franchise-a-business` that point at
+it, because a link carries the title of the page it opens.
+
+The reason, as given: the search term is "franchise vs license", this is a
+Texas company, and the title has to lead with the target term.
+
+Everything else keeps the British spelling, and there is a fair amount of it:
+`/franchising`, the FAQ in `company.ts`, `images.ts`, and five articles use
+the word in passing. Changing any of those is a separate decision and a Rule
+One matter, because it would move text on pages nobody has approved to touch.
+
+This is recorded so the next session reads the mixed spelling as a ruled
+exception rather than as drift to be tidied up. Tidying it up in either
+direction is a content change to merged pages and needs its own approval.
+
 ## Closed: three merged articles failed the section rhythm rule
 
 `voice-audit` rule 9 failed three articles that were already on main when it

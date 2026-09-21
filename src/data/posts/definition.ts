@@ -7,7 +7,7 @@ import type { Insight } from "@/data/insights";
  * The prior clusters all assume the answer to one question: that the thing
  * being described is a franchise. These two articles are about the question
  * itself, from both sides of it. One is read by somebody being offered a
- * licence who wants to know what they are actually being offered. The other is
+ * license who wants to know what they are actually being offered. The other is
  * read by somebody who owns a business and is considering granting one.
  *
  * EVERY LEGAL CLAIM IN THIS FILE WAS VERIFIED AGAINST A PRIMARY SOURCE BEFORE
@@ -23,7 +23,7 @@ import type { Insight } from "@/data/insights";
  *   the Rule reaches relationships merely
  *   represented as having those characteristics,
  *   true or not                                    Guide, What Types of
- *   the single trademark licence exclusion         Guide, Single Trademark
+ *   the single trademark license exclusion         Guide, Single Trademark
  *   the required payment, large investment and
  *   large franchisee exemptions were all
  *   readjusted with effect from 12 July 2024,
@@ -40,7 +40,7 @@ import type { Insight } from "@/data/insights";
  *
  * THE STALE THRESHOLD IS THE FIND IN THIS PAIR, and it is a find about
  * staleness rather than about obscurity. Almost everything published on the
- * franchise versus licence question quotes the figure set when the Rule was
+ * franchise versus license question quotes the figure set when the Rule was
  * written. The Commission is required to adjust it for inflation every four
  * years and has done so, most recently with effect from 12 July 2024.
  *
@@ -61,6 +61,20 @@ import type { Insight } from "@/data/insights";
  * live decision the owner may want to reverse, in which case the honest route
  * is narrowing the audit rule with plants, not rephrasing around it.
  *
+ * ONE ARTICLE ON THIS PROPERTY SPELLS IT THE AMERICAN WAY, AND ONLY ONE.
+ *
+ * House style is British and every other page keeps it, including the two
+ * articles in this file's sibling cluster that use the word in passing. The
+ * exception is scoped to "franchise-vs-license" and covers its slug, title,
+ * description, heading and body, plus the anchor text and href in article 6
+ * that point at it, because a link carries the title of the page it opens.
+ *
+ * Directed, with the reasoning given: the search term is "franchise vs
+ * license", this is a Texas company, and the title has to lead with the target
+ * term. Changing house style anywhere else is a separate decision and a Rule
+ * One matter. Recorded here and in BACKLOG.md so the next session reads this
+ * as a ruled exception rather than as drift to be tidied up.
+ *
  * WHAT IS DELIBERATELY GENERALISED RATHER THAN ASSERTED. The number of states
  * with franchise registration, filing or relationship statutes is not stated
  * anywhere here, for the reason already recorded against the first two
@@ -78,17 +92,17 @@ import type { Insight } from "@/data/insights";
 
 export const DEFINITION_POSTS: Insight[] = [
   {
-    slug: "franchise-or-licence-what-separates-them",
-    title: "Franchise or licence: what legally separates them",
+    slug: "franchise-vs-license",
+    title: "Franchise vs license: what legally separates them",
     eyebrow: "The definition",
     description:
-      "Franchise or licence: the three elements that decide it, why the name on the document is irrelevant, and why the payment figure most pages quote is out of date.",
-    lead: "Calling an arrangement a licence does not make it one. The federal test has three elements and it does not read the title page.",
+      "Franchise vs license: the three elements that decide it, why the name on the document is irrelevant, and why the payment figure most pages quote is out of date.",
+    lead: "Calling an arrangement a license does not make it one. The federal test has three elements and it does not read the title page.",
     published: "2026-09-21",
     body: [
       {
         kind: "paragraph",
-        text: "The question arrives from two directions. A business owner wants to license a brand without becoming a franchisor. A prospective operator is offered something described as a licence or a dealership and wants to know what is actually on the table. Both are asking the same question, and the federal answer is the same for both.",
+        text: "The question arrives from two directions. A business owner wants to license a brand without becoming a franchisor. A prospective operator is offered something described as a license or a dealership and wants to know what is actually on the table. Both are asking the same question, and the federal answer is the same for both.",
       },
       {
         kind: "paragraph",
@@ -159,17 +173,17 @@ export const DEFINITION_POSTS: Insight[] = [
         text: "The practical point is not the arithmetic. A payment structure designed to sit under an old threshold may not sit under the current one, and any article giving the figure without a date is describing an unspecified moment. This page gives the source instead of the number, because the number has a shelf life and the source does not.",
       },
 
-      { kind: "heading", text: "The single trademark licence exclusion" },
+      { kind: "heading", text: "The single trademark license exclusion" },
       {
         kind: "paragraph",
         text: [
-          "There is a real trademark licence that is not a franchise, and the Rule excludes it. The guide describes it as an arrangement in which ",
+          "There is a real trademark license that is not a franchise, and the Rule excludes it. The guide describes it as an arrangement in which ",
           {
             text: "a single licensee is granted the right to use the trademark",
             href: "https://www.ftc.gov/system/files/documents/plain-language/bus70-franchise-rule-compliance-guide.pdf",
             external: true,
           },
-          ", and gives three examples: a one to one licence to a manufacturer producing goods to the licensor's specifications, collateral product licensing such as a drinks logo used on clothing, and a licence granted to an infringing party to settle trademark litigation.",
+          ", and gives three examples: a one to one license to a manufacturer producing goods to the licensor's specifications, collateral product licensing such as a drinks logo used on clothing, and a license granted to an infringing party to settle trademark litigation.",
         ],
       },
       {
@@ -198,7 +212,7 @@ export const DEFINITION_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "Getting this wrong is not a labelling error. It is offering an unregistered franchise, which is a different category of problem from a badly drafted licence, and it is why the question deserves a lawyer rather than a search result.",
+        text: "Getting this wrong is not a labelling error. It is offering an unregistered franchise, which is a different category of problem from a badly drafted license, and it is why the question deserves a lawyer rather than a search result.",
       },
 
       { kind: "heading", text: "What this does not establish" },
@@ -240,8 +254,8 @@ export const DEFINITION_POSTS: Insight[] = [
         text: [
           "The three part test applies whether or not anybody intended it to. Where you grant the right to operate under your mark, exert or may exert significant control over how that business is run or provide significant assistance with it, and require a payment, the arrangement is a franchise. ",
           {
-            text: "Franchise or licence, and what separates them",
-            href: "/insights/franchise-or-licence-what-separates-them",
+            text: "Franchise vs license, and what separates them",
+            href: "/insights/franchise-vs-license",
           },
           " sets out the test and the current payment threshold.",
         ],
