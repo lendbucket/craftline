@@ -151,10 +151,10 @@ export const DEFINITION_POSTS: Insight[] = [
         ],
       },
 
-      { kind: "heading", text: "The payment figure most published answers give is out of date" },
+      { kind: "heading", text: "The payment threshold, and the date it carries" },
       {
         kind: "paragraph",
-        text: "Nearly every page explaining this question quotes a five hundred dollar threshold. That figure was the one set when the Rule was written. It is not the current one, and the reason the number moves is the part worth knowing.",
+        text: "The threshold the Rule originally carried was five hundred dollars, and that is still the figure most often quoted for it. It is not the current one, and the reason the number moves is the part worth knowing.",
       },
       {
         kind: "paragraph",
@@ -165,7 +165,7 @@ export const DEFINITION_POSTS: Insight[] = [
             href: "https://www.ftc.gov/news-events/news/press-releases/2024/07/ftc-publishes-inflation-adjusted-monetary-thresholds-three-exemptions-franchise-rule",
             external: true,
           },
-          ", which makes this one of the few numbers in franchising that can simply be looked up rather than inferred.",
+          ": the required payment threshold is $735, the large investment exemption $1,469,600, and the large franchisee net worth exemption $7,348,000. Those are the figures as adjusted on that date, and the next adjustment will replace them.",
         ],
       },
       {
@@ -194,7 +194,7 @@ export const DEFINITION_POSTS: Insight[] = [
       { kind: "heading", text: "Control or assistance is the element people argue about" },
       {
         kind: "paragraph",
-        text: "The trademark element is usually obvious and the payment element is arithmetic. The one that produces genuine disagreement is the second. A supplier setting quality specifications has not thereby become a franchisor, while a company dictating site approval, opening hours, methods, pricing, training and operating procedures generally has. The guide devotes one section to when control or assistance becomes significant and another to what does not count, and both belong in any conclusion that an arrangement sits outside the Rule.",
+        text: "The payment element is arithmetic and the trademark element is a matter of record. The one that produces genuine disagreement is the second. A supplier setting quality specifications has not thereby become a franchisor, while a company dictating site approval, opening hours, methods, pricing, training and operating procedures is exercising the kind of control the element describes. The guide devotes one section to when control or assistance becomes significant and another to what does not count, and both belong in any conclusion that an arrangement sits outside the Rule.",
       },
 
       { kind: "heading", text: "Why it matters which one you have" },
@@ -219,7 +219,7 @@ export const DEFINITION_POSTS: Insight[] = [
       {
         kind: "paragraph",
         text: [
-          "This explains the federal test and where its current figures come from. It is not legal advice, several states define a franchise in their own statutes and some of those definitions are broader than the federal one, and whether a particular arrangement meets the test is a question of facts rather than of wording. Craftline has issued no Franchise Disclosure Document and is not offering anything. ",
+          "This explains the federal test and where its current figures come from. It is not legal advice, several states define a franchise in their own statutes and the federal test is not the only one that can apply, and whether a particular arrangement meets the test is a question of facts rather than of wording. Craftline has issued no Franchise Disclosure Document and is not offering anything. ",
           {
             text: "What Craftline does and does not claim to do",
             href: "/about",
@@ -241,7 +241,7 @@ export const DEFINITION_POSTS: Insight[] = [
     body: [
       {
         kind: "paragraph",
-        text: "The decision to franchise is usually framed as a growth question. What follows it is not a growth question. It is a compliance sequence with a fixed order, and knowing the order is what stops a plan being built backwards.",
+        text: "The decision to franchise is a growth question. What follows it is not. It is a compliance sequence with a fixed order, and knowing the order is what stops a plan being built backwards.",
       },
       {
         kind: "paragraph",
@@ -262,7 +262,7 @@ export const DEFINITION_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "This comes first because businesses arrive here by accident. A successful operator licenses the name to somebody in the next city, helps them set it up, takes a monthly fee, and has created a franchise with no disclosure document behind it.",
+        text: "This comes first because a business can arrive here by accident. A successful operator licenses the name to somebody in the next city, helps them set it up, takes a monthly fee, and has created a franchise with no disclosure document behind it.",
       },
       {
         kind: "paragraph",
@@ -292,14 +292,14 @@ export const DEFINITION_POSTS: Insight[] = [
         ],
       },
 
-      { kind: "heading", text: "Audited statements are the step most plans underestimate" },
+      { kind: "heading", text: "Audited statements, and what they need before they can start" },
       {
         kind: "paragraph",
         text: "An audit is neither a formality nor a quick one. It needs books that can be audited, which for a business run on management accounts can mean a period of remediation before an auditor will begin fieldwork at all.",
       },
       {
         kind: "paragraph",
-        text: "The phase in softens the first year rather than removing the requirement. Setting a launch date without an auditor's schedule already in hand is the most ordinary way a franchising timetable slips, and it slips by quarters rather than by weeks.",
+        text: "The phase in softens the first year rather than removing the requirement. A launch date set without an auditor's schedule already in hand is a date resting on an unknown, and the unknown is on the critical path rather than beside it.",
       },
 
       { kind: "heading", text: "Registration states come before any offer" },

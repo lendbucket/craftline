@@ -111,13 +111,13 @@ export const AGREEMENT_POSTS: Insight[] = [
       { kind: "heading", text: "What the document is made of" },
       {
         kind: "paragraph",
-        text: "Agreements vary in length and in temperament, and the parts are broadly consistent across systems. Knowing what each part is for makes a two hundred page document navigable rather than intimidating.",
+        text: "Agreements vary in length and in temperament. Knowing what each part is for is what makes a long document navigable rather than intimidating.",
       },
       {
         kind: "list",
         items: [
           "The grant. What you are licensed to do, under which marks, and for how long. This is short and it is the foundation of everything below it.",
-          "Term and renewal. How long the agreement runs, and on what conditions it can be renewed. Renewal is usually conditional rather than automatic.",
+          "Term and renewal. How long the agreement runs, and on what conditions it can be renewed. Whether renewal is automatic or conditional is settled here.",
           "Territory. What area you get and what the franchisor may still do inside it.",
           "Fees. The initial fee, the royalty, the marketing contribution, and any technology or transfer charges.",
           "Your obligations. Standards, training, reporting, systems you must use, and how the franchisor verifies all of it.",
@@ -131,14 +131,14 @@ export const AGREEMENT_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "The order varies and the weighting does not. Roughly a third of the document describes what you must do, a short section describes what the franchisor must do, and the remainder describes what happens when the first part is not met. That distribution is the shape of the deal, before a single clause is read.",
+        text: "The order varies between systems. Which of those parts takes the most room is worth measuring on any particular agreement, because the distribution is the shape of that deal before a single clause is read.",
       },
 
-      { kind: "heading", text: "The seven day rule, which is rarely mentioned" },
+      { kind: "heading", text: "The seven day rule, in the same section of the regulation" },
       {
         kind: "paragraph",
         text: [
-          "The 14 day period is well known. The second rule in the same section of the regulation is not, and it matters more in the final week before a signature. If the franchisor ",
+          "The 14 day period is one of two in that section of the regulation. The second governs the final week before a signature. If the franchisor ",
           {
             text: "unilaterally and materially alters the terms",
             href: "https://www.law.cornell.edu/cfr/text/16/436.2",
@@ -149,7 +149,15 @@ export const AGREEMENT_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "There is a carve out, and it is the part to understand. The seven day period does not apply to changes the prospective franchisee asked for. Something negotiated at your request can be papered and signed without a fresh wait; something the franchisor changed on its own cannot. If a revised agreement appears late and nobody can say which of those it was, that is the question to ask before signing.",
+        text: [
+          "There is a carve out, and it is the part to understand. The Rule ",
+          {
+            text: "expressly exempts changes initiated at the prospective franchisee's request",
+            href: "https://www.ftc.gov/system/files/documents/plain-language/bus70-franchise-rule-compliance-guide.pdf",
+            external: true,
+          },
+          ". Something negotiated at your request can be papered and signed without a fresh wait; something the franchisor changed on its own cannot. If a revised agreement appears late and nobody can say which of those it was, that is the question to ask before signing.",
+        ],
       },
 
       { kind: "heading", text: "What makes it a franchise at all" },
@@ -257,23 +265,31 @@ export const AGREEMENT_POSTS: Insight[] = [
       { kind: "heading", text: "Expiry is not termination" },
       {
         kind: "paragraph",
-        text: "An agreement that reaches the end of its term and is not renewed has ended without anybody having breached anything. This is the most common ending and the least discussed, because there is no dispute in it.",
+        text: "An agreement that reaches the end of its term and is not renewed has ended without anybody having breached anything. There is no dispute in it and nothing to litigate, which is why it gets less attention than the endings that produce both.",
       },
       {
         kind: "paragraph",
-        text: "Renewal is normally conditional. Typical conditions include being in good standing, signing the then current form of agreement rather than the one originally signed, bringing the premises or the equipment up to current standards, and paying a renewal fee. The second of those is the one that surprises people: renewing can mean accepting terms that did not exist when the first agreement was signed.",
+        text: [
+          "Renewal conditions are disclosed rather than customary. ",
+          {
+            text: "Item 17",
+            href: "https://www.law.cornell.edu/cfr/text/16/436.5",
+            external: true,
+          },
+          " carries a row for renewal or extension of the term and another for the requirements to renew or extend, which is where a system sets out what it wants: good standing, which form of agreement gets signed, bringing premises or equipment up to current standards, and a renewal fee. Signing the then current form rather than the original is the condition that changes the deal, because renewing can mean accepting terms that did not exist when the first agreement was signed.",
+        ],
       },
 
       { kind: "heading", text: "Default, cure, and the breaches with no cure" },
       {
         kind: "paragraph",
-        text: "Franchisor termination almost always runs through a default provision, and agreements generally sort defaults into two kinds.",
+        text: "Franchisor termination runs through the agreement's default provision, which sorts defaults into two kinds.",
       },
       {
         kind: "list",
         items: [
-          "Curable defaults, which come with a notice and a period to fix the problem. Late royalty payment, failure to report, and falling below an operating standard are usually here.",
-          "Defaults with no cure period, where the agreement ends on notice. Abandonment, insolvency, loss of a licence the business needs to operate, conviction for certain offences, and repeated defaults of the same kind are the common examples.",
+          "Curable defaults, which come with a notice and a period to fix the problem. Late royalty payment, failure to report, and falling below an operating standard are the kind that carries one.",
+          "Defaults with no cure period, where the agreement ends on notice. Abandonment, insolvency, loss of a licence the business needs to operate, conviction for certain offences, and repeated defaults of the same kind are the kind that carries none.",
         ],
       },
       {
@@ -284,17 +300,17 @@ export const AGREEMENT_POSTS: Insight[] = [
       { kind: "heading", text: "Getting out is harder than getting in" },
       {
         kind: "paragraph",
-        text: "Franchisee termination rights are usually far narrower than the franchisor's, and in many agreements they barely exist. A franchisee who wants out more often sells the business than terminates it, which means the transfer provisions, and not the termination provisions, are the ones that decide whether an exit is realistic.",
+        text: "Where a franchisee's termination rights are narrower than the franchisor's, an exit runs through a sale rather than through termination. The transfer provisions then decide whether an exit is realistic, which makes them the ones to read first.",
       },
       {
         kind: "paragraph",
-        text: "Those provisions typically require franchisor consent, give the franchisor a right of first refusal, require the buyer to qualify and to sign the current form of agreement, and charge a transfer fee. None of that is unusual. All of it affects what the business is worth to somebody else.",
+        text: "What those provisions require is disclosed in the same Item 17 table, which carries a row for the franchisor's approval of a transfer by the franchisee and another for the conditions of that approval: the buyer qualifying, a transfer fee, a release, and which form of agreement gets signed. All of it affects what the business is worth to somebody else.",
       },
 
       { kind: "heading", text: "What survives the ending" },
       {
         kind: "paragraph",
-        text: "Ending the agreement does not end every obligation in it. What continues is written down, and it usually includes de-identification, meaning removal of signage, marks, and anything that would let a customer think the business is still part of the brand. It usually includes returning manuals and confidential material. It usually includes a covenant restricting competing activity for a period within a defined area, and whether that covenant is enforceable, and how far, is a question of state law and of how the clause was drafted.",
+        text: "Ending the agreement does not end every obligation in it. What continues is written down, and the clauses to look for are de-identification, meaning removal of signage, marks, and anything that would let a customer think the business is still part of the brand; the return of manuals and confidential material; and a covenant restricting competing activity for a period within a defined area. Where that last one exists, whether it is enforceable and how far is a question of state law and of how the clause was drafted.",
       },
 
       { kind: "heading", text: "Where the real numbers are" },
@@ -311,7 +327,15 @@ export const AGREEMENT_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "For a particular system, there are real numbers and they are disclosed. Item 20 of the disclosure document carries outlet tables showing, year by year, how many units were terminated, not renewed, transferred, or ceased operations. Those are the figures worth reading, and they are about the system in front of you rather than about franchising in the abstract.",
+        text: [
+          "For a particular system, there are real numbers and they are disclosed. ",
+          {
+            text: "Item 20 of the disclosure document",
+            href: "https://www.law.cornell.edu/cfr/text/16/436.5",
+            external: true,
+          },
+          " carries the outlet tables for the last three fiscal years, including terminations, non-renewals, transfers, and outlets that ceased operations for other reasons. Those are the figures worth reading, and they are about the system in front of you rather than about franchising in the abstract.",
+        ],
       },
 
       { kind: "heading", text: "What this does not establish" },
@@ -357,7 +381,7 @@ export const AGREEMENT_POSTS: Insight[] = [
       { kind: "heading", text: "The schedule is the operative clause" },
       {
         kind: "paragraph",
-        text: "Most of an area development agreement is unremarkable. The part doing the work is the development schedule, usually a short table setting a date beside a cumulative number of open outlets. Almost everything else in the document exists either to support that table or to say what happens when it is not met.",
+        text: "Most of an area development agreement is unremarkable. The part doing the work is the development schedule, a table setting a date beside a cumulative number of open outlets. Everything else in the document exists either to support that table or to say what happens when it is not met.",
       },
       {
         kind: "paragraph",
@@ -367,7 +391,7 @@ export const AGREEMENT_POSTS: Insight[] = [
       { kind: "heading", text: "One development agreement, several franchise agreements" },
       {
         kind: "paragraph",
-        text: "The development agreement by itself does not let you operate anything. Each outlet opened under it is normally governed by its own franchise agreement, signed at or near the time that outlet opens, on the form the franchisor is using at that date.",
+        text: "The development agreement by itself does not let you operate anything. The outlet is governed by a franchise agreement of its own, signed at or near the time that outlet opens, on the form the franchisor is using at that date.",
       },
       {
         kind: "paragraph",
@@ -375,20 +399,20 @@ export const AGREEMENT_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "The fee structure divides along the same line. There is usually a development fee paid for the area and the schedule, and then an initial franchise fee for each outlet, often credited in part against the first. How the two interact is written down and it differs between systems.",
+        text: "The fee structure divides along the same line. Where there is a development fee for the area and the schedule, there is also an initial franchise fee for each outlet, and whether one is credited against the other is written down. How the two interact differs between systems.",
       },
 
       { kind: "heading", text: "What a missed deadline does" },
       {
         kind: "paragraph",
-        text: "Missing the schedule does not usually unwind what is already built. Outlets already open are governed by their own agreements and continue operating. What is at risk is the forward half of the deal, and the document will say which of the following applies.",
+        text: "A missed deadline puts the forward half of the deal at risk rather than the built half, because outlets already open are governed by their own agreements and continue operating on them. The document will say which of the following applies.",
       },
       {
         kind: "list",
         items: [
           "Loss of exclusivity in the area, so the franchisor may develop it or award it to somebody else, while the open outlets carry on.",
           "Loss of the right to open the remaining outlets, ending the development agreement without touching the franchise agreements already signed.",
-          "A cure right, typically a payment or a shortened extension. Some agreements grant one, some grant it once, and some do not have one at all.",
+          "A cure right, where the agreement grants one, such as a payment or a shortened extension. Some agreements grant it once and some do not have one at all.",
           "Acceleration, where development fees for the unopened outlets become payable whether or not those outlets are ever built.",
         ],
       },
@@ -439,7 +463,7 @@ export const AGREEMENT_POSTS: Insight[] = [
     body: [
       {
         kind: "paragraph",
-        text: "Franchise agreements run for a fixed term, commonly ten years, and the end of that term is automatic in neither direction. The agreement says whether there is a right to continue, what has to be true to exercise it, and what continuing actually means.",
+        text: "Franchise agreements run for a fixed term, and the end of that term is automatic in neither direction. The agreement says how long the term is, whether there is a right to continue, what has to be true to exercise it, and what continuing actually means.",
       },
       {
         kind: "paragraph",
@@ -495,7 +519,7 @@ export const AGREEMENT_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "What can change is not small. Royalty rate, advertising contribution, territory definition, technology requirements, remodel obligations and dispute resolution have all moved between generations of agreements in systems that publish both.",
+        text: "What can change is not small. Royalty rate, advertising contribution, territory definition, technology requirements, remodel obligations and dispute resolution all sit in the form of agreement, so every one of them is capable of differing between the form signed at the start and the form offered at renewal.",
       },
 
       { kind: "heading", text: "When a renewal owes you a new disclosure document" },
@@ -519,10 +543,10 @@ export const AGREEMENT_POSTS: Insight[] = [
         ],
       },
 
-      { kind: "heading", text: "What renewal usually costs" },
+      { kind: "heading", text: "What renewal can cost" },
       {
         kind: "paragraph",
-        text: "Renewal is rarely free, and the conditions live in the agreement rather than in general practice. A renewal fee is common. So is a requirement to remodel or re-equip to the current standard, which is frequently the larger number and is easy to miss because nothing labels it as a fee.",
+        text: "Renewal is not free by default, and the conditions live in the agreement rather than in general practice. A renewal fee is one line. A requirement to remodel or re-equip to the current standard is another, and where it applies it can be the larger number while nothing labels it as a fee.",
       },
       {
         kind: "paragraph",
