@@ -216,6 +216,50 @@ written by the session it is meant to constrain, in the commit it is meant to
 gate, is the control that only looks like one. This belongs to the owner, on
 GitHub, under an identity the agent does not hold.
 
+**Two checks agreeing is worth less than it sounds when they share a half.**
+
+Rule One has two halves, a capture and a comparison, and there are two tools
+that read the capture: `rule-one-compare.mjs` and
+`article-propagation-check.mjs`. They were written separately, they share no
+code, and on 21 September they returned the same figure, 3,602, for the same
+run. The overnight report presented that as two independent checks agreeing.
+
+That overstated it, and the overstatement is the point of this entry. Only the
+comparison logic is independent. Both read the same two JSON files, produced by
+the same capture, from the same build. Any defect in the capture is invisible
+to both of them, and they will agree about it confidently. An agreement between
+two readers of one artifact is evidence about the readers, not about the
+artifact.
+
+It was also weaker than that at the time. Planting two words onto a route,
+`the` and `Franchise`, was caught by the comparator and missed by the
+propagation check, because the second was still matching a vocabulary at word
+level. So the matching totals partly reflected the looser predicate agreeing
+with the stricter one, which is not corroboration at all.
+
+What to say instead, when both are green: the comparison was checked two ways
+against one capture. If the capture is the thing in doubt, neither of them
+helps, and the answer is a fresh capture from a fresh build rather than a
+second opinion on the old one.
+
+**Record a bound in the order it was actually arrived at.**
+
+Three tokens reach the word inventories with no block behind them, and the
+allowance for them is one of each per article in a batch. The order that number
+was arrived at is part of the record, because it was not derived and then
+checked.
+
+Twelve instances came back unfunded. A bound of one of each per article, for a
+four article batch, is twelve. The number was chosen because it matched, and
+only afterwards verified against the two card templates, which do turn out to
+emit exactly one "Read this" label per hub card and one separator per title on
+`/franchising`. The justification holds. The sequence was observe, size, then
+justify, and a bound sized to a result is worth less than one derived from a
+template even when the two agree.
+
+Anyone changing it should re-derive from the templates first and compare
+afterwards, which is the order this one missed.
+
 **A separate failure class: the data was right and the reader was not.**
 
 This is not the audit-checking-the-wrong-thing pattern above, and it is on the
