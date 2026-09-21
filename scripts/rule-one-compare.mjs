@@ -869,15 +869,28 @@ const SPLIT_WHY =
  *   miss   the run untouched
  *          -> CLEAN. 3602 approved delta(s) under 5 entries          SILENT
  *
- * A FIFTH PLANT FOUND SOMETHING ELSE AND IT IS NOT FIXED HERE.
+ * A FIFTH PLANT FOUND SOMETHING ELSE, AND IT IS FIXED NOW.
  *
  *   "Area development agreement: what it commits you to
  *    -> https://example.com/elsewhere"
  *
- * came back CLEAN. The exact branch above strips the suffix with
- * split(" -> ")[0] and never looks at the href, so an approved anchor text can
- * point anywhere, including off the property. Reported rather than changed,
- * because the owner rules on this machinery and has not seen it yet.
+ * came back CLEAN, because the exact branch stripped the suffix with
+ * split(" -> ")[0] and never looked at the href. An approved anchor text could
+ * point anywhere, including off the property, which is the shape of a link
+ * injection: keep the words a reviewer recognises, change where they go.
+ *
+ * Directed: "A card composition includes its href, and the href must equal
+ * that article's own path on this property. Any other approved anchor matches
+ * on text and href together."
+ *
+ * So every anchor form an article can produce is composed with the one href it
+ * may carry, and a value containing " -> " is now matched whole against that
+ * set. There is no path by which an anchor is approved on its text alone.
+ *
+ *   catch  an approved title pointing at https://example.com/elsewhere
+ *          -> NOT CLEAN. unapproved added=1                         CAUGHT
+ *   miss   the run untouched
+ *          -> CLEAN. 3602 approved delta(s) under 5 entries          SILENT
  */
 function cardCompositions(articles) {
   const out = new Set();
@@ -885,8 +898,11 @@ function cardCompositions(articles) {
     const href = `/insights/${a.slug}`;
     const related = `${a.eyebrow}${a.title}${a.description}`;
     const hub = `${a.eyebrow}${a.date}${a.title}${a.description}Read this: ${a.title}`;
+    /* Three anchor forms, each carrying the only href it may carry. */
+    out.add(`${a.title} -> ${href}`);
     out.add(`${related} -> ${href}`);
     out.add(`${hub} -> ${href}`);
+    /* The hub's screen reader suffix, which is not a link. */
     out.add(`: ${a.title}`);
   }
   return out;
@@ -1078,11 +1094,14 @@ const APPROVED_RULES = [
       /* Words are funded by the blocks below, never matched as a vocabulary. */
       if (WORD_FIELDS.has(field)) return false;
       if (ARTICLE_FURNITURE.has(v)) return true;
-      /* "H2:<title>" on the hub, and "<title> -> /insights/<slug>" anchors. */
-      const bare = v.replace(/^H[1-6]:/, "").split(" -> ")[0];
-      if (ARTICLE_STRINGS.has(bare)) return true;
-      /* A whole card, matched as one string rather than searched inside. */
-      return CARD_COMPOSITIONS.has(v);
+      /*
+        An anchor is matched on its text and its href together. Splitting the
+        href off and approving the text alone is what let an approved title
+        point at example.com.
+      */
+      if (v.includes(" -> ")) return CARD_COMPOSITIONS.has(v);
+      /* Not an anchor: a heading, a block, or the slug itself. */
+      return ARTICLE_STRINGS.has(v.replace(/^H[1-6]:/, "")) || CARD_COMPOSITIONS.has(v);
     },
   },
 
@@ -1096,11 +1115,8 @@ const APPROVED_RULES = [
       if (!batchIsNew(APPROVED_ARTICLES_2.map((a) => a.slug))) return false;
       if (WORD_FIELDS.has(field)) return false;
       if (ARTICLE_FURNITURE_2.has(v)) return true;
-      /* "H2:<title>" on the hub, and "<title> -> /insights/<slug>" anchors. */
-      const bare = v.replace(/^H[1-6]:/, "").split(" -> ")[0];
-      if (ARTICLE_STRINGS_2.has(bare)) return true;
-      /* A whole card, matched as one string rather than searched inside. */
-      return CARD_COMPOSITIONS_2.has(v);
+      if (v.includes(" -> ")) return CARD_COMPOSITIONS_2.has(v);
+      return ARTICLE_STRINGS_2.has(v.replace(/^H[1-6]:/, "")) || CARD_COMPOSITIONS_2.has(v);
     },
   },
 
