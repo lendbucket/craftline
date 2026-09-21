@@ -21,6 +21,38 @@ testimonials, and no reviews, because none of those are established.
 The founder's name is never rendered anywhere: not in copy, metadata, schema,
 image alt text, or the sitemap.
 
+**Why, and the status of this reasoning.** The rule was written into this file
+at the first commit and restated in seven other places, and none of them
+recorded a reason. In September 2026 a founder page was proposed, built on a
+branch, and ruled against by the owner, who then adopted the following as the
+rule's stated rationale. **This is reasoning adopted, not reasoning recovered.**
+It was reconstructed from where the rule sits rather than read out of any
+original note, and it is written down here so the next session does not have to
+reconstruct it again.
+
+Craftline is a franchisor in formation. Under the FTC Franchise Rule a
+franchisor's principals and their business experience are disclosed in **Item 2
+of the FDD**, which is a controlled document delivered with a waiting period
+before anything can be signed. A named principal making statements on a
+pre-disclosure marketing site is a different exposure profile from a corporate
+voice making the same statements, because the statements attach to a person.
+That is why the rule reaches schema, alt text and the sitemap, which is further
+than a privacy preference normally goes: those are all places a name becomes
+machine readable and quotable outside the page that carried it.
+
+Two things this rationale does not claim. It is not a privacy rule, and the
+owner's name is already published as `founder` in live schema on a property he
+owns that is not franchise gated. It is not a style rule either, and it has
+never appeared in the style section.
+
+**The condition on which it is revisitable.** This rule holds until an FDD
+exists and Item 2 is filed. At that point the principals are disclosed through
+the controlled channel, the exposure the rule was adopted to prevent has been
+addressed by the disclosure itself, and a founder page on this property becomes
+a normal decision rather than a gated one. Until then, the answer is no, and
+"the owner asked for it" is not sufficient on its own: the rule was reversed
+once on exactly that basis and then restored when the reasoning was examined.
+
 ## Franchise legal guardrails, non negotiable
 
 The FDD is not yet issued. Until it is, and in registration states until
