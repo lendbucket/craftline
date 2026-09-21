@@ -697,6 +697,41 @@ about registration at all.` The antecedent of `one` is `relationship law`,
 which is the list item's own label rather than anything in the sentence, so
 the pronoun points at nothing a reader has just been given. It was written
 in a hurry to remove `typically` and it removed the referent with it.
+## Ruled: articles 7 to 11 approved, entries not yet written
+
+**The word, 21 September 2026:** *"I read articles 7 to 11 on production and
+approve all five, as served at c21a9c5. Do not write the approval entries yet.
+They go in after PR #9 and (c) land, one approval commit, citing this message,
+against the 1ae77a3 baseline."*
+
+**It does not cover** the cleanup of articles 1 to 6, or the PR #6 metadata.
+Those remain unapproved and their removals remain unexplained.
+
+**Preconditions before the entries are written.**
+
+| | |
+|---|---|
+| PR #9, spent entries and furniture counts | merged at `40475b4` |
+| (c), removed side vocabulary deleted | **not yet built** |
+| form | one approval commit, `Kind: approval`, citing that message |
+| baseline | the 1ae77a3 production capture |
+
+**If any of the five has changed since `c21a9c5`, stop and report what
+changed rather than writing the entry.** These are the hashes of what was
+approved, taken from production served bytes: title, metas, canonical,
+headings, every main block, and the main word count.
+
+| hash | route |
+|---|---|
+| `655ff549ccfe793b` | `/insights/what-a-master-franchise-is` |
+| `38b70e446f11bceb` | `/insights/what-item-19-is` |
+| `2b9945a1d2f1c3a1` | `/insights/buying-an-existing-franchise` |
+| `742323a59deccb52` | `/insights/what-a-multi-unit-franchise-is` |
+| `fddfcdd755cb62ac` | `/insights/franchise-registration-states` |
+
+`c21a9c5..40475b4` changes nothing under `src/`, so these hashes describe
+both commits. Any later hash that differs means the approved text moved and
+the word no longer covers it.
 ## Ruled: one article spells license the American way
 
 House style is British and stays British. `franchise-vs-license` is a scoped
