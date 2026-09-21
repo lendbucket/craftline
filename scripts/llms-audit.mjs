@@ -121,9 +121,42 @@ function style(file, text) {
  * legitimately in the constraints block, which says they are not published, so
  * the check is scoped to a figure sitting beside one.
  */
+/**
+ * THE ONE CLASS OF MONEY FIGURE THAT MAY APPEAR, AND WHY IT IS A LIST.
+ *
+ * The blanket ban was right and stayed right through two rounds: a dollar
+ * amount lifted out of a machine readable file and attributed to Craftline is
+ * exactly the failure this audit exists to prevent, and a federal threshold
+ * looks like any other number once the sentence around it is gone.
+ *
+ * The owner has now directed that article 5 state the current exemption
+ * thresholds rather than cite them, which puts three figures into llms-full.
+ * When this conflict first came up the ruling was that the honest route is
+ * narrowing the rule with plants rather than rephrasing around a shape check,
+ * so that is what this is.
+ *
+ * LITERALS, NOT A PATTERN. Only these three exact figures pass, and they are
+ * the Commission's published exemption thresholds as adjusted on 12 July 2024.
+ * Any other amount fails, including a figure that merely looks regulatory.
+ * When the Commission readjusts, this list has to be edited by hand and the
+ * audit goes red until somebody does it, which is the correct amount of
+ * friction for a number that ages.
+ *
+ * INJECTION VERIFIED, both halves.
+ *   catch  "$12,500" added to llms-full.txt
+ *          -> llms-full.txt: money figure "$12,500"                 CAUGHT
+ *   miss   the three thresholds as article 5 renders them
+ *          -> ALL GREEN                                              SILENT
+ */
+const ALLOWED_MONEY = new Set(["$735", "$1,469,600", "$7,348,000"]);
+
 function withheldShapes(file, text) {
-  const money = text.match(/\$\s?[\d,]+/);
-  if (money) failures.push(`${file}: money figure "${money[0]}"`);
+  for (const hit of text.match(/\$\s?[\d,]+/g) ?? []) {
+    const bare = hit.replace(/\s/g, "").replace(/,$/, "");
+    if (ALLOWED_MONEY.has(bare)) continue;
+    failures.push(`${file}: money figure "${hit}"`);
+    break;
+  }
   const percent = text.match(/\b\d+(\.\d+)?\s?(percent|%)/i);
   if (percent) failures.push(`${file}: percentage figure "${percent[0]}"`);
   /*

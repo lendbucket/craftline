@@ -555,6 +555,63 @@ consultant` at 1,500 and KD 39 is the same subject from the other side, and
 a $6.00 CPC, are local_pack "find me a lawyer" queries that Craftline cannot
 satisfy at all.
 
+## Open: the capture holds no whole string for text beside an element child
+
+`rule-one-capture.mjs` builds its block inventories from leaf text. An
+element that carries its own text *and* has an element child is not a leaf,
+so its own text reaches `mainWords` and no block, anchor or heading holds it
+as a whole string. Nothing is checking those strings at block level.
+
+A scan of the built site found 108 such elements in 34 distinct shapes. Three
+account for 71 of them:
+
+| shape | count | where |
+|---|---|---|
+| `p.label-sm` carrying `Published` beside a `<time>` | 24 | every article page |
+| `p.text-datum` carrying `Read this` beside an `sr-only` span | 24 | every hub card |
+| `span` carrying `,` beside a title link | 23 | the `/franchising` title run |
+
+`Published` plus its date is the clearest case: it appears on 24 routes and
+**no inventory holds it as a string at all**. If it changed, only word level
+would notice, and word level cannot say what changed.
+
+The other 25 are article body links whose own text sits beside an `sr-only`
+"(opens in a new tab)". Those are covered, because `anchors` holds the
+combined text as one value.
+
+**The fix is in the capture, not the comparator.** `leafBlocks` should emit an
+element's own text as its own block when that element also has element
+children, so the string exists to be compared. That is a change to what every
+capture contains, so it invalidates stored captures and belongs in its own
+pull request, after #3 merges, with a fresh capture on both sides.
+
+**This retires the twelve token bound, and that bound is temporary because of
+this entry.** `rule-one-compare.mjs` currently funds `Read`, `this` and the
+comma at one of each per article in a batch, because those three tokens reach
+the word inventory with nothing behind them to pay for them. Once the capture
+emits the text as a block, the block funds its own words like any other and
+the special case has no work left to do. Delete it then rather than carrying
+it forward: a hand sized allowance for a capture defect outlives the defect
+unless somebody writes down that it should not.
+## Ruled: one article spells license the American way
+
+House style is British and stays British. `franchise-vs-license` is a scoped
+exception covering that article's slug, title, description, heading and body,
+plus the anchor text and href in `how-to-franchise-a-business` that point at
+it, because a link carries the title of the page it opens.
+
+The reason, as given: the search term is "franchise vs license", this is a
+Texas company, and the title has to lead with the target term.
+
+Everything else keeps the British spelling, and there is a fair amount of it:
+`/franchising`, the FAQ in `company.ts`, `images.ts`, and five articles use
+the word in passing. Changing any of those is a separate decision and a Rule
+One matter, because it would move text on pages nobody has approved to touch.
+
+This is recorded so the next session reads the mixed spelling as a ruled
+exception rather than as drift to be tidied up. Tidying it up in either
+direction is a content change to merged pages and needs its own approval.
+
 ## Closed: three merged articles failed the section rhythm rule
 
 `voice-audit` rule 9 failed three articles that were already on main when it

@@ -346,13 +346,21 @@ const APPROVED_ARTICLES = [
   },
 ];
 
+/*
+  STRINGS ONLY, AND THE MISSING WORD SET IS THE POINT.
+
+  A matching ARTICLE_WORDS set used to sit on the next line, and it was the
+  whole of the 1,220 defect: it approved any word appearing anywhere in these
+  titles or descriptions, so "the", "what", "is", "and" and "of" were approved
+  in unlimited quantity, on any article surface, by any later batch. It is
+  deliberately not replaced with a bounded version. A word now reaches approval
+  one way only, by sitting inside a block this run approved.
+*/
 const ARTICLE_STRINGS = new Set();
-const ARTICLE_WORDS = new Set();
 for (const a of APPROVED_ARTICLES) {
   ARTICLE_STRINGS.add(a.title);
   ARTICLE_STRINGS.add(a.description);
   ARTICLE_STRINGS.add(`/insights/${a.slug}`);
-  for (const w of `${a.title} ${a.description}`.split(/\s+/)) if (w) ARTICLE_WORDS.add(w);
 }
 
 /*
@@ -367,13 +375,7 @@ const ARTICLE_FURNITURE = new Set([
   ...APPROVED_ARTICLES.map((a) => a.date),
   "Read this",
 ]);
-const FURNITURE_WORDS = new Set([
-  ...APPROVED_ARTICLES.flatMap((a) => `${a.eyebrow} ${a.date}`.split(/\s+/)),
-  "Read",
-  "this",
-  ":",
-  ",",
-]);
+const CARD_COMPOSITIONS = cardCompositions(APPROVED_ARTICLES);
 
 /*
   The nine decided question and answer strings, read from the same export the
@@ -502,6 +504,34 @@ const swapWords = (side) => {
 const SWAP_FROM_WORDS = swapWords("from");
 const SWAP_TO_WORDS = swapWords("to");
 
+/**
+ * IS A STRING SUBSTITUTION STILL HAPPENING IN THIS RUN?
+ *
+ * The same ruling that retired the articles 1 and 2 entry applies here, and
+ * for the same reason: an approval covers what existed when it was given. A
+ * decision to replace one string with another is spent the moment the
+ * replacement has happened. It is live only while the old string is still in
+ * the before capture and the new one is not, which is precisely the run that
+ * performs the swap.
+ *
+ * Without this, a retired substitution goes on approving things for ever. It
+ * was doing exactly that: with the articles 1 and 2 entry dead, 537 word
+ * additions fell through to the retitle and 476 to the heading swaps, all of
+ * them caused by a later batch of articles and none of them by either
+ * decision. Same defect, two more places, found by fixing the first one.
+ */
+function substitutionIsLive(from, to) {
+  const beforeBlocks = valuesOf("before", "mainBlocks");
+  const afterBlocks = valuesOf("after", "mainBlocks");
+  const present = (set, needle) => {
+    for (const v of set) if (v.includes(needle)) return true;
+    return false;
+  };
+  return present(beforeBlocks, from) && !present(beforeBlocks, to)
+    ? true
+    : titlesBefore.has(from) && !titlesBefore.has(to) && present(afterBlocks, to);
+}
+
 function swapFor(field, kind, value) {
   const side = kind === "removed" ? "from" : "to";
   for (const s of SWAPS) {
@@ -510,6 +540,13 @@ function swapFor(field, kind, value) {
     if (value === `H2:${target}` || value === `H3:${target}`) return s.why;
   }
   if (field === "mainWords") {
+    /*
+      Word level only while the swap is actually being made. Once every "to"
+      string is in place, this branch has nothing left to explain and its
+      vocabulary would otherwise approve any later prose sharing a word.
+    */
+    const live = SWAPS.some((sw) => substitutionIsLive(sw.from, sw.to));
+    if (!live) return null;
     const words = kind === "removed" ? SWAP_FROM_WORDS : SWAP_TO_WORDS;
     if (words.has(value)) {
       return "word of an approved string swap";
@@ -657,11 +694,354 @@ for (const r of APPROVED_SPLITS) {
 const SPLIT_WHY =
   'restructure of the three uniform articles, directed: "Restructure the three, do not exempt them... Change block boundaries only"';
 
+/**
+ * ROUTE SCOPES. EVERY ENTRY SAYS WHICH ROUTES ITS DECISION COVERED.
+ * ================================================================
+ *
+ * Directed: "Scope the allowlist... Scope every entry to the routes its
+ * authorising decision covered."
+ *
+ * Before this, approval was a function of a value and nothing else, so an
+ * entry authorising a change on one page approved the identical string
+ * anywhere on the property. A value is now approved only if EVERY route it was
+ * added on falls inside the scope of the entry claiming it. Every, not any: a
+ * string landing on one approved route and one unapproved route fails, which
+ * is the case the loose version was silently passing.
+ *
+ * THE ARTICLE SCOPE IS A STRUCTURAL CLAIM, CHECKED AGAINST THE TEMPLATES
+ * RATHER THAN AGAINST THE DIFF. Exactly three route templates read the
+ * insights data: src/app/insights/page.tsx, src/app/insights/[slug]/page.tsx
+ * and src/app/franchising/page.tsx, plus src/app/sitemap.ts, which emits no
+ * text. Nothing else imports INSIGHTS or ORDERED_INSIGHTS. So an article can
+ * only reach /insights, /insights/<slug> and /franchising, and seven routes
+ * are structurally out of its reach: /, /about, /brands,
+ * /brands/wattsmith-electric, /contact, /privacy and /terms.
+ *
+ * Deriving the scope from which routes happened to change would have been the
+ * mirror pattern, reading the answer off the thing being checked. This claim
+ * is about what the code can render, which is checkable without any run.
+ *
+ * WHAT SCOPING DOES NOT FIX, said here rather than left to be discovered. The
+ * absorption that prompted it, where the articles 1 and 2 entry approved 1,612
+ * of the next batch's additions, is not a route problem. Both batches
+ * propagate onto the same three surfaces, so route scoping leaves that number
+ * exactly where it was. The absorption was a word level problem and it is
+ * fixed separately below, by replacing the static word list with a budget
+ * drawn from the blocks a run actually approved.
+ *
+ * INJECTION VERIFIED, both halves, per the standing rule.
+ *
+ * The plant is article 1's title, which is an already approved value, pushed
+ * into the after capture on one route at a time. The capture is edited rather
+ * than the site, because the thing under test is the comparison.
+ *
+ *   catch  "Franchise agreement: what is actually in one" on /privacy, a route
+ *          no article can structurally reach
+ *          -> ADDED      Franchise agreement: what is actually in one
+ *          listed as an unapproved addition                          CAUGHT
+ *
+ *   miss   the same string on /insights, which is inside the scope the
+ *          decision covered
+ *          -> ok added   Franchise agreement: what is actually in one
+ *             (articles 1 and 2, directed: "Approve the two new routes and
+ *             their propagation")                                    SILENT
+ *
+ * Before this change both runs printed the second line. The value was
+ * approved and the route was never consulted.
+ */
+/**
+ * AN APPROVAL COVERS WHAT EXISTED WHEN IT WAS GIVEN.
+ * =================================================
+ *
+ * Directed, and it settles a question this file could not: "an approval covers
+ * what existed when it was given. Copies caused by a later batch belong to
+ * that later batch's approval. Rescope the articles 1 and 2 entry to what it
+ * approved at the time, attribute the 1,220 to the batch that caused them."
+ *
+ * An article batch entry is therefore live only in the run that introduces its
+ * routes. Once those routes are present on both sides of the comparison, the
+ * batch caused nothing in this run and its entry approves nothing, whatever
+ * strings it happens to match.
+ *
+ * WHAT THE 1,220 ACTUALLY WAS, corrected. It was reported as two causes, one
+ * of them wrong. The claim that articles 1 and 2's own titles were appearing
+ * on more existing pages as the corpus grew does not survive checking: each
+ * title appears 23 times on the pre-existing routes before the batch and 23
+ * times after. Each article page renders every other article, so adding four
+ * articles adds four cards to each existing page, and takes nothing away from
+ * and adds nothing to the count of any older article's strings there.
+ *
+ * The single real cause was this entry's own mainWords branch, which asked
+ * whether a word appeared anywhere in its titles or descriptions. Those
+ * contain "the", "what", "is", "and" and "of", so any prose added anywhere on
+ * an article surface, by any later batch, matched. 340 instances of "the" were
+ * approved under a decision about two articles.
+ *
+ * So that branch is gone from both article entries rather than bounded. Word
+ * level approval now happens one way only: a block this run approved funds its
+ * own words, counted with multiplicity, and each funded instance remembers
+ * which entry paid for it. Word approval is a consequence of block approval
+ * instead of a second and looser path to the same verdict.
+ *
+ * THE SAME DEFECT WAS IN TWO MORE PLACES, AND FIXING THE FIRST ONE FOUND THEM.
+ * With the articles 1 and 2 entry dead, its 1,220 did not become unapproved.
+ * 537 fell through to the Ahrefs retitle, whose word rule matched any word of
+ * "Home services franchise: what the category actually is", and 476 to the
+ * heading swaps, whose word rule matched any word of any replacement heading.
+ * Both were approving prose written months after either decision. Both are now
+ * gated on the substitution actually being made in the run under comparison.
+ *
+ * INJECTION VERIFIED, both halves, on this run.
+ *
+ *   catch  "the" and "Franchise" pushed onto /insights at word level. Both are
+ *          words of articles 1 and 2's titles and of the retitled headline, so
+ *          all three retired entries would once have approved them, and no
+ *          block in this run funds either.
+ *          -> mainWords  0  2  0  3246
+ *             ADDED      Franchise
+ *             ADDED      the
+ *             NOT CLEAN. unapproved added=2                          CAUGHT
+ *
+ *   miss   the same run untouched
+ *          -> CLEAN. 3602 approved delta(s) under 5 allowlist entries  SILENT
+ *
+ * The entry count in that verdict is itself the tell. It was 7 before this
+ * change and is 5 after, because two retired decisions stopped claiming work
+ * that was never theirs.
+ */
+/**
+ * A CARD PASSES AS AN EXACT CONCATENATION OF ITS PARTS, OR NOT AT ALL.
+ * ====================================================================
+ *
+ * Directed: "A card block passes only as an exact concatenation of known card
+ * parts: eyebrow, date, title, description, in the order the template emits
+ * them. Delete the includes branch."
+ *
+ * WHAT THE INCLUDES BRANCH ADMITTED. It approved any value containing an
+ * approved title or description over thirty characters, however much other
+ * text was wrapped around it. A plant proved it: the paragraph
+ *
+ *   "Craftline expects to open its first eight territories across central
+ *    Texas during the coming year. Area development agreement: what it
+ *    commits you to"
+ *
+ * pushed onto /insights came back CLEAN. That is a territory availability
+ * claim and a unit count, and it passed because it ended with an approved
+ * title. Worse, an approved block funds its own words, so "territories",
+ * "Texas" and "eight" were approved at word level on the back of it.
+ *
+ * WHAT REPLACES IT. Every string a card can legitimately produce is composed
+ * here from the article's own literals, in the order the two templates emit
+ * them, and matched whole. Nothing is derived from the capture.
+ *
+ *   src/app/insights/page.tsx            eyebrow, date, title, description,
+ *                                        then "Read this" with an sr-only
+ *                                        ": <title>" suffix
+ *   src/app/insights/[slug]/page.tsx     eyebrow, title, description
+ *
+ * Each whole card is wrapped in one link, so these reach the inventory as
+ * anchor accessible names carrying " -> <href>". The bare title and the bare
+ * description are matched by the exact branch above and are not repeated here.
+ *
+ * DELIBERATELY TIGHT. Only the forms the templates actually emit today are
+ * composed. If a template changes, this goes red and names the string, which
+ * is the correct failure: a card shape nobody has looked at should stop the
+ * gate rather than slip through a wildcard.
+ *
+ * IT COST NOTHING. Every value the substring branch was carrying is covered by
+ * exact composition: 88 composed, 180 exact title or description, 88 exact
+ * furniture. Rule One returns the same 3,602 before and after.
+ *
+ * INJECTION VERIFIED, five plants, all run against the run that introduces
+ * articles 3 to 6.
+ *
+ *   catch  unrelated prose with an approved title concatenated onto it, the
+ *          plant that exposed the old branch
+ *          -> NOT CLEAN. unapproved added=24                        CAUGHT
+ *   catch  a real related card anchor with one word changed inside its
+ *          description, "a missed deadline" -> "a missed payment"
+ *          -> NOT CLEAN. unapproved added=1                         CAUGHT
+ *   catch  "H2:" followed by unrelated prose, against the prefix strip
+ *          -> NOT CLEAN. unapproved added=1                         CAUGHT
+ *   catch  unrelated prose followed by an approved href, against the suffix
+ *          strip
+ *          -> NOT CLEAN. unapproved added=1                         CAUGHT
+ *   miss   the run untouched
+ *          -> CLEAN. 3602 approved delta(s) under 5 entries          SILENT
+ *
+ * A FIFTH PLANT FOUND SOMETHING ELSE, AND IT IS FIXED NOW.
+ *
+ *   "Area development agreement: what it commits you to
+ *    -> https://example.com/elsewhere"
+ *
+ * came back CLEAN, because the exact branch stripped the suffix with
+ * split(" -> ")[0] and never looked at the href. An approved anchor text could
+ * point anywhere, including off the property, which is the shape of a link
+ * injection: keep the words a reviewer recognises, change where they go.
+ *
+ * Directed: "A card composition includes its href, and the href must equal
+ * that article's own path on this property. Any other approved anchor matches
+ * on text and href together."
+ *
+ * So every anchor form an article can produce is composed with the one href it
+ * may carry, and a value containing " -> " is now matched whole against that
+ * set. There is no path by which an anchor is approved on its text alone.
+ *
+ *   catch  an approved title pointing at https://example.com/elsewhere
+ *          -> NOT CLEAN. unapproved added=1                         CAUGHT
+ *   miss   the run untouched
+ *          -> CLEAN. 3602 approved delta(s) under 5 entries          SILENT
+ */
+function cardCompositions(articles) {
+  const out = new Set();
+  for (const a of articles) {
+    const href = `/insights/${a.slug}`;
+    const related = `${a.eyebrow}${a.title}${a.description}`;
+    const hub = `${a.eyebrow}${a.date}${a.title}${a.description}Read this: ${a.title}`;
+    /* Three anchor forms, each carrying the only href it may carry. */
+    out.add(`${a.title} -> ${href}`);
+    out.add(`${related} -> ${href}`);
+    out.add(`${hub} -> ${href}`);
+    /* The hub's screen reader suffix, which is not a link. */
+    out.add(`: ${a.title}`);
+  }
+  return out;
+}
+
+const WORD_FIELDS = new Set(["mainWords", "headerWords", "footerWords"]);
+const SITE_WIDE = () => true;
+const ARTICLE_SURFACES = (path) =>
+  path === "/insights" ||
+  path === "/franchising" ||
+  path.startsWith("/insights/");
+
+/**
+ * Is this batch the one being introduced by the run under comparison?
+ *
+ * Called from inside a rule test, so it reads routesGainedAll, which is built
+ * further down the file and is populated long before any test runs.
+ */
+function batchIsNew(slugs) {
+  return slugs.some((slug) => routesGainedAll.includes(`/insights/${slug}`));
+}
+
+/**
+ * PER CARD FURNITURE THAT ARRIVES AT WORD LEVEL WITH NO BLOCK BEHIND IT.
+ *
+ * Three tokens reach mainWords without any block of their own to fund them,
+ * and the templates say exactly how many of each an article batch causes:
+ *
+ *   "Read" and "this"   the hub renders one "Read this: <title>" label per
+ *                       card, and it lives inside the whole card anchor rather
+ *                       than in a block, so the anchor is approved at its own
+ *                       level and the words are left unfunded
+ *   ","                 /franchising lists every title in one comma separated
+ *                       run, so each added article adds one separator
+ *
+ * So the allowance is one of each per article in the batch, funded to the
+ * entry that introduced those articles. It is a count, not a vocabulary: a
+ * fifth "Read" in a four article batch is unapproved, and the tokens are named
+ * individually rather than matched by shape.
+ *
+ * This is the narrow replacement for what the old FURNITURE_WORDS sets did
+ * without any bound at all.
+ */
+const PER_ARTICLE_WORDS = ["Read", "this", ","];
+
+function fundBatchFurniture(articles, why) {
+  if (!batchIsNew(articles.map((a) => a.slug))) return;
+  for (const article of articles) {
+    void article;
+    for (const word of PER_ARTICLE_WORDS) fundWord("mainWords", word, why);
+  }
+}
+
+/** Every route a value landed on has to be inside the scope, or it fails. */
+function inScope(scope, routes) {
+  if (!scope) return false;
+  if (!routes || routes.size === 0) return true;
+  for (const path of routes) if (!scope(path)) return false;
+  return true;
+}
+
+
+/**
+ * ARTICLES 3 TO 6, APPROVED IN ADVANCE OF THE RUN THAT NEEDED IT.
+ *
+ * Authorising decision, quoted: "Articles three through six approved. My word,
+ * given here in advance: write the approval commit for the four routes and
+ * their propagation, citing this message as the authorising decision. Separate
+ * commit, no content in it."
+ *
+ * Literals again, not derived from the article data. The reason is the same
+ * one recorded against the first batch: an allowlist that reads the thing it
+ * is checking approves whatever that thing says, which is how a planted tenth
+ * FAQ question walked past this file once already.
+ *
+ * Article 5 is listed under its American spelling because that is what it
+ * renders. The exception is scoped to that one article and is recorded in
+ * BACKLOG.md and in the cluster header.
+ */
+const APPROVED_ARTICLES_2 = [
+  {
+    slug: "what-an-area-development-agreement-is",
+    title: "Area development agreement: what it commits you to",
+    description:
+      "Area development agreement: why the schedule is the operative clause, what a missed deadline puts at risk, and where the seven day rule reaches this document.",
+    eyebrow: "The agreement",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "how-franchise-renewal-works",
+    title: "Franchise renewal: what happens at the end of a term",
+    description:
+      "Franchise renewal often means signing the current agreement, not continuing the old one. What Item 17 must tell you, and when a new disclosure document is owed.",
+    eyebrow: "The agreement",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "franchise-vs-license",
+    title: "Franchise vs license: what legally separates them",
+    description:
+      "Franchise vs license: the three elements that decide it, why the name on the document is irrelevant, and why the payment figure most pages quote is out of date.",
+    eyebrow: "The definition",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "how-to-franchise-a-business",
+    title: "How to franchise a business: what the law requires",
+    description:
+      "How to franchise a business in the order the obligations bite: the three part test, the disclosure document, the audit, and registration before any offer.",
+    eyebrow: "Becoming a franchisor",
+    date: "September 21, 2026",
+  },
+];
+
+const ARTICLE_STRINGS_2 = new Set();
+for (const a of APPROVED_ARTICLES_2) {
+  ARTICLE_STRINGS_2.add(a.title);
+  ARTICLE_STRINGS_2.add(a.description);
+  ARTICLE_STRINGS_2.add(`/insights/${a.slug}`);
+}
+
+/*
+  Per card furniture for this batch. Two of the four reuse the eyebrow the
+  first batch already introduced, and two bring new ones. The date is new to
+  all four. "Read this" and the comma separator on /franchising are already
+  named by the first batch's entry and are not repeated here.
+*/
+const ARTICLE_FURNITURE_2 = new Set([
+  ...APPROVED_ARTICLES_2.map((a) => a.eyebrow),
+  ...APPROVED_ARTICLES_2.map((a) => a.date),
+]);
+const CARD_COMPOSITIONS_2 = cardCompositions(APPROVED_ARTICLES_2);
+
 const APPROVED_RULES = [
   /* ---- the four approved paragraph splits, block movement only ---- */
   {
     kind: "added",
     field: "mainBlocks",
+    scope: ARTICLE_SURFACES,
     why: SPLIT_WHY,
     test: (v) => {
       const r = SPLIT_HALVES.get(v);
@@ -679,6 +1059,7 @@ const APPROVED_RULES = [
   {
     kind: "removed",
     field: "*",
+    scope: SITE_WIDE,
     why: RETITLE_WHY,
     test: (v, field) =>
       v.includes(RETITLE_FROM) &&
@@ -687,6 +1068,7 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "*",
+    scope: SITE_WIDE,
     why: RETITLE_WHY,
     test: (v, field) =>
       v.includes(RETITLE_TO) &&
@@ -704,17 +1086,37 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "*",
+    scope: ARTICLE_SURFACES,
     why: 'articles 1 and 2, directed: "Approve the two new routes and their propagation"',
     test: (v, field) => {
-      if (field === "mainWords") {
-        return ARTICLE_WORDS.has(v) || FURNITURE_WORDS.has(v);
-      }
+      /* Spent. These two routes existed before any run this entry can reach. */
+      if (!batchIsNew(APPROVED_ARTICLES.map((a) => a.slug))) return false;
+      /* Words are funded by the blocks below, never matched as a vocabulary. */
+      if (WORD_FIELDS.has(field)) return false;
       if (ARTICLE_FURNITURE.has(v)) return true;
-      /* "H2:<title>" on the hub, and "<title> -> /insights/<slug>" anchors. */
-      const bare = v.replace(/^H[1-6]:/, "").split(" -> ")[0];
-      if (ARTICLE_STRINGS.has(bare)) return true;
-      /* Card blocks concatenate eyebrow, date, title and description. */
-      return [...ARTICLE_STRINGS].some((s) => s.length > 30 && v.includes(s));
+      /*
+        An anchor is matched on its text and its href together. Splitting the
+        href off and approving the text alone is what let an approved title
+        point at example.com.
+      */
+      if (v.includes(" -> ")) return CARD_COMPOSITIONS.has(v);
+      /* Not an anchor: a heading, a block, or the slug itself. */
+      return ARTICLE_STRINGS.has(v.replace(/^H[1-6]:/, "")) || CARD_COMPOSITIONS.has(v);
+    },
+  },
+
+  /* ---- articles 3 to 6, propagating onto existing pages ---- */
+  {
+    kind: "added",
+    field: "*",
+    scope: ARTICLE_SURFACES,
+    why: 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation."',
+    test: (v, field) => {
+      if (!batchIsNew(APPROVED_ARTICLES_2.map((a) => a.slug))) return false;
+      if (WORD_FIELDS.has(field)) return false;
+      if (ARTICLE_FURNITURE_2.has(v)) return true;
+      if (v.includes(" -> ")) return CARD_COMPOSITIONS_2.has(v);
+      return ARTICLE_STRINGS_2.has(v.replace(/^H[1-6]:/, "")) || CARD_COMPOSITIONS_2.has(v);
     },
   },
 
@@ -722,6 +1124,7 @@ const APPROVED_RULES = [
   {
     kind: "removed",
     field: "*",
+    scope: SITE_WIDE,
     why: 'CTA pattern, directed: "One position, two links, last block before the footer"',
     test: (v, field) => {
       if (field === "mainWords") return CTA_WORDS.has(v);
@@ -738,12 +1141,14 @@ const APPROVED_RULES = [
   {
     kind: "removed",
     field: "metas",
+    scope: SITE_WIDE,
     why: 'description lengths, directed: "Fix the short home description and the three long descriptions"',
     test: (v) => META_KEY.test(v) && OLD_DESCRIPTIONS.has(v.replace(META_KEY, "")),
   },
   {
     kind: "added",
     field: "metas",
+    scope: SITE_WIDE,
     why: 'description lengths, directed: "Fix the short home description and the three long descriptions"',
     test: (v) => META_KEY.test(v) && NEW_DESCRIPTIONS.has(v.replace(META_KEY, "")),
   },
@@ -751,12 +1156,14 @@ const APPROVED_RULES = [
   {
     kind: "removed",
     field: "title",
+    scope: SITE_WIDE,
     why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
     test: (v) => v === `${RETITLE_FROM}${BRAND_SUFFIX}`,
   },
   {
     kind: "added",
     field: "title",
+    scope: SITE_WIDE,
     why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
     test: (v) => v === RETITLE_TO,
   },
@@ -766,29 +1173,37 @@ const APPROVED_RULES = [
     A word is approved only if it is a word of the old headline (on the removed
     side) or of the new one (on the added side). Nothing else passes.
 
-    THE LIMIT, STATED RATHER THAN GLOSSED. These are multisets, so if some
-    unrelated change removed a further instance of a common word like "the",
-    this rule would approve that instance too. What stops that mattering is
-    that the block inventory is the stricter check and it is already clean:
-    mainBlocks reports zero unapproved, so no new or missing sentence exists
-    for a stray word to belong to. Word level is the backstop here, not the
-    authority.
+    THE LIMIT, AND WHAT NOW BOUNDS IT. These are multisets, so within the run
+    that performs the retitle an unrelated instance of a common word like "the"
+    would also be approved. Two things bound that. The block inventory is the
+    stricter check and is already clean, so no new or missing sentence exists
+    for a stray word to belong to. And both rules are now gated on the retitle
+    actually being made in this run: once the new headline is in place, they
+    approve nothing at all. Before that gate existed they approved 537 words
+    belonging to a batch of articles written months later.
   */
   {
     kind: "removed",
     field: "mainWords",
+    scope: SITE_WIDE,
     why: `${RETITLE_WHY} (word of the previous headline)`,
-    test: (v) => RETITLE_FROM.split(" ").includes(v),
+    test: (v) =>
+      substitutionIsLive(RETITLE_FROM, RETITLE_TO) &&
+      RETITLE_FROM.split(" ").includes(v),
   },
   {
     kind: "added",
     field: "mainWords",
+    scope: SITE_WIDE,
     why: `${RETITLE_WHY} (word of the new headline)`,
-    test: (v) => RETITLE_TO.split(" ").includes(v),
+    test: (v) =>
+      substitutionIsLive(RETITLE_FROM, RETITLE_TO) &&
+      RETITLE_TO.split(" ").includes(v),
   },
   {
     kind: "removed",
     field: "title",
+    scope: SITE_WIDE,
     why: 'title suffix: "Drop | Craftline Brands from article titles"',
     test: (v) =>
       v.endsWith(BRAND_SUFFIX) &&
@@ -797,12 +1212,14 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "title",
+    scope: SITE_WIDE,
     why: 'title suffix: "Drop | Craftline Brands from article titles"',
     test: (v) => titlesBefore.has(v + BRAND_SUFFIX),
   },
   {
     kind: "removed",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
     test: (v) =>
       v === "url=https://craftlinebrands.com/" ||
@@ -811,6 +1228,7 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
     test: (v) =>
       v === "url=https://craftlinebrands.com" ||
@@ -828,12 +1246,14 @@ const APPROVED_RULES = [
     */
     kind: "added",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'entity work, directed: "legalName from existing config", LEGAL_ENTITIES[1], the franchisor entity',
     test: (v) => v === "legalName=Craftline Brands Franchising LLC",
   },
   {
     kind: "added",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'FAQPage on /franchising, from FRANCHISE_FAQ, already rendered on the page',
     /*
       ANCHORED ON THE ACTUAL FAQ VALUES, NOT ON THE FIELD NAME.
@@ -857,6 +1277,7 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'breadcrumb schema on /privacy and /terms, directed',
     test: (v) =>
       /*
@@ -879,11 +1300,13 @@ const APPROVED_RULES = [
   },
 ];
 
-function ruleFor(field, kind, value) {
+function ruleFor(field, kind, value, routes) {
   for (const rule of APPROVED_RULES) {
     if (rule.field !== "*" && rule.field !== field) continue;
     if (rule.kind !== kind) continue;
-    if (rule.test(value, field)) return rule.why;
+    if (!rule.test(value, field)) continue;
+    if (!inScope(rule.scope, routes)) continue;
+    return rule.why;
   }
   return null;
 }
@@ -895,25 +1318,74 @@ const flat = (o) =>
 const APPROVED_REMOVED = flat(APPROVED.removed);
 const APPROVED_ADDED = flat(APPROVED.added);
 
-/* Words inside approved blocks, so word level does not have to be listed. */
-const APPROVED_WORDS = new Set();
-for (const list of Object.values(APPROVED.added)) {
-  for (const [value] of list) {
-    for (const w of String(value).split(/[\s>=-]+/)) if (w) APPROVED_WORDS.add(w);
-  }
+/**
+ * WORD LEVEL IS A BUDGET DRAWN FROM THE BLOCKS A RUN APPROVED, NOT A LIST.
+ *
+ * THE DEFECT THIS REPLACES, and it is the one the owner found rather than one
+ * the harness found. The old version built a Set of every word appearing in
+ * any approved value and then approved any word level addition matching it.
+ * The approved titles contain "the", "a", "what" and "is", so the entry for
+ * articles 1 and 2 approved those words in unlimited quantity, on any route,
+ * for ever. Running articles 3 to 6 against it, 1,612 of 3,602 additions came
+ * back pre-approved under a decision that had nothing to do with them, and the
+ * verdict line reported them as approved deltas.
+ *
+ * Route scoping does not touch this. Both batches propagate onto the same
+ * three surfaces, so every one of those 1,612 was inside the scope.
+ *
+ * WHAT REPLACES IT. The block inventories are the authority and the word
+ * inventories exist to catch what block boundaries can hide. So the words a
+ * run may approve are exactly the words inside the blocks that run approved,
+ * counted with multiplicity. A block approved on twenty routes appears twenty
+ * times in the site wide multiset, so it funds twenty copies of each of its
+ * words and not one more. A word arriving from anywhere else has no funding
+ * and fails.
+ *
+ * This is self limiting in the way the list was not: an entry cannot fund a
+ * batch it never approved, because the budget is built during the run from
+ * that run's approved blocks. Block fields are processed before their word
+ * fields, which FIELDS already guarantees and which is asserted below.
+ */
+/*
+  THE BUDGET CARRIES THE ENTRY THAT FUNDED EACH INSTANCE, not just a count.
+
+  Directed: "attribute the 1,220 to the batch that caused them". A count alone
+  cannot do that. Each funded instance now remembers which entry's block paid
+  for it, and spending one returns that entry's reason, so a word level
+  addition is reported under the decision that actually caused it rather than
+  under whichever entry happened to share vocabulary with it.
+*/
+const WORD_BUDGET = new Map();
+function fundWord(wordField, word, why) {
+  const key = `${wordField}|${word}`;
+  let queue = WORD_BUDGET.get(key);
+  if (!queue) WORD_BUDGET.set(key, (queue = []));
+  queue.push(why);
+}
+function spendWord(wordField, word) {
+  const queue = WORD_BUDGET.get(`${wordField}|${word}`);
+  if (!queue || queue.length === 0) return null;
+  return queue.shift();
 }
 
-const WORD_FIELDS = new Set(["mainWords", "headerWords", "footerWords"]);
-function approvalFor(field, kind, value) {
+function approvalFor(field, kind, value, routes) {
+  /*
+    The literal table and the string swaps are both site wide by decision. Each
+    one is a single edit to a shared component, a heading level, or a title
+    that propagates by design, so there is no narrower set of routes to name.
+    Written as an explicit SITE_WIDE check rather than by leaving the scope out,
+    so an entry with no scope reads as a decision and not as an oversight.
+  */
   const table = kind === "removed" ? APPROVED_REMOVED : APPROVED_ADDED;
   const hit = table[field]?.get(value);
-  if (hit) return hit;
-  const byRule = ruleFor(field, kind, value);
+  if (hit && inScope(SITE_WIDE, routes)) return hit;
+  const byRule = ruleFor(field, kind, value, routes);
   if (byRule) return byRule;
   const bySwap = swapFor(field, kind, value);
   if (bySwap) return bySwap;
-  if (kind === "added" && WORD_FIELDS.has(field) && APPROVED_WORDS.has(value)) {
-    return "word of an approved block";
+  if (kind === "added" && WORD_FIELDS.has(field)) {
+    const funded = spendWord(field, value);
+    if (funded) return `word of a block approved under: ${funded}`;
   }
   return null;
 }
@@ -1005,6 +1477,30 @@ const APPROVED_NEW_ROUTES = new Map([
   ],
 ]);
 
+
+/**
+ * THE SECOND BATCH OF ROUTES, APPROVED BEFORE THE DRAFTS WERE REREAD.
+ *
+ * This differs from the first batch in one way worth naming. The first was
+ * approved after the owner read the drafts. This one was approved in advance,
+ * in the same message that commissioned the rest of the night's work. The
+ * sequence protection that the first batch had, approval written after a human
+ * read the content, is therefore weaker here, and nothing in this file can
+ * make up the difference. What remains true is that the approval is in its own
+ * commit with no content in it, and that the drafts were reported in full
+ * before the instruction was given.
+ *
+ * Articles 7 to 11 are deliberately absent. They have no approval and the gate
+ * is red on them by design.
+ */
+const APPROVED_NEW_ROUTES_2 = new Map([
+  ["/insights/what-an-area-development-agreement-is", 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation, citing this message as the authorising decision."'],
+  ["/insights/how-franchise-renewal-works", 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation, citing this message as the authorising decision."'],
+  ["/insights/franchise-vs-license", 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation, citing this message as the authorising decision."'],
+  ["/insights/how-to-franchise-a-business", 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation, citing this message as the authorising decision."'],
+]);
+for (const [route, why] of APPROVED_NEW_ROUTES_2) APPROVED_NEW_ROUTES.set(route, why);
+
 const routesLost = [...routesBefore].filter((r) => !routesAfter.has(r));
 const routesGainedAll = [...routesAfter].filter((r) => !routesBefore.has(r));
 const routesGained = routesGainedAll.filter((r) => !APPROVED_NEW_ROUTES.has(r));
@@ -1014,6 +1510,20 @@ const sitemapGainedAll = minus(after.sitemap, before.sitemap);
 const sitemapGained = sitemapGainedAll.filter((r) => !APPROVED_NEW_ROUTES.has(r));
 
 /* ---------- per field, per route, then site wide ---------- */
+/*
+  Fund the per card furniture before any field is partitioned. routesGainedAll
+  exists by this point, so batchIsNew can answer, and every entry that is not
+  the batch being introduced funds nothing.
+*/
+fundBatchFurniture(
+  APPROVED_ARTICLES,
+  'articles 1 and 2, directed: "Approve the two new routes and their propagation"',
+);
+fundBatchFurniture(
+  APPROVED_ARTICLES_2,
+  'articles 3 to 6, directed: "Articles three through six approved... write the approval commit for the four routes and their propagation."',
+);
+
 const report = {};
 const splits = {};
 const shared = [...routesBefore].filter((r) => routesAfter.has(r));
@@ -1075,12 +1585,32 @@ for (const [field, get] of FIELDS) {
       }
     }
   }
+  /*
+    WHICH ROUTES EACH VALUE LANDED ON, so an entry can be held to its scope.
+
+    The diff above is a site wide multiset, which is what makes it immune to a
+    string moving between pages. Scoping needs the other view as well, so this
+    inverts the per route lists into value -> set of routes. A value appearing
+    on three routes carries all three, and inScope requires every one of them
+    to be inside the claiming entry's scope.
+  */
+  const routesOf = { added: new Map(), removed: new Map() };
+  const note = (map, value, path) => {
+    let set = map.get(value);
+    if (!set) map.set(value, (set = new Set()));
+    set.add(path);
+  };
+  for (const { path, gone, came } of perRoute) {
+    for (const v of came) note(routesOf.added, v, path);
+    for (const v of gone) note(routesOf.removed, v, path);
+  }
+
   /* Split each bucket into approved and unapproved. */
   const part = (values, kind) => {
     const ok = [];
     const bad = [];
     for (const v of values) {
-      const why = approvalFor(field, kind, v);
+      const why = approvalFor(field, kind, v, routesOf[kind].get(v));
       if (why) ok.push({ v, why });
       else bad.push(v);
     }
@@ -1088,6 +1618,26 @@ for (const [field, get] of FIELDS) {
   };
   const rem = part(siteGone, "removed");
   const add = part(siteCame, "added");
+
+  /*
+    FUND THE WORD BUDGET FROM THE BLOCKS THIS RUN APPROVED.
+
+    One instance of an approved block funds one copy of each of its words, so a
+    block approved on twenty routes funds twenty. Block fields are processed
+    before their word fields; the assertion below makes that ordering a
+    checked fact rather than a property of how FIELDS happens to be written.
+  */
+  if (BLOCK_FIELDS.has(field)) {
+    const wordField = WORDS_FOR_BLOCKS[field];
+    if (report[wordField]) {
+      throw new Error(
+        `${wordField} was partitioned before ${field} funded it; FIELDS order is wrong`,
+      );
+    }
+    for (const { v, why } of add.ok) {
+      for (const w of String(v).split(/\s+/)) if (w) fundWord(wordField, w, why);
+    }
+  }
   report[field] = {
     removed: rem.bad,
     removedApproved: rem.ok,
