@@ -207,6 +207,65 @@ made. And before any commit whose message makes a claim about its own scope,
 read `git diff --cached` rather than trusting the file list. The claim in the
 message is the thing being made, so it is the thing to check.
 
+**A plant on a value that already appears many times is measured by count,
+never by presence.**
+
+A word plant was reported twice as having flipped from red to green, and the
+report went further: it quoted a gross-against-net comparison as showing 129
+spare credits for "the" and concluded the budget had slack. A change was
+designed to close it.
+
+None of that was true. The classifier asked whether the string appeared on an
+approved line. "the" appears on hundreds of approved lines and hundreds of
+unapproved ones in the same run, so the answer was yes whatever the harness
+did. Measured properly, by planting one instance and counting the unapproved
+lines with and without it, the count rose by exactly one both before and after
+the change. The budget was already tight and the proposed fix would have
+turned 516 legitimately approved words into unapproved ones for nothing.
+
+The gross-against-net figure was the second error and it fed the first.
+Funding comes from APPROVED blocks; the 681 figure counted words in ALL added
+blocks. The two numbers were never comparable, and the difference between them
+was read as slack.
+
+**The rule. When a plant targets a value the capture already holds many
+copies of, the test is the change in count, not the presence of a line.**
+Record the count without the plant, plant one, record it again, and state the
+difference. A presence check on a duplicated value answers a question nobody
+asked.
+
+And when a measurement taken outside the harness is used to justify changing
+the harness, the two have to be computed over the same set. Otherwise the
+difference measures the disagreement between the methods rather than anything
+about the site.
+
+**Sample output is labelled with the plant that produced it.**
+
+A pull request body showed a harness printing
+
+    ### furniture the templates promised and the capture did not hold
+      "The definition"   expected: 21   found: 20
+
+beside a second sample taken from real data, with nothing to tell them apart.
+The first was manufactured: an eyebrow had been deleted from the capture to
+exercise that branch. Read as written it says a card is missing from
+production, which is a defect report about the live site, and it was neither
+true nor claimed to be false.
+
+Nobody was misled, because the owner asked. That is the point. The reader had
+to ask, and the answer lived only in this session.
+
+**The rule. Any sample of tool output in a report or a pull request body says
+where it came from, in the sample.** Real run, or which plant produced it. Not
+in a paragraph above it, because output gets quoted onward and the caption
+does not travel with it. A sample with no provenance reads as evidence about
+production, which is the strongest thing a sample can claim and the thing it
+is least often entitled to.
+
+This applies hardest to output that looks like a defect report. A harness
+prints the same words whether it found something or was shown something, and
+the difference is entirely in what the person running it did a moment earlier.
+
 **A one-off check is run against a known positive before its result is
 cited.**
 
