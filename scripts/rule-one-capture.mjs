@@ -28,6 +28,7 @@
  *   8  every JSON-LD block, flattened to sorted key and string value pairs
  *   9  the complete visible text of main, header and footer, separately
  *  10  the route set, from the prerendered output and from the sitemap
+ *  11  the lastmod the sitemap gives each route
  *
  * ON ITEM 9. The whole region as one string would differ on any reordering,
  * which is presentation rather than content, so it is captured two ways: as a
@@ -195,11 +196,33 @@ try {
     });
   }
 
-  /* ---- 10: the route set, from the sitemap ---- */
+  /* ---- 10 and 11: the route set and its dates, from the sitemap ---- */
   await page.goto(server.base + "/sitemap.xml", { waitUntil: "load" });
-  const sitemap = await page.evaluate(() =>
-    [...document.querySelectorAll("loc")].map((l) => l.textContent ?? ""),
+  const sitemapUrls = await page.evaluate(() =>
+    [...document.querySelectorAll("url")].map((u) => [
+      u.querySelector("loc")?.textContent ?? "",
+      u.querySelector("lastmod")?.textContent ?? "",
+    ]),
   );
+  const sitemap = sitemapUrls.map(([loc]) => loc);
+
+  /*
+    LASTMOD IS PART OF WHAT THE SITEMAP SAYS, AND NOTHING WAS READING IT.
+
+    The route set was captured and the dates beside it were not, so a lastmod
+    could move on every route in the file and fifteen inventories would agree
+    that nothing had changed. That is the shape of defect this harness exists
+    to catch, sitting inside the harness.
+
+    Stored as one string per route so the comparison prints a difference the
+    way it prints every other difference, rather than needing a shape of its
+    own. Routes with no lastmod, which is every static route by design, are
+    left out rather than recorded as empty.
+  */
+  const sitemapDates = sitemapUrls
+    .filter(([, lastmod]) => lastmod !== "")
+    .map(([loc, lastmod]) => `${loc.replace(/^https?:\/\/[^/]+/, "")} ${lastmod}`)
+    .sort();
 
   /*
     THE BUILD THIS WAS CAPTURED FROM, RECORDED SO A STALE CAPTURE CANNOT PASS.
@@ -226,6 +249,7 @@ try {
         builtAt,
         routeList: auditRoutes().map((r) => r.path).sort(),
         sitemap: sitemap.map((u) => u.replace(/^https?:\/\/[^/]+/, "")).sort(),
+        sitemapDates,
         routes,
       },
       null,
@@ -233,7 +257,7 @@ try {
     ),
   );
   console.log(
-    `${label}: captured ${Object.keys(routes).length} routes, ${sitemap.length} sitemap entries -> ${outFile}`,
+    `${label}: captured ${Object.keys(routes).length} routes, ${sitemap.length} sitemap entries, ${sitemapDates.length} with a lastmod -> ${outFile}`,
   );
   await context.close();
 } finally {

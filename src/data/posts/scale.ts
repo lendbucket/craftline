@@ -67,6 +67,8 @@ export const SCALE_POSTS: Insight[] = [
       "Master franchise: the right to sub-franchise an area makes you a franchisor under the federal rule, with disclosure obligations of your own.",
     lead: "A master franchise is sold as a territory. What it grants is the right to sell franchises, and that changes what you are rather than how much you have.",
     published: "2026-09-21",
+    /* Body, title, description or lead changed on 21 September 2026 in e00be98, 9d311ba. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
@@ -176,6 +178,8 @@ export const SCALE_POSTS: Insight[] = [
       "Buying an existing franchise often comes with no disclosure document, and one specific act by the franchisor changes that. What to read in its place.",
     lead: "Buying a unit that already trades removes most of the unknowns in a new franchise and adds one. You may not be entitled to a disclosure document at all.",
     published: "2026-09-21",
+    /* Body, title, description or lead changed on 21 September 2026 in e00be98, 9d311ba. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
@@ -284,6 +288,8 @@ export const SCALE_POSTS: Insight[] = [
       "Multi unit franchise ownership arrives by three different contracts with three different obligations, and one of them changes what the rule requires of you.",
     lead: "Owning several units of one brand is a single outcome reached by three routes, and the route decides what you are committed to long before the units exist.",
     published: "2026-09-21",
+    /* Body, title, description or lead changed on 21 September 2026 in e00be98. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",

@@ -139,6 +139,22 @@ export interface Insight {
    * a reader the piece changed when it did not.
    */
   published: string;
+  /**
+   * ISO date of the last MATERIAL change: body, title, description or lead.
+   * Optional, and absent on almost every post, because most posts have not
+   * been touched since they went up and a field repeating the publication
+   * date is noise a reader has to check before discarding.
+   *
+   * Metadata alone does not earn one. Correcting an eyebrow, a category or a
+   * typo in a field nobody reads does not change what the page says, and a
+   * lastmod that moves for those is the sort of signal crawlers learn to
+   * ignore. That is the same reasoning that keeps the static routes out of
+   * the sitemap's lastModified entirely.
+   *
+   * Hardcoded, for the same reason published is. A computed value would move
+   * on every deploy and tell a reader the piece changed when it did not.
+   */
+  updated?: string;
   body: Block[];
 }
 

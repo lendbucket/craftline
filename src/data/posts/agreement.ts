@@ -67,6 +67,8 @@ export const AGREEMENT_POSTS: Insight[] = [
       "Franchise agreement: what each part of the contract does, the 14 day and seven day waiting periods, and where the disclosure stops and the obligation starts.",
     lead: "The disclosure document is what you are shown. The agreement is what you sign. They are two different documents doing two different jobs, and only one of them binds you.",
     published: "2026-09-20",
+    /* Body, title, description or lead changed on 21 September 2026 in c6ae568, 5d670d0, 564b7f9. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
@@ -231,6 +233,8 @@ export const AGREEMENT_POSTS: Insight[] = [
       "Franchise termination is governed by the contract and by state law, not by the federal rule. The three ways an agreement ends, and what survives it.",
     lead: "A franchise agreement describes a relationship working and then describes it failing. The second half is where the asymmetries between the two sides are written down.",
     published: "2026-09-19",
+    /* Body, title, description or lead changed on 21 September 2026 in c6ae568, 5d670d0. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
@@ -361,6 +365,8 @@ export const AGREEMENT_POSTS: Insight[] = [
       "Area development agreement: why the schedule is the operative clause, what a missed deadline puts at risk, and where the seven day rule reaches this document.",
     lead: "A franchise agreement grants one business. An area development agreement grants the right to open several, and attaches a date to each one.",
     published: "2026-09-21",
+    /* Body, title, description or lead changed on 21 September 2026 in c6ae568. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
@@ -460,6 +466,8 @@ export const AGREEMENT_POSTS: Insight[] = [
       "Franchise renewal often means signing the current agreement, not continuing the old one. What Item 17 must tell you, and when a new disclosure document is owed.",
     lead: "A franchise term ends on a date written into the contract. What happens next is decided by a clause signed years before the date it governs arrives.",
     published: "2026-09-21",
+    /* Body, title, description or lead changed on 21 September 2026 in c6ae568, 5d670d0. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
