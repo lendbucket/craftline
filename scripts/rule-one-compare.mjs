@@ -375,6 +375,7 @@ const ARTICLE_FURNITURE = new Set([
   ...APPROVED_ARTICLES.map((a) => a.date),
   "Read this",
 ]);
+const CARD_COMPOSITIONS = cardCompositions(APPROVED_ARTICLES);
 
 /*
   The nine decided question and answer strings, read from the same export the
@@ -808,6 +809,89 @@ const SPLIT_WHY =
  * change and is 5 after, because two retired decisions stopped claiming work
  * that was never theirs.
  */
+/**
+ * A CARD PASSES AS AN EXACT CONCATENATION OF ITS PARTS, OR NOT AT ALL.
+ * ====================================================================
+ *
+ * Directed: "A card block passes only as an exact concatenation of known card
+ * parts: eyebrow, date, title, description, in the order the template emits
+ * them. Delete the includes branch."
+ *
+ * WHAT THE INCLUDES BRANCH ADMITTED. It approved any value containing an
+ * approved title or description over thirty characters, however much other
+ * text was wrapped around it. A plant proved it: the paragraph
+ *
+ *   "Craftline expects to open its first eight territories across central
+ *    Texas during the coming year. Area development agreement: what it
+ *    commits you to"
+ *
+ * pushed onto /insights came back CLEAN. That is a territory availability
+ * claim and a unit count, and it passed because it ended with an approved
+ * title. Worse, an approved block funds its own words, so "territories",
+ * "Texas" and "eight" were approved at word level on the back of it.
+ *
+ * WHAT REPLACES IT. Every string a card can legitimately produce is composed
+ * here from the article's own literals, in the order the two templates emit
+ * them, and matched whole. Nothing is derived from the capture.
+ *
+ *   src/app/insights/page.tsx            eyebrow, date, title, description,
+ *                                        then "Read this" with an sr-only
+ *                                        ": <title>" suffix
+ *   src/app/insights/[slug]/page.tsx     eyebrow, title, description
+ *
+ * Each whole card is wrapped in one link, so these reach the inventory as
+ * anchor accessible names carrying " -> <href>". The bare title and the bare
+ * description are matched by the exact branch above and are not repeated here.
+ *
+ * DELIBERATELY TIGHT. Only the forms the templates actually emit today are
+ * composed. If a template changes, this goes red and names the string, which
+ * is the correct failure: a card shape nobody has looked at should stop the
+ * gate rather than slip through a wildcard.
+ *
+ * IT COST NOTHING. Every value the substring branch was carrying is covered by
+ * exact composition: 88 composed, 180 exact title or description, 88 exact
+ * furniture. Rule One returns the same 3,602 before and after.
+ *
+ * INJECTION VERIFIED, five plants, all run against the run that introduces
+ * articles 3 to 6.
+ *
+ *   catch  unrelated prose with an approved title concatenated onto it, the
+ *          plant that exposed the old branch
+ *          -> NOT CLEAN. unapproved added=24                        CAUGHT
+ *   catch  a real related card anchor with one word changed inside its
+ *          description, "a missed deadline" -> "a missed payment"
+ *          -> NOT CLEAN. unapproved added=1                         CAUGHT
+ *   catch  "H2:" followed by unrelated prose, against the prefix strip
+ *          -> NOT CLEAN. unapproved added=1                         CAUGHT
+ *   catch  unrelated prose followed by an approved href, against the suffix
+ *          strip
+ *          -> NOT CLEAN. unapproved added=1                         CAUGHT
+ *   miss   the run untouched
+ *          -> CLEAN. 3602 approved delta(s) under 5 entries          SILENT
+ *
+ * A FIFTH PLANT FOUND SOMETHING ELSE AND IT IS NOT FIXED HERE.
+ *
+ *   "Area development agreement: what it commits you to
+ *    -> https://example.com/elsewhere"
+ *
+ * came back CLEAN. The exact branch above strips the suffix with
+ * split(" -> ")[0] and never looks at the href, so an approved anchor text can
+ * point anywhere, including off the property. Reported rather than changed,
+ * because the owner rules on this machinery and has not seen it yet.
+ */
+function cardCompositions(articles) {
+  const out = new Set();
+  for (const a of articles) {
+    const href = `/insights/${a.slug}`;
+    const related = `${a.eyebrow}${a.title}${a.description}`;
+    const hub = `${a.eyebrow}${a.date}${a.title}${a.description}Read this: ${a.title}`;
+    out.add(`${related} -> ${href}`);
+    out.add(`${hub} -> ${href}`);
+    out.add(`: ${a.title}`);
+  }
+  return out;
+}
+
 const WORD_FIELDS = new Set(["mainWords", "headerWords", "footerWords"]);
 const SITE_WIDE = () => true;
 const ARTICLE_SURFACES = (path) =>
@@ -934,6 +1018,7 @@ const ARTICLE_FURNITURE_2 = new Set([
   ...APPROVED_ARTICLES_2.map((a) => a.eyebrow),
   ...APPROVED_ARTICLES_2.map((a) => a.date),
 ]);
+const CARD_COMPOSITIONS_2 = cardCompositions(APPROVED_ARTICLES_2);
 
 const APPROVED_RULES = [
   /* ---- the four approved paragraph splits, block movement only ---- */
@@ -996,8 +1081,8 @@ const APPROVED_RULES = [
       /* "H2:<title>" on the hub, and "<title> -> /insights/<slug>" anchors. */
       const bare = v.replace(/^H[1-6]:/, "").split(" -> ")[0];
       if (ARTICLE_STRINGS.has(bare)) return true;
-      /* Card blocks concatenate eyebrow, date, title and description. */
-      return [...ARTICLE_STRINGS].some((s) => s.length > 30 && v.includes(s));
+      /* A whole card, matched as one string rather than searched inside. */
+      return CARD_COMPOSITIONS.has(v);
     },
   },
 
@@ -1014,8 +1099,8 @@ const APPROVED_RULES = [
       /* "H2:<title>" on the hub, and "<title> -> /insights/<slug>" anchors. */
       const bare = v.replace(/^H[1-6]:/, "").split(" -> ")[0];
       if (ARTICLE_STRINGS_2.has(bare)) return true;
-      /* Card blocks concatenate eyebrow, date, title and description. */
-      return [...ARTICLE_STRINGS_2].some((t) => t.length > 30 && v.includes(t));
+      /* A whole card, matched as one string rather than searched inside. */
+      return CARD_COMPOSITIONS_2.has(v);
     },
   },
 
