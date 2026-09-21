@@ -19,6 +19,17 @@ import { ORDERED_INSIGHTS } from "@/data/insights";
  * exception: they carry a real, hand set publication date, so they get a real
  * lastModified that only moves when someone actually changes the post.
  *
+ * THAT LAST SENTENCE WAS A CLAIM THIS FILE DID NOT KEEP. lastmod was the
+ * publication date, so it moved when a post was published and never again,
+ * whatever was done to the post afterwards. Eleven posts had their body,
+ * title, description or lead rewritten on 21 September. Nine of them had gone
+ * up the same day, so their dates were right by accident. Two had not, and
+ * those two were advertising a text that no longer existed.
+ *
+ * So lastmod is `updated` when a post carries one and `published` otherwise.
+ * `updated` is set by hand, only for a material change, and the rules for
+ * what counts are on the field itself in src/data/insights.ts.
+ *
  * There are no state pages and no city pages in this list, and none may be
  * added. This site targets national categories only.
  *
@@ -45,7 +56,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })),
     ...ORDERED_INSIGHTS.map((insight) => ({
       url: `${SITE_URL}/insights/${insight.slug}`,
-      lastModified: new Date(`${insight.published}T00:00:00Z`),
+      lastModified: new Date(`${insight.updated ?? insight.published}T00:00:00Z`),
       changeFrequency: "yearly" as const,
       priority: 0.6,
     })),

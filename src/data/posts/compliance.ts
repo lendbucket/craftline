@@ -69,6 +69,8 @@ export const COMPLIANCE_POSTS: Insight[] = [
       "Item 19 is the only place a franchisor may publish financial performance, and a franchisor with a blank one is forbidden to publish figures anywhere else.",
     lead: "Item 19 is where a disclosure document is allowed to talk about money. It is also the only place, and a franchisor with a blank one may not talk about it anywhere.",
     published: "2026-09-21",
+    /* Body, title, description or lead changed on 21 September 2026 in 90eb1a5, 5d670d0. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
@@ -207,6 +209,8 @@ export const COMPLIANCE_POSTS: Insight[] = [
       "Franchise registration states: why the counts disagree, what the statutes actually make unlawful, and the state that needs a filing while appearing on no list.",
     lead: "There is no federal list of registration states. The number you are given depends entirely on what the person giving it decided to count.",
     published: "2026-09-21",
+    /* Body, title, description or lead changed on 21 September 2026 in e00be98, 564b7f9. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
