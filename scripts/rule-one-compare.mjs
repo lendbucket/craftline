@@ -726,6 +726,82 @@ function inScope(scope, routes) {
   return true;
 }
 
+
+/**
+ * ARTICLES 3 TO 6, APPROVED IN ADVANCE OF THE RUN THAT NEEDED IT.
+ *
+ * Authorising decision, quoted: "Articles three through six approved. My word,
+ * given here in advance: write the approval commit for the four routes and
+ * their propagation, citing this message as the authorising decision. Separate
+ * commit, no content in it."
+ *
+ * Literals again, not derived from the article data. The reason is the same
+ * one recorded against the first batch: an allowlist that reads the thing it
+ * is checking approves whatever that thing says, which is how a planted tenth
+ * FAQ question walked past this file once already.
+ *
+ * Article 5 is listed under its American spelling because that is what it
+ * renders. The exception is scoped to that one article and is recorded in
+ * BACKLOG.md and in the cluster header.
+ */
+const APPROVED_ARTICLES_2 = [
+  {
+    slug: "what-an-area-development-agreement-is",
+    title: "Area development agreement: what it commits you to",
+    description:
+      "Area development agreement: why the schedule is the operative clause, what a missed deadline puts at risk, and where the seven day rule reaches this document.",
+    eyebrow: "The agreement",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "how-franchise-renewal-works",
+    title: "Franchise renewal: what happens at the end of a term",
+    description:
+      "Franchise renewal often means signing the current agreement, not continuing the old one. What Item 17 must tell you, and when a new disclosure document is owed.",
+    eyebrow: "The agreement",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "franchise-vs-license",
+    title: "Franchise vs license: what legally separates them",
+    description:
+      "Franchise vs license: the three elements that decide it, why the name on the document is irrelevant, and why the payment figure most pages quote is out of date.",
+    eyebrow: "The definition",
+    date: "September 21, 2026",
+  },
+  {
+    slug: "how-to-franchise-a-business",
+    title: "How to franchise a business: what the law requires",
+    description:
+      "How to franchise a business in the order the obligations bite: the three part test, the disclosure document, the audit, and registration before any offer.",
+    eyebrow: "Becoming a franchisor",
+    date: "September 21, 2026",
+  },
+];
+
+const ARTICLE_STRINGS_2 = new Set();
+const ARTICLE_WORDS_2 = new Set();
+for (const a of APPROVED_ARTICLES_2) {
+  ARTICLE_STRINGS_2.add(a.title);
+  ARTICLE_STRINGS_2.add(a.description);
+  ARTICLE_STRINGS_2.add(`/insights/${a.slug}`);
+  for (const w of `${a.title} ${a.description}`.split(/\s+/)) if (w) ARTICLE_WORDS_2.add(w);
+}
+
+/*
+  Per card furniture for this batch. Two of the four reuse the eyebrow the
+  first batch already introduced, and two bring new ones. The date is new to
+  all four. "Read this" and the comma separator on /franchising are already
+  named by the first batch's entry and are not repeated here.
+*/
+const ARTICLE_FURNITURE_2 = new Set([
+  ...APPROVED_ARTICLES_2.map((a) => a.eyebrow),
+  ...APPROVED_ARTICLES_2.map((a) => a.date),
+]);
+const FURNITURE_WORDS_2 = new Set(
+  APPROVED_ARTICLES_2.flatMap((a) => `${a.eyebrow} ${a.date}`.split(/\s+/)),
+);
+
 const APPROVED_RULES = [
   /* ---- the four approved paragraph splits, block movement only ---- */
   {
@@ -788,6 +864,25 @@ const APPROVED_RULES = [
       if (ARTICLE_STRINGS.has(bare)) return true;
       /* Card blocks concatenate eyebrow, date, title and description. */
       return [...ARTICLE_STRINGS].some((s) => s.length > 30 && v.includes(s));
+    },
+  },
+
+  /* ---- articles 3 to 6, propagating onto existing pages ---- */
+  {
+    kind: "added",
+    field: "*",
+    scope: ARTICLE_SURFACES,
+    why: 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation."',
+    test: (v, field) => {
+      if (field === "mainWords") {
+        return ARTICLE_WORDS_2.has(v) || FURNITURE_WORDS_2.has(v);
+      }
+      if (ARTICLE_FURNITURE_2.has(v)) return true;
+      /* "H2:<title>" on the hub, and "<title> -> /insights/<slug>" anchors. */
+      const bare = v.replace(/^H[1-6]:/, "").split(" -> ")[0];
+      if (ARTICLE_STRINGS_2.has(bare)) return true;
+      /* Card blocks concatenate eyebrow, date, title and description. */
+      return [...ARTICLE_STRINGS_2].some((t) => t.length > 30 && v.includes(t));
     },
   },
 
@@ -1133,6 +1228,30 @@ const APPROVED_NEW_ROUTES = new Map([
     'articles 1 and 2, directed: "Voice approved on both drafts. Approve the two new routes and their propagation."',
   ],
 ]);
+
+
+/**
+ * THE SECOND BATCH OF ROUTES, APPROVED BEFORE THE DRAFTS WERE REREAD.
+ *
+ * This differs from the first batch in one way worth naming. The first was
+ * approved after the owner read the drafts. This one was approved in advance,
+ * in the same message that commissioned the rest of the night's work. The
+ * sequence protection that the first batch had, approval written after a human
+ * read the content, is therefore weaker here, and nothing in this file can
+ * make up the difference. What remains true is that the approval is in its own
+ * commit with no content in it, and that the drafts were reported in full
+ * before the instruction was given.
+ *
+ * Articles 7 to 11 are deliberately absent. They have no approval and the gate
+ * is red on them by design.
+ */
+const APPROVED_NEW_ROUTES_2 = new Map([
+  ["/insights/what-an-area-development-agreement-is", 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation, citing this message as the authorising decision."'],
+  ["/insights/how-franchise-renewal-works", 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation, citing this message as the authorising decision."'],
+  ["/insights/franchise-vs-license", 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation, citing this message as the authorising decision."'],
+  ["/insights/how-to-franchise-a-business", 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation, citing this message as the authorising decision."'],
+]);
+for (const [route, why] of APPROVED_NEW_ROUTES_2) APPROVED_NEW_ROUTES.set(route, why);
 
 const routesLost = [...routesBefore].filter((r) => !routesAfter.has(r));
 const routesGainedAll = [...routesAfter].filter((r) => !routesBefore.has(r));
