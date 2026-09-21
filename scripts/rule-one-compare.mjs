@@ -424,6 +424,36 @@ const REMOVED_CTA_STRINGS = [
   "Craftline is developing its programme and no Franchise Disclosure Document has been issued. An inquiry starts a conversation and nothing else.",
   "An inquiry is read by a person and commits you to nothing. No Franchise Disclosure Document has been issued, so there is nothing to apply for yet.",
 ];
+/**
+ * THE THREE CTA ANCHORS, TEXT AND HREF TOGETHER.
+ *
+ * Four of the seven strings above are headings or paragraphs. Three were
+ * links, and the entry used to approve them by text alone: it split on " -> "
+ * and threw the href away. That is the hole that was closed on the two
+ * article entries and left open here, and it is the shape of a link
+ * injection: keep the words a reviewer recognises, change where they go.
+ *
+ * The hrefs are literals recovered from the tree as it stood before the CTA
+ * pattern shipped, at 07ec3b0^, rather than from any capture:
+ *
+ *   src/app/about/page.tsx            ctaHref="/franchising#inquiry"
+ *                                     ctaLabel="Franchise inquiry"
+ *                                     secondaryHref="/franchising"
+ *                                     secondaryLabel="How franchising works"
+ *   src/app/insights/[slug]/page.tsx  <Cta href="/insights">All insights</Cta>
+ *
+ * INJECTION VERIFIED, both halves.
+ *   catch  "All insights -> https://example.com/elsewhere" as a removed anchor
+ *          -> REMOVED, unapproved                                    CAUGHT
+ *   miss   "All insights -> /insights", the pair that actually existed
+ *          -> ok removed, CTA pattern named                          SILENT
+ */
+const CTA_ANCHORS = new Set([
+  "Franchise inquiry -> /franchising#inquiry",
+  "How franchising works -> /franchising",
+  "All insights -> /insights",
+]);
+
 const CTA_BLOCKS = new Set(REMOVED_CTA_STRINGS);
 const CTA_WORDS = new Set(
   REMOVED_CTA_STRINGS.flatMap((s) => s.split(/\s+/)).filter(Boolean),
@@ -952,7 +982,7 @@ function fundBatchFurniture(articles, why) {
   if (!batchIsNew(articles.map((a) => a.slug))) return;
   for (const article of articles) {
     void article;
-    for (const word of PER_ARTICLE_WORDS) fundWord("mainWords", word, why);
+    for (const word of PER_ARTICLE_WORDS) fundWord("added", "mainWords", word, why);
   }
 }
 
@@ -1217,12 +1247,11 @@ const APPROVED_RULES = [
     why: 'CTA pattern, directed: "One position, two links, last block before the footer"',
     test: (v, field) => {
       if (field === "mainWords") return CTA_WORDS.has(v);
+      /* An anchor is matched on its text and its href together, never text. */
+      if (v.includes(" -> ")) return CTA_ANCHORS.has(v);
       if (CTA_BLOCKS.has(v)) return true;
-      /* "H3:Evaluating a franchise?" and "All insights -> /insights". */
       const heading = v.replace(/^H[1-6]:/, "");
-      if (heading !== v && CTA_BLOCKS.has(heading)) return true;
-      const anchor = v.split(" -> ")[0];
-      return v.includes(" -> ") && CTA_BLOCKS.has(anchor);
+      return heading !== v && CTA_BLOCKS.has(heading);
     },
   },
 
@@ -1444,15 +1473,62 @@ const APPROVED_ADDED = flat(APPROVED.added);
   addition is reported under the decision that actually caused it rather than
   under whichever entry happened to share vocabulary with it.
 */
-const WORD_BUDGET = new Map();
-function fundWord(wordField, word, why) {
+/**
+ * TWO BUDGETS, ONE SHAPE. THE REMOVED SIDE IS NOT THE ADDED SIDE IN REVERSE.
+ *
+ * The added side has been funded from approved added blocks since the word
+ * vocabularies came out. The removed side had nothing: removals at word level
+ * were approved only by CTA_WORDS and the retitle's word lists, which are
+ * vocabularies with no count behind them. That is how the CTA entry came to
+ * approve the removed words "there" and "apply", which left articles 1 and 2
+ * in a content cleanup and have nothing to do with any call to action.
+ *
+ * WHEN THE REMOVED SIDE IS FUNDED, AND WHY THE TIMING IS THE WHOLE POINT.
+ * A block whose every word survives on the same route is reclassified SPLIT
+ * and never reaches the removed bucket: element boundaries moved, nothing
+ * went. Funding from the raw per route departures would pay for words that
+ * were never removed, and those credits would then be spent on words that
+ * genuinely were. So the removed side is funded from rem.ok, which is drawn
+ * from siteGone, which is computed after the SPLIT filter has run. The
+ * assertion below fails loudly if that order is ever reversed.
+ *
+ * INJECTION VERIFIED, both halves, and the first attempt proved nothing.
+ *
+ *   The first plant put an approved removed HEADING into the baseline. It came
+ *   back unapproved at word level and that was correct: headings are not a
+ *   block field, so an approved removed heading funds nothing. The plant was
+ *   measuring the wrong path.
+ *
+ *   The second put an approved removed mainBlocks value on a route where its
+ *   words survive. SPLIT reclassified it, it never reached the removed bucket,
+ *   and again nothing was funded. That is the reclassification working, and it
+ *   is the reason for the assertion below.
+ *
+ *   catch  the words "Corporate" and "structure" in the baseline with no block
+ *          and no vocabulary behind them
+ *          -> REMOVED Corporate / REMOVED structure, unapproved      CAUGHT
+ *
+ *   miss   the CTA block "Evaluating a franchise?" planted on /terms, where
+ *          its words do not survive
+ *          -> ok removed Evaluating a franchise?  (CTA pattern)
+ *             ok removed Evaluating  (word of a block approved under: CTA
+ *             pattern), and the same for "franchise?"                SILENT
+ *
+ * The attribution string is the point. Before this, those two words would have
+ * been approved by CTA_WORDS, which says only that a call to action decision
+ * exists somewhere. Now they name the block that paid for them.
+ */
+const WORD_BUDGET = { added: new Map(), removed: new Map() };
+function fundWord(side, wordField, word, why) {
+  const book = WORD_BUDGET[side];
+  if (!book) throw new Error(`no word budget for side "${side}"`);
   const key = `${wordField}|${word}`;
-  let queue = WORD_BUDGET.get(key);
-  if (!queue) WORD_BUDGET.set(key, (queue = []));
+  let queue = book.get(key);
+  if (!queue) book.set(key, (queue = []));
   queue.push(why);
 }
-function spendWord(wordField, word) {
-  const queue = WORD_BUDGET.get(`${wordField}|${word}`);
+function spendWord(side, wordField, word) {
+  const queue = WORD_BUDGET[side]?.get(`${wordField}|${word}`);
   if (!queue || queue.length === 0) return null;
   return queue.shift();
 }
@@ -1465,6 +1541,21 @@ function approvalFor(field, kind, value, routes) {
     Written as an explicit SITE_WIDE check rather than by leaving the scope out,
     so an entry with no scope reads as a decision and not as an oversight.
   */
+  /*
+    WORD LEVEL ASKS THE BUDGET BEFORE IT ASKS ANY VOCABULARY.
+
+    A word paid for by a block this run approved is attributable to the entry
+    that approved that block. A word matched by a vocabulary is attributable
+    to nothing in particular. Asking the budget first means the specific
+    answer wins and the vocabularies only ever see what the budget could not
+    pay for, which is also the set worth looking at when deciding whether a
+    vocabulary still earns its place.
+  */
+  if (WORD_FIELDS.has(field)) {
+    const funded = spendWord(kind, field, value);
+    if (funded) return `word of a block approved under: ${funded}`;
+  }
+
   const table = kind === "removed" ? APPROVED_REMOVED : APPROVED_ADDED;
   const hit = table[field]?.get(value);
   if (hit && inScope(SITE_WIDE, routes)) return hit;
@@ -1472,10 +1563,6 @@ function approvalFor(field, kind, value, routes) {
   if (byRule) return byRule;
   const bySwap = swapFor(field, kind, value);
   if (bySwap) return bySwap;
-  if (kind === "added" && WORD_FIELDS.has(field)) {
-    const funded = spendWord(field, value);
-    if (funded) return `word of a block approved under: ${funded}`;
-  }
   return null;
 }
 
@@ -1723,8 +1810,25 @@ for (const [field, get] of FIELDS) {
         `${wordField} was partitioned before ${field} funded it; FIELDS order is wrong`,
       );
     }
+    /*
+      rem.ok is drawn from siteGone, which the SPLIT filter above has already
+      removed the reclassified blocks from. Asserting it rather than trusting
+      it, because funding from the wrong list is silent and its effect is to
+      approve removals nobody made.
+    */
+    const splitValues = new Set((splits[field] ?? []).map((x) => x.value));
+    for (const { v } of rem.ok) {
+      if (splitValues.has(v)) {
+        throw new Error(
+          `${field}: a SPLIT block reached the removed bucket, so the removed budget would fund words that were never removed`,
+        );
+      }
+    }
     for (const { v, why } of add.ok) {
-      for (const w of String(v).split(/\s+/)) if (w) fundWord(wordField, w, why);
+      for (const w of String(v).split(/\s+/)) if (w) fundWord("added", wordField, w, why);
+    }
+    for (const { v, why } of rem.ok) {
+      for (const w of String(v).split(/\s+/)) if (w) fundWord("removed", wordField, w, why);
     }
   }
   report[field] = {
