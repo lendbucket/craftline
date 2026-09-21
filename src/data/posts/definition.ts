@@ -160,17 +160,30 @@ export const DEFINITION_POSTS: Insight[] = [
         kind: "paragraph",
         text: [
           "The Rule exempts arrangements where total required payments, from before operations begin to within six months after, fall below a threshold, and the Commission must adjust that threshold for inflation every four years. It has done so, most recently with effect from 12 July 2024, and the same adjustment moved the large investment and large franchisee exemptions with it. ",
+          "The Commission publishes them itself, and every one of them carries that date: the required payment threshold is ",
           {
-            text: "The Commission publishes the current figures itself",
+            text: "$735",
             href: "https://www.ftc.gov/news-events/news/press-releases/2024/07/ftc-publishes-inflation-adjusted-monetary-thresholds-three-exemptions-franchise-rule",
             external: true,
           },
-          ": the required payment threshold is $735, the large investment exemption $1,469,600, and the large franchisee net worth exemption $7,348,000. Those are the figures as adjusted on that date, and the next adjustment will replace them.",
+          ", the large investment exemption ",
+          {
+            text: "$1,469,600",
+            href: "https://www.ftc.gov/news-events/news/press-releases/2024/07/ftc-publishes-inflation-adjusted-monetary-thresholds-three-exemptions-franchise-rule",
+            external: true,
+          },
+          ", and the large franchisee net worth exemption ",
+          {
+            text: "$7,348,000",
+            href: "https://www.ftc.gov/news-events/news/press-releases/2024/07/ftc-publishes-inflation-adjusted-monetary-thresholds-three-exemptions-franchise-rule",
+            external: true,
+          },
+          ". The next adjustment replaces all three.",
         ],
       },
       {
         kind: "paragraph",
-        text: "The practical point is not the arithmetic. A payment structure designed to sit under an old threshold may not sit under the current one, and any article giving the figure without a date is describing an unspecified moment. This page gives the source instead of the number, because the number has a shelf life and the source does not.",
+        text: "The practical point is not the arithmetic. A payment structure designed to sit under an old threshold may not sit under the current one, and any article giving the figure without a date is describing an unspecified moment. This page gives both, and each figure links to the notice that set it, because the number has a shelf life and the source does not.",
       },
 
       { kind: "heading", text: "The single trademark license exclusion" },
