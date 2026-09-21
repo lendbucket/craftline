@@ -21,18 +21,18 @@ import type { Insight } from "@/data/insights";
  *
  *   the outlet count in an area development
  *   agreement is a substantive term that
- *   triggers the 7 day review period               FTC Compliance Guide, p 23
+ *   triggers the 7 day review period               Guide, Unilateral Material
  *   no disclosure document is owed to a
  *   franchisee exercising a right to open new
  *   outlets, or keeping an outlet post term,
  *   unless the new relationship is materially
- *   different                                      FTC Compliance Guide, p 19
+ *   different                                      Guide, Existing Franchisee
  *   renewal means a new agreement on then
  *   current terms in some systems and a simple
  *   extension in others, and Item 17 must say
- *   which                                          FTC Compliance Guide, p 81
+ *   which                                          Guide, Item 17 Renewals
  *   Item 17 must warn that renewal terms may
- *   differ materially from the original            FTC Compliance Guide, p 81
+ *   differ materially from the original            Guide, Item 17 Renewals
  *   Item 17 rows b and c cover renewal             16 CFR 436.5(q)
  *
  * The 7 day rule was the one worth the effort in the first pair. It is in the

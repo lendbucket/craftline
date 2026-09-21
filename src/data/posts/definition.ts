@@ -17,13 +17,13 @@ import type { Insight } from "@/data/insights";
  *   the three definitional elements                16 CFR 436.1(h)
  *   "whatever it may be called", and the name
  *   given to the arrangement is irrelevant         16 CFR 436.1(h);
- *                                                  FTC Compliance Guide, p 1
+ *                                                  Guide, What Types of
  *   a self described distributorship is covered
- *   only if the three elements are satisfied       FTC Compliance Guide, p 1
+ *   only if the three elements are satisfied       Guide, What Types of
  *   the Rule reaches relationships merely
  *   represented as having those characteristics,
- *   true or not                                    FTC Compliance Guide, p 1
- *   the single trademark licence exclusion         FTC Compliance Guide, p 16
+ *   true or not                                    Guide, What Types of
+ *   the single trademark licence exclusion         Guide, Single Trademark
  *   the required payment, large investment and
  *   large franchisee exemptions were all
  *   readjusted with effect from 12 July 2024,
