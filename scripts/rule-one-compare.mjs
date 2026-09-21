@@ -657,11 +657,81 @@ for (const r of APPROVED_SPLITS) {
 const SPLIT_WHY =
   'restructure of the three uniform articles, directed: "Restructure the three, do not exempt them... Change block boundaries only"';
 
+/**
+ * ROUTE SCOPES. EVERY ENTRY SAYS WHICH ROUTES ITS DECISION COVERED.
+ * ================================================================
+ *
+ * Directed: "Scope the allowlist... Scope every entry to the routes its
+ * authorising decision covered."
+ *
+ * Before this, approval was a function of a value and nothing else, so an
+ * entry authorising a change on one page approved the identical string
+ * anywhere on the property. A value is now approved only if EVERY route it was
+ * added on falls inside the scope of the entry claiming it. Every, not any: a
+ * string landing on one approved route and one unapproved route fails, which
+ * is the case the loose version was silently passing.
+ *
+ * THE ARTICLE SCOPE IS A STRUCTURAL CLAIM, CHECKED AGAINST THE TEMPLATES
+ * RATHER THAN AGAINST THE DIFF. Exactly three route templates read the
+ * insights data: src/app/insights/page.tsx, src/app/insights/[slug]/page.tsx
+ * and src/app/franchising/page.tsx, plus src/app/sitemap.ts, which emits no
+ * text. Nothing else imports INSIGHTS or ORDERED_INSIGHTS. So an article can
+ * only reach /insights, /insights/<slug> and /franchising, and seven routes
+ * are structurally out of its reach: /, /about, /brands,
+ * /brands/wattsmith-electric, /contact, /privacy and /terms.
+ *
+ * Deriving the scope from which routes happened to change would have been the
+ * mirror pattern, reading the answer off the thing being checked. This claim
+ * is about what the code can render, which is checkable without any run.
+ *
+ * WHAT SCOPING DOES NOT FIX, said here rather than left to be discovered. The
+ * absorption that prompted it, where the articles 1 and 2 entry approved 1,612
+ * of the next batch's additions, is not a route problem. Both batches
+ * propagate onto the same three surfaces, so route scoping leaves that number
+ * exactly where it was. The absorption was a word level problem and it is
+ * fixed separately below, by replacing the static word list with a budget
+ * drawn from the blocks a run actually approved.
+ *
+ * INJECTION VERIFIED, both halves, per the standing rule.
+ *
+ * The plant is article 1's title, which is an already approved value, pushed
+ * into the after capture on one route at a time. The capture is edited rather
+ * than the site, because the thing under test is the comparison.
+ *
+ *   catch  "Franchise agreement: what is actually in one" on /privacy, a route
+ *          no article can structurally reach
+ *          -> ADDED      Franchise agreement: what is actually in one
+ *          listed as an unapproved addition                          CAUGHT
+ *
+ *   miss   the same string on /insights, which is inside the scope the
+ *          decision covered
+ *          -> ok added   Franchise agreement: what is actually in one
+ *             (articles 1 and 2, directed: "Approve the two new routes and
+ *             their propagation")                                    SILENT
+ *
+ * Before this change both runs printed the second line. The value was
+ * approved and the route was never consulted.
+ */
+const SITE_WIDE = () => true;
+const ARTICLE_SURFACES = (path) =>
+  path === "/insights" ||
+  path === "/franchising" ||
+  path.startsWith("/insights/");
+
+/** Every route a value landed on has to be inside the scope, or it fails. */
+function inScope(scope, routes) {
+  if (!scope) return false;
+  if (!routes || routes.size === 0) return true;
+  for (const path of routes) if (!scope(path)) return false;
+  return true;
+}
+
 const APPROVED_RULES = [
   /* ---- the four approved paragraph splits, block movement only ---- */
   {
     kind: "added",
     field: "mainBlocks",
+    scope: ARTICLE_SURFACES,
     why: SPLIT_WHY,
     test: (v) => {
       const r = SPLIT_HALVES.get(v);
@@ -679,6 +749,7 @@ const APPROVED_RULES = [
   {
     kind: "removed",
     field: "*",
+    scope: SITE_WIDE,
     why: RETITLE_WHY,
     test: (v, field) =>
       v.includes(RETITLE_FROM) &&
@@ -687,6 +758,7 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "*",
+    scope: SITE_WIDE,
     why: RETITLE_WHY,
     test: (v, field) =>
       v.includes(RETITLE_TO) &&
@@ -704,6 +776,7 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "*",
+    scope: ARTICLE_SURFACES,
     why: 'articles 1 and 2, directed: "Approve the two new routes and their propagation"',
     test: (v, field) => {
       if (field === "mainWords") {
@@ -722,6 +795,7 @@ const APPROVED_RULES = [
   {
     kind: "removed",
     field: "*",
+    scope: SITE_WIDE,
     why: 'CTA pattern, directed: "One position, two links, last block before the footer"',
     test: (v, field) => {
       if (field === "mainWords") return CTA_WORDS.has(v);
@@ -738,12 +812,14 @@ const APPROVED_RULES = [
   {
     kind: "removed",
     field: "metas",
+    scope: SITE_WIDE,
     why: 'description lengths, directed: "Fix the short home description and the three long descriptions"',
     test: (v) => META_KEY.test(v) && OLD_DESCRIPTIONS.has(v.replace(META_KEY, "")),
   },
   {
     kind: "added",
     field: "metas",
+    scope: SITE_WIDE,
     why: 'description lengths, directed: "Fix the short home description and the three long descriptions"',
     test: (v) => META_KEY.test(v) && NEW_DESCRIPTIONS.has(v.replace(META_KEY, "")),
   },
@@ -751,12 +827,14 @@ const APPROVED_RULES = [
   {
     kind: "removed",
     field: "title",
+    scope: SITE_WIDE,
     why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
     test: (v) => v === `${RETITLE_FROM}${BRAND_SUFFIX}`,
   },
   {
     kind: "added",
     field: "title",
+    scope: SITE_WIDE,
     why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
     test: (v) => v === RETITLE_TO,
   },
@@ -777,18 +855,21 @@ const APPROVED_RULES = [
   {
     kind: "removed",
     field: "mainWords",
+    scope: SITE_WIDE,
     why: `${RETITLE_WHY} (word of the previous headline)`,
     test: (v) => RETITLE_FROM.split(" ").includes(v),
   },
   {
     kind: "added",
     field: "mainWords",
+    scope: SITE_WIDE,
     why: `${RETITLE_WHY} (word of the new headline)`,
     test: (v) => RETITLE_TO.split(" ").includes(v),
   },
   {
     kind: "removed",
     field: "title",
+    scope: SITE_WIDE,
     why: 'title suffix: "Drop | Craftline Brands from article titles"',
     test: (v) =>
       v.endsWith(BRAND_SUFFIX) &&
@@ -797,12 +878,14 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "title",
+    scope: SITE_WIDE,
     why: 'title suffix: "Drop | Craftline Brands from article titles"',
     test: (v) => titlesBefore.has(v + BRAND_SUFFIX),
   },
   {
     kind: "removed",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
     test: (v) =>
       v === "url=https://craftlinebrands.com/" ||
@@ -811,6 +894,7 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
     test: (v) =>
       v === "url=https://craftlinebrands.com" ||
@@ -828,12 +912,14 @@ const APPROVED_RULES = [
     */
     kind: "added",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'entity work, directed: "legalName from existing config", LEGAL_ENTITIES[1], the franchisor entity',
     test: (v) => v === "legalName=Craftline Brands Franchising LLC",
   },
   {
     kind: "added",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'FAQPage on /franchising, from FRANCHISE_FAQ, already rendered on the page',
     /*
       ANCHORED ON THE ACTUAL FAQ VALUES, NOT ON THE FIELD NAME.
@@ -857,6 +943,7 @@ const APPROVED_RULES = [
   {
     kind: "added",
     field: "jsonLd",
+    scope: SITE_WIDE,
     why: 'breadcrumb schema on /privacy and /terms, directed',
     test: (v) =>
       /*
@@ -879,11 +966,13 @@ const APPROVED_RULES = [
   },
 ];
 
-function ruleFor(field, kind, value) {
+function ruleFor(field, kind, value, routes) {
   for (const rule of APPROVED_RULES) {
     if (rule.field !== "*" && rule.field !== field) continue;
     if (rule.kind !== kind) continue;
-    if (rule.test(value, field)) return rule.why;
+    if (!rule.test(value, field)) continue;
+    if (!inScope(rule.scope, routes)) continue;
+    return rule.why;
   }
   return null;
 }
@@ -895,25 +984,65 @@ const flat = (o) =>
 const APPROVED_REMOVED = flat(APPROVED.removed);
 const APPROVED_ADDED = flat(APPROVED.added);
 
-/* Words inside approved blocks, so word level does not have to be listed. */
-const APPROVED_WORDS = new Set();
-for (const list of Object.values(APPROVED.added)) {
-  for (const [value] of list) {
-    for (const w of String(value).split(/[\s>=-]+/)) if (w) APPROVED_WORDS.add(w);
-  }
+/**
+ * WORD LEVEL IS A BUDGET DRAWN FROM THE BLOCKS A RUN APPROVED, NOT A LIST.
+ *
+ * THE DEFECT THIS REPLACES, and it is the one the owner found rather than one
+ * the harness found. The old version built a Set of every word appearing in
+ * any approved value and then approved any word level addition matching it.
+ * The approved titles contain "the", "a", "what" and "is", so the entry for
+ * articles 1 and 2 approved those words in unlimited quantity, on any route,
+ * for ever. Running articles 3 to 6 against it, 1,612 of 3,602 additions came
+ * back pre-approved under a decision that had nothing to do with them, and the
+ * verdict line reported them as approved deltas.
+ *
+ * Route scoping does not touch this. Both batches propagate onto the same
+ * three surfaces, so every one of those 1,612 was inside the scope.
+ *
+ * WHAT REPLACES IT. The block inventories are the authority and the word
+ * inventories exist to catch what block boundaries can hide. So the words a
+ * run may approve are exactly the words inside the blocks that run approved,
+ * counted with multiplicity. A block approved on twenty routes appears twenty
+ * times in the site wide multiset, so it funds twenty copies of each of its
+ * words and not one more. A word arriving from anywhere else has no funding
+ * and fails.
+ *
+ * This is self limiting in the way the list was not: an entry cannot fund a
+ * batch it never approved, because the budget is built during the run from
+ * that run's approved blocks. Block fields are processed before their word
+ * fields, which FIELDS already guarantees and which is asserted below.
+ */
+const WORD_BUDGET = new Map();
+function fundWord(wordField, word) {
+  const key = `${wordField}|${word}`;
+  WORD_BUDGET.set(key, (WORD_BUDGET.get(key) ?? 0) + 1);
+}
+function spendWord(wordField, word) {
+  const key = `${wordField}|${word}`;
+  const n = WORD_BUDGET.get(key) ?? 0;
+  if (n <= 0) return false;
+  WORD_BUDGET.set(key, n - 1);
+  return true;
 }
 
 const WORD_FIELDS = new Set(["mainWords", "headerWords", "footerWords"]);
-function approvalFor(field, kind, value) {
+function approvalFor(field, kind, value, routes) {
+  /*
+    The literal table and the string swaps are both site wide by decision. Each
+    one is a single edit to a shared component, a heading level, or a title
+    that propagates by design, so there is no narrower set of routes to name.
+    Written as an explicit SITE_WIDE check rather than by leaving the scope out,
+    so an entry with no scope reads as a decision and not as an oversight.
+  */
   const table = kind === "removed" ? APPROVED_REMOVED : APPROVED_ADDED;
   const hit = table[field]?.get(value);
-  if (hit) return hit;
-  const byRule = ruleFor(field, kind, value);
+  if (hit && inScope(SITE_WIDE, routes)) return hit;
+  const byRule = ruleFor(field, kind, value, routes);
   if (byRule) return byRule;
   const bySwap = swapFor(field, kind, value);
   if (bySwap) return bySwap;
-  if (kind === "added" && WORD_FIELDS.has(field) && APPROVED_WORDS.has(value)) {
-    return "word of an approved block";
+  if (kind === "added" && WORD_FIELDS.has(field) && spendWord(field, value)) {
+    return "word of a block approved in this run";
   }
   return null;
 }
@@ -1075,12 +1204,32 @@ for (const [field, get] of FIELDS) {
       }
     }
   }
+  /*
+    WHICH ROUTES EACH VALUE LANDED ON, so an entry can be held to its scope.
+
+    The diff above is a site wide multiset, which is what makes it immune to a
+    string moving between pages. Scoping needs the other view as well, so this
+    inverts the per route lists into value -> set of routes. A value appearing
+    on three routes carries all three, and inScope requires every one of them
+    to be inside the claiming entry's scope.
+  */
+  const routesOf = { added: new Map(), removed: new Map() };
+  const note = (map, value, path) => {
+    let set = map.get(value);
+    if (!set) map.set(value, (set = new Set()));
+    set.add(path);
+  };
+  for (const { path, gone, came } of perRoute) {
+    for (const v of came) note(routesOf.added, v, path);
+    for (const v of gone) note(routesOf.removed, v, path);
+  }
+
   /* Split each bucket into approved and unapproved. */
   const part = (values, kind) => {
     const ok = [];
     const bad = [];
     for (const v of values) {
-      const why = approvalFor(field, kind, v);
+      const why = approvalFor(field, kind, v, routesOf[kind].get(v));
       if (why) ok.push({ v, why });
       else bad.push(v);
     }
@@ -1088,6 +1237,26 @@ for (const [field, get] of FIELDS) {
   };
   const rem = part(siteGone, "removed");
   const add = part(siteCame, "added");
+
+  /*
+    FUND THE WORD BUDGET FROM THE BLOCKS THIS RUN APPROVED.
+
+    One instance of an approved block funds one copy of each of its words, so a
+    block approved on twenty routes funds twenty. Block fields are processed
+    before their word fields; the assertion below makes that ordering a
+    checked fact rather than a property of how FIELDS happens to be written.
+  */
+  if (BLOCK_FIELDS.has(field)) {
+    const wordField = WORDS_FOR_BLOCKS[field];
+    if (report[wordField]) {
+      throw new Error(
+        `${wordField} was partitioned before ${field} funded it; FIELDS order is wrong`,
+      );
+    }
+    for (const { v } of add.ok) {
+      for (const w of String(v).split(/\s+/)) if (w) fundWord(wordField, w);
+    }
+  }
   report[field] = {
     removed: rem.bad,
     removedApproved: rem.ok,
