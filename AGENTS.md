@@ -177,6 +177,55 @@ reachable from a commit, and the owner set them up. CODEOWNERS is the one place
 the recursion works in our favour, because editing it is itself a CODEOWNERS
 change requiring the same review.
 
+**A state check is only true at the moment it runs, and a report is not that
+moment.**
+
+On 21 September a session verified that `origin/main` was unchanged, that five
+pull requests were open, and that production served 29 routes. It then worked
+for ten minutes and published a report giving those findings as current state.
+The owner had merged all five pull requests between 15:44:50 and 15:45:35 UTC,
+inside that window, and two of the session's own commits are stamped 15:52.
+Every figure in the report was true when measured and false when read.
+
+This is the stale capture in a different costume. There, a comparison read a
+leftover file and reported CLEAN about a state that no longer existed. Here, a
+report read a leftover measurement and did the same thing, and nothing in the
+harness could have caught it, because nothing in the harness knows what a
+report says.
+
+**The rule. Any state that can change outside this session is re-checked as the
+last act before the report that states it.** That means `git fetch` and the
+remote refs, pull request status, production served bytes, and any deployment
+state. Not at the top of the work, not in the middle, last. If a check is
+expensive enough that running it twice is a real cost, it runs once, at the
+end, and the earlier pass is treated as orientation rather than as a finding.
+
+Two corollaries worth writing down. A figure carried forward from an earlier
+step in the same turn is a quotation, not a measurement, and it is labelled
+with when it was taken. And a report that says "verified" about anything
+outside the working tree is making a claim about a clock as well as a fact.
+
+**Content and removals reached `main` without a read, and the approvals were
+written afterwards.**
+
+On 21 September the owner merged PR #2 and PR #5 before reading either. PR #2
+carried five articles that no approval entry covered. PR #5 carried the
+cleanup, which rewrites text on routes that already existed, so it carried 130
+removals as well as additions. Both landed on `main` and reached production,
+and the retroactive approvals were written after the fact.
+
+It is the same shape as the entry below it: a control reported as exercised
+that was not. The gate record's whole claim is that content reaches `main`
+after a person has read it, and for these two merges the reading happened in
+the other order. The approvals that now exist describe a decision taken after
+the deployment, and anyone auditing this later should know that rather than
+infer the usual sequence from the usual paperwork.
+
+The owner identified this himself and recorded it as his error. It is here
+because the record is about what happened, not about who is at fault: an
+approval written after a merge proves less than one written before it, and the
+file should not let the two look alike.
+
 **The control was reported as in place, and it was not.**
 
 On 20 September 2026 the owner said both were being set up on GitHub, and this
