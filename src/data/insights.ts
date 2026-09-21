@@ -4,6 +4,8 @@ import { MONEY_POSTS } from "@/data/posts/money";
 import { CATEGORY_POSTS } from "@/data/posts/category";
 import { OPERATING_POSTS } from "@/data/posts/operating";
 import { DEFINITION_POSTS } from "@/data/posts/definition";
+import { SCALE_POSTS } from "@/data/posts/scale";
+import { COMPLIANCE_POSTS } from "@/data/posts/compliance";
 
 /**
  * INSIGHTS
@@ -413,7 +415,7 @@ const FOUNDING_POSTS: Insight[] = [
 ];
 
 /**
- * Every post, from the founding three plus the five content clusters.
+ * Every post, from the founding three plus the seven content clusters.
  *
  * Order in this array is not display order. ORDERED_INSIGHTS sorts by date, so
  * a post added to the wrong cluster file still lists correctly.
@@ -426,6 +428,8 @@ export const INSIGHTS: Insight[] = [
   ...OPERATING_POSTS,
   ...AGREEMENT_POSTS,
   ...DEFINITION_POSTS,
+  ...SCALE_POSTS,
+  ...COMPLIANCE_POSTS,
 ];
 
 /**
