@@ -1025,6 +1025,53 @@ function fundBatchFurniture(articles, why) {
  */
 const FURNITURE_LEDGER = [];
 
+/**
+ * A REFUSAL IS NOT AN OVERRUN WHEN ANOTHER ENTRY PAYS.
+ *
+ * Two batches can carry the same eyebrow or the same date. The nine hub cards
+ * dated 21 September are four from articles 3 to 6 and five from articles 7 to
+ * 11, and each batch funds its own. Entries are tried in order, so the first
+ * book funds four, refuses the fifth, and that refusal hands the value to the
+ * next entry, which funds it.
+ *
+ * The ledger recorded every refusal, so a correct handoff printed as
+ * "expected 4, found 9" against a budget doing exactly what it was built to
+ * do. A ledger that cannot tell a handoff from an overrun reports the working
+ * case and the broken one in the same words, which is the failure this file
+ * exists to catch in other checks.
+ *
+ * SO A REFUSAL IS A CANDIDATE, NOT A FINDING. A value is reported only when
+ * the number of times it was presented exceeds the number of times any book
+ * paid for it. Both are counted here, across every book, and the report
+ * subtracts them at the end.
+ *
+ * Presentations are counted once per value, on the first book that recognises
+ * it, so a handoff does not count one instance twice. That is sound because a
+ * book's budget is keyed by value: a book that recognises a value recognises
+ * every instance of that value.
+ *
+ * And a value that gets reported was refused by every book, so every book was
+ * exhausted, so what was funded is the whole combined budget. That is why the
+ * report can print the total expected without adding the books up itself.
+ *
+ * PLANTS, per the standing rule.
+ *
+ *   MUST CATCH: a tenth "September 21, 2026" planted into the hub capture,
+ *   against a combined budget of nine. Output:
+ *
+ *     ### furniture outside its template budget
+ *       "September 21, 2026"
+ *           surface:  the hub card only
+ *           expected: 9   found: 10
+ *
+ *   MUST NOT CATCH: the nine that are really on the hub, four funded by the
+ *   3 to 6 book and five by the 7 to 11 book. The section does not print.
+ */
+const FURNITURE_FIRST = new Map();
+const FURNITURE_SEEN = new Map();
+const FURNITURE_FUNDED = new Map();
+const bumpFurniture = (m, k) => m.set(k, (m.get(k) ?? 0) + 1);
+
 function furnitureBudget(articles, why) {
   const beforeRoutes = before.routeList ?? Object.keys(before.routes);
   const hub = beforeRoutes.includes("/insights") ? 1 : 0;
@@ -1056,6 +1103,8 @@ function spendFurniture(book, value) {
   if (!book) return false;
   const allowed = book.budget.get(value);
   if (allowed === undefined) return false;
+  if (!FURNITURE_FIRST.has(value)) FURNITURE_FIRST.set(value, book);
+  if (FURNITURE_FIRST.get(value) === book) bumpFurniture(FURNITURE_SEEN, value);
   /*
     SEEN COUNTS EVERY INSTANCE PRESENTED, SPENT ONLY THE ONES FUNDED.
 
@@ -1078,6 +1127,7 @@ function spendFurniture(book, value) {
     return false;
   }
   book.spent.set(value, used + 1);
+  bumpFurniture(FURNITURE_FUNDED, value);
   return true;
 }
 
@@ -2264,18 +2314,19 @@ const clean =
   Under says a card stopped rendering. The report has to tell them apart, so
   it prints what the templates expect against what the capture found.
 */
-if (FURNITURE_LEDGER.length) {
+const FURNITURE_UNPAID = new Map();
+for (const f of FURNITURE_LEDGER) {
+  if ((FURNITURE_SEEN.get(f.value) ?? 0) <= (FURNITURE_FUNDED.get(f.value) ?? 0)) continue;
+  if (!FURNITURE_UNPAID.has(f.value)) FURNITURE_UNPAID.set(f.value, f);
+}
+if (FURNITURE_UNPAID.size) {
   console.log(`\n### furniture outside its template budget`);
-  const seen = new Map();
-  for (const f of FURNITURE_LEDGER) {
-    const key = `${f.why}|${f.value}`;
-    if (!seen.has(key) || seen.get(key).found < f.found) seen.set(key, f);
-  }
-  for (const f of seen.values()) {
-    console.log(`  ${JSON.stringify(f.value)}`);
-    console.log(`      entry:    ${f.why.replace(/, directed.*/, '')}`);
+  for (const [value, f] of FURNITURE_UNPAID) {
+    console.log(`  ${JSON.stringify(value)}`);
     console.log(`      surface:  ${f.surface}`);
-    console.log(`      expected: ${f.expected}   found: ${f.found}`);
+    console.log(
+      `      expected: ${FURNITURE_FUNDED.get(value) ?? 0}   found: ${FURNITURE_SEEN.get(value)}`,
+    );
   }
 }
 
