@@ -570,7 +570,8 @@ function swapFor(field, kind, value) {
     if (value === target) return s.why;
     if (value === `H2:${target}` || value === `H3:${target}`) return s.why;
   }
-  if (field === "mainWords") {
+  /* (c): swap words are paid for by the budget, not by a vocabulary. */
+  if (false) {
     /*
       Word level only while the swap is actually being made. Once every "to"
       string is in place, this branch has nothing left to explain and its
@@ -1383,7 +1384,14 @@ const APPROVED_RULES = [
       ),
     why: 'CTA pattern, directed: "One position, two links, last block before the footer"',
     test: (v, field) => {
-      if (field === "mainWords") return CTA_WORDS.has(v);
+      /*
+        (c) The removed side vocabulary is gone. Words that leave are paid for
+        by the removed word budget, funded from the blocks this run approved
+        as removals, which is the same basis the added side has used since its
+        own vocabulary came out. CTA_WORDS approved "there" and "apply" out of
+        a content cleanup that had nothing to do with a call to action.
+      */
+      if (WORD_FIELDS.has(field)) return false;
       /* An anchor is matched on its text and its href together, never text. */
       if (v.includes(" -> ")) return CTA_ANCHORS.has(v);
       if (CTA_BLOCKS.has(v)) return true;
@@ -1447,9 +1455,8 @@ const APPROVED_RULES = [
     scope: SITE_WIDE,
     live: () => substitutionIsLive(RETITLE_FROM, RETITLE_TO),
     why: `${RETITLE_WHY} (word of the previous headline)`,
-    test: (v) =>
-      substitutionIsLive(RETITLE_FROM, RETITLE_TO) &&
-      RETITLE_FROM.split(" ").includes(v),
+    /* (c): the vocabulary is gone, the budget pays for these. */
+    test: () => false,
   },
   {
     kind: "added",
@@ -1457,9 +1464,7 @@ const APPROVED_RULES = [
     scope: SITE_WIDE,
     live: () => substitutionIsLive(RETITLE_FROM, RETITLE_TO),
     why: `${RETITLE_WHY} (word of the new headline)`,
-    test: (v) =>
-      substitutionIsLive(RETITLE_FROM, RETITLE_TO) &&
-      RETITLE_TO.split(" ").includes(v),
+    test: () => false,
   },
   {
     kind: "removed",
