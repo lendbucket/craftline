@@ -99,6 +99,8 @@ export const DEFINITION_POSTS: Insight[] = [
       "Franchise vs license: the three elements that decide it, why the name on the document is irrelevant, and the current payment threshold with the date it carries.",
     lead: "Calling an arrangement a license does not make it one. The federal test has three elements and it does not read the title page.",
     published: "2026-09-21",
+    /* Body, title, description or lead changed on 21 September 2026 in c6ae568, f1fc115, 9d311ba. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
@@ -251,6 +253,8 @@ export const DEFINITION_POSTS: Insight[] = [
       "How to franchise a business in the order the obligations bite: the three part test, the disclosure document, the audit, and registration before any offer.",
     lead: "Franchising a business starts with a document, an auditor, and in some states a regulator. Selling franchises is what happens after all three are in place.",
     published: "2026-09-21",
+    /* Body, title, description or lead changed on 21 September 2026 in c6ae568, 9d311ba. */
+    updated: "2026-09-21",
     body: [
       {
         kind: "paragraph",
