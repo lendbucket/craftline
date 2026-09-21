@@ -655,6 +655,48 @@ the search data for the existing title. A replacement is drafted that leads
 with the target term and stays in the length band. Then the retitle and its
 approval entry go in separate commits, the approval citing the message that
 gave the word, which is how every retitle on this property has been handled.
+## Open: three content follow-ups, found and not fixed
+
+Found while sweeping for self-references and frequency claims. None is
+fixed, because each is a content change and this branch is harness only.
+
+**1. A header comment that describes behaviour the page no longer has.**
+
+`src/data/posts/definition.ts` carries a block headed
+`THE CURRENT FIGURES ARE CITED AND NOT PRINTED`, which argues at length for
+citing the thresholds rather than printing them. The page has printed all
+three since the owner directed it, and links each to the notice. The comment
+is now the opposite of the file it sits in.
+
+It is worth more than a tidy-up. That comment is the record of a decision
+that was later reversed, and the reversal is recorded in the commit message
+rather than in the file. Rewriting it should keep both: what was decided
+first, and why it changed.
+
+**2. `often` in two descriptions.**
+
+| route | description opens |
+|---|---|
+| `/insights/how-franchise-renewal-works` | `Franchise renewal **often** means signing the current agreement` |
+| `/insights/buying-an-existing-franchise` | `Buying an existing franchise **often** comes with no disclosure document` |
+
+Both are frequency claims about how agreements and transfers usually work,
+in the metadata, and both survived the sweep that cut the same class from
+the bodies. The mechanism under each is sound and is stated in the article;
+the descriptions assert how common it is, which nobody counted.
+
+Descriptions are Rule One protected and both currently sit at 160 and 149
+characters with the term at position 0, so a rewrite has to hold all three
+constraints.
+
+**3. `Where it has one` in `src/data/posts/compliance.ts`.**
+
+The sentence reads: `A state regulates what happens after the sale. Where it
+has one, it restricts termination, non-renewal or transfer, and says nothing
+about registration at all.` The antecedent of `one` is `relationship law`,
+which is the list item's own label rather than anything in the sentence, so
+the pronoun points at nothing a reader has just been given. It was written
+in a hurry to remove `typically` and it removed the referent with it.
 ## Ruled: one article spells license the American way
 
 House style is British and stays British. `franchise-vs-license` is a scoped
