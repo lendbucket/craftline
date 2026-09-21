@@ -376,6 +376,7 @@ const ARTICLE_FURNITURE = new Set([
   "Read this",
 ]);
 const CARD_COMPOSITIONS = cardCompositions(APPROVED_ARTICLES);
+let FURNITURE_BOOK = null;
 
 /*
   The nine decided question and answer strings, read from the same export the
@@ -986,6 +987,120 @@ function fundBatchFurniture(articles, why) {
   }
 }
 
+/**
+ * FURNITURE BY COUNT, DERIVED FROM THE TEMPLATES, NEVER BY VALUE ALONE.
+ * ====================================================================
+ *
+ * Directed, with the coupling accepted: "Furniture is approved by count
+ * derived from the templates, one per card per article in the entry per
+ * surface, never by value alone. A template change is a presentation change
+ * and should go red, and a dropped card is a real defect. Every red it
+ * produces names the surface and gives expected against found."
+ *
+ * WHAT IT FIXES. An eyebrow and a date are values, not sentences, so two
+ * batches months apart can carry the same string. Matching by value let the
+ * articles 3 to 6 entry claim five "September 21, 2026" blocks, four of which
+ * were its own and the fifth belonging to articles 7 to 11, which carry the
+ * same date and have no entry at all.
+ *
+ * THE COUNTS, READ OFF THE TWO CARD TEMPLATES.
+ *
+ *   src/app/insights/page.tsx          eyebrow, date, title, description
+ *   src/app/insights/[slug]/page.tsx   eyebrow, title, description
+ *   src/app/franchising/page.tsx       title only
+ *
+ * So for an entry covering N articles, against a comparison whose BEFORE side
+ * already holds the hub and R article routes:
+ *
+ *   an eyebrow value  N(with that eyebrow) x (hub + R) instances
+ *   a date value      N(with that date)    x hub          instances
+ *
+ * Dates appear on the hub card only. /franchising renders titles and nothing
+ * else, so it contributes no furniture.
+ *
+ * EXACT, NOT A CEILING. Under-running is as wrong as over-running: a card that
+ * stopped rendering is a defect, and a ceiling would hide it. The ledger below
+ * reports both directions.
+ */
+const FURNITURE_LEDGER = [];
+
+function furnitureBudget(articles, why) {
+  const beforeRoutes = before.routeList ?? Object.keys(before.routes);
+  const hub = beforeRoutes.includes("/insights") ? 1 : 0;
+  const articleRoutes = beforeRoutes.filter((r) => r.startsWith("/insights/")).length;
+  const surfaces = hub + articleRoutes;
+
+  const budget = new Map();
+  const where = new Map();
+  for (const a of articles) {
+    budget.set(a.eyebrow, (budget.get(a.eyebrow) ?? 0) + surfaces);
+    where.set(
+      a.eyebrow,
+      `the hub and ${articleRoutes} article route${articleRoutes === 1 ? "" : "s"}`,
+    );
+    budget.set(a.date, (budget.get(a.date) ?? 0) + hub);
+    where.set(a.date, "the hub card only");
+  }
+  return { budget, where, why, spent: new Map() };
+}
+
+/**
+ * Spend one instance of a furniture value, or refuse.
+ *
+ * Every refusal is recorded with the surface the template says it belongs to
+ * and the two numbers, so the report can say what was expected and what was
+ * found rather than only that something failed.
+ */
+function spendFurniture(book, value) {
+  if (!book) return false;
+  const allowed = book.budget.get(value);
+  if (allowed === undefined) return false;
+  const used = book.spent.get(value) ?? 0;
+  if (used >= allowed) {
+    FURNITURE_LEDGER.push({
+      why: book.why,
+      value,
+      surface: book.where.get(value),
+      expected: allowed,
+      found: used + 1,
+    });
+    return false;
+  }
+  book.spent.set(value, used + 1);
+  return true;
+}
+
+/**
+ * (a) AN ENTRY WHOSE DECISION IS ALREADY IN THE BASELINE APPROVES NOTHING.
+ * =======================================================================
+ *
+ * Directed. Half of this existed already: batchIsNew retires an article entry
+ * once its routes are on both sides, and substitutionIsLive retires a string
+ * swap once the swap has happened. Every entry now declares the same thing,
+ * and an entry with no signal says so in the open rather than by omission.
+ *
+ * THE THREE SHAPES OF SIGNAL.
+ *
+ *   a route decision   live while the route is being introduced
+ *   a substitution     live while the old string is still in the baseline and
+ *                      the new one is not
+ *   a one-time edit    live while the thing it changed is still in the
+ *                      baseline in its old form
+ *
+ * WHAT ALWAYS_LIVE MEANS, AND WHY IT IS NOT A SHRUG. Three schema entries add
+ * a node that either is or is not in the capture, and a node that is already
+ * present produces no addition to approve, so retiring them buys nothing a
+ * zero delta does not already buy. They are marked ALWAYS_LIVE with that
+ * reasoning attached rather than given a signal that would never fire.
+ */
+const ALWAYS_LIVE = () => true;
+
+/** Is a value present anywhere in the before capture for this field? */
+function inBaseline(field, predicate) {
+  for (const v of valuesOf("before", field)) if (predicate(v)) return true;
+  return false;
+}
+
 /** Every route a value landed on has to be inside the scope, or it fails. */
 function inScope(scope, routes) {
   if (!scope) return false;
@@ -1065,6 +1180,7 @@ const ARTICLE_FURNITURE_2 = new Set([
   ...APPROVED_ARTICLES_2.map((a) => a.date),
 ]);
 const CARD_COMPOSITIONS_2 = cardCompositions(APPROVED_ARTICLES_2);
+let FURNITURE_BOOK_2 = null;
 
 /**
  * PROPOSED, NOT BUILT. THE THREE CHANGES, AND WHAT EACH ONE BREAKS.
@@ -1161,6 +1277,12 @@ const APPROVED_RULES = [
     kind: "added",
     field: "mainBlocks",
     scope: ARTICLE_SURFACES,
+    live: () =>
+      APPROVED_SPLITS.some(
+        (r) =>
+          valuesOf("before", "mainBlocks").has(r.original) &&
+          !valuesOf("after", "mainBlocks").has(r.original),
+      ),
     why: SPLIT_WHY,
     test: (v) => {
       const r = SPLIT_HALVES.get(v);
@@ -1179,6 +1301,7 @@ const APPROVED_RULES = [
     kind: "removed",
     field: "*",
     scope: SITE_WIDE,
+    live: () => substitutionIsLive(RETITLE_FROM, RETITLE_TO),
     why: RETITLE_WHY,
     test: (v, field) =>
       v.includes(RETITLE_FROM) &&
@@ -1188,6 +1311,7 @@ const APPROVED_RULES = [
     kind: "added",
     field: "*",
     scope: SITE_WIDE,
+    live: () => substitutionIsLive(RETITLE_FROM, RETITLE_TO),
     why: RETITLE_WHY,
     test: (v, field) =>
       v.includes(RETITLE_TO) &&
@@ -1206,13 +1330,14 @@ const APPROVED_RULES = [
     kind: "added",
     field: "*",
     scope: ARTICLE_SURFACES,
+    live: () => batchIsNew(APPROVED_ARTICLES.map((a) => a.slug)),
     why: 'articles 1 and 2, directed: "Approve the two new routes and their propagation"',
     test: (v, field) => {
       /* Spent. These two routes existed before any run this entry can reach. */
       if (!batchIsNew(APPROVED_ARTICLES.map((a) => a.slug))) return false;
       /* Words are funded by the blocks below, never matched as a vocabulary. */
       if (WORD_FIELDS.has(field)) return false;
-      if (ARTICLE_FURNITURE.has(v)) return true;
+      if (ARTICLE_FURNITURE.has(v)) return spendFurniture(FURNITURE_BOOK, v);
       /*
         An anchor is matched on its text and its href together. Splitting the
         href off and approving the text alone is what let an approved title
@@ -1229,11 +1354,12 @@ const APPROVED_RULES = [
     kind: "added",
     field: "*",
     scope: ARTICLE_SURFACES,
+    live: () => batchIsNew(APPROVED_ARTICLES_2.map((a) => a.slug)),
     why: 'articles 3 to 6, directed: "Articles three through six approved. My word, given here in advance: write the approval commit for the four routes and their propagation."',
     test: (v, field) => {
       if (!batchIsNew(APPROVED_ARTICLES_2.map((a) => a.slug))) return false;
       if (WORD_FIELDS.has(field)) return false;
-      if (ARTICLE_FURNITURE_2.has(v)) return true;
+      if (ARTICLE_FURNITURE_2.has(v)) return spendFurniture(FURNITURE_BOOK_2, v);
       if (v.includes(" -> ")) return CARD_COMPOSITIONS_2.has(v);
       return ARTICLE_STRINGS_2.has(v.replace(/^H[1-6]:/, "")) || CARD_COMPOSITIONS_2.has(v);
     },
@@ -1244,6 +1370,17 @@ const APPROVED_RULES = [
     kind: "removed",
     field: "*",
     scope: SITE_WIDE,
+    /*
+      Presence in the baseline is not the signal. Three of these strings are
+      ordinary link labels that still exist elsewhere on the site, so "is it
+      in before" was true for ever. The decision was to REMOVE these blocks,
+      so it is live only while one of them is in before and gone from after.
+    */
+    live: () =>
+      inBaseline("mainBlocks", (v) => CTA_BLOCKS.has(v)) &&
+      [...CTA_BLOCKS].some(
+        (v) => valuesOf("before", "mainBlocks").has(v) && !valuesOf("after", "mainBlocks").has(v),
+      ),
     why: 'CTA pattern, directed: "One position, two links, last block before the footer"',
     test: (v, field) => {
       if (field === "mainWords") return CTA_WORDS.has(v);
@@ -1260,6 +1397,7 @@ const APPROVED_RULES = [
     kind: "removed",
     field: "metas",
     scope: SITE_WIDE,
+    live: () => inBaseline("metas", (v) => META_KEY.test(v) && OLD_DESCRIPTIONS.has(v.replace(META_KEY, ""))),
     why: 'description lengths, directed: "Fix the short home description and the three long descriptions"',
     test: (v) => META_KEY.test(v) && OLD_DESCRIPTIONS.has(v.replace(META_KEY, "")),
   },
@@ -1267,6 +1405,7 @@ const APPROVED_RULES = [
     kind: "added",
     field: "metas",
     scope: SITE_WIDE,
+    live: () => inBaseline("metas", (v) => META_KEY.test(v) && OLD_DESCRIPTIONS.has(v.replace(META_KEY, ""))),
     why: 'description lengths, directed: "Fix the short home description and the three long descriptions"',
     test: (v) => META_KEY.test(v) && NEW_DESCRIPTIONS.has(v.replace(META_KEY, "")),
   },
@@ -1275,6 +1414,7 @@ const APPROVED_RULES = [
     kind: "removed",
     field: "title",
     scope: SITE_WIDE,
+    live: () => substitutionIsLive(RETITLE_FROM, RETITLE_TO),
     why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
     test: (v) => v === `${RETITLE_FROM}${BRAND_SUFFIX}`,
   },
@@ -1282,6 +1422,7 @@ const APPROVED_RULES = [
     kind: "added",
     field: "title",
     scope: SITE_WIDE,
+    live: () => substitutionIsLive(RETITLE_FROM, RETITLE_TO),
     why: `${RETITLE_WHY}, and the suffix drop, on the same string`,
     test: (v) => v === RETITLE_TO,
   },
@@ -1304,6 +1445,7 @@ const APPROVED_RULES = [
     kind: "removed",
     field: "mainWords",
     scope: SITE_WIDE,
+    live: () => substitutionIsLive(RETITLE_FROM, RETITLE_TO),
     why: `${RETITLE_WHY} (word of the previous headline)`,
     test: (v) =>
       substitutionIsLive(RETITLE_FROM, RETITLE_TO) &&
@@ -1313,6 +1455,7 @@ const APPROVED_RULES = [
     kind: "added",
     field: "mainWords",
     scope: SITE_WIDE,
+    live: () => substitutionIsLive(RETITLE_FROM, RETITLE_TO),
     why: `${RETITLE_WHY} (word of the new headline)`,
     test: (v) =>
       substitutionIsLive(RETITLE_FROM, RETITLE_TO) &&
@@ -1322,6 +1465,7 @@ const APPROVED_RULES = [
     kind: "removed",
     field: "title",
     scope: SITE_WIDE,
+    live: () => [...titlesBefore].some((t) => t.endsWith(BRAND_SUFFIX)),
     why: 'title suffix: "Drop | Craftline Brands from article titles"',
     test: (v) =>
       v.endsWith(BRAND_SUFFIX) &&
@@ -1331,6 +1475,7 @@ const APPROVED_RULES = [
     kind: "added",
     field: "title",
     scope: SITE_WIDE,
+    live: () => [...titlesBefore].some((t) => t.endsWith(BRAND_SUFFIX)),
     why: 'title suffix: "Drop | Craftline Brands from article titles"',
     test: (v) => titlesBefore.has(v + BRAND_SUFFIX),
   },
@@ -1338,6 +1483,7 @@ const APPROVED_RULES = [
     kind: "removed",
     field: "jsonLd",
     scope: SITE_WIDE,
+    live: ALWAYS_LIVE,
     why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
     test: (v) =>
       v === "url=https://craftlinebrands.com/" ||
@@ -1347,6 +1493,7 @@ const APPROVED_RULES = [
     kind: "added",
     field: "jsonLd",
     scope: SITE_WIDE,
+    live: ALWAYS_LIVE,
     why: 'schema hygiene: "Fix the trailing slash so schema url matches canonical exactly"',
     test: (v) =>
       v === "url=https://craftlinebrands.com" ||
@@ -1365,6 +1512,7 @@ const APPROVED_RULES = [
     kind: "added",
     field: "jsonLd",
     scope: SITE_WIDE,
+    live: ALWAYS_LIVE,
     why: 'entity work, directed: "legalName from existing config", LEGAL_ENTITIES[1], the franchisor entity',
     test: (v) => v === "legalName=Craftline Brands Franchising LLC",
   },
@@ -1372,6 +1520,7 @@ const APPROVED_RULES = [
     kind: "added",
     field: "jsonLd",
     scope: SITE_WIDE,
+    live: ALWAYS_LIVE,
     why: 'FAQPage on /franchising, from FRANCHISE_FAQ, already rendered on the page',
     /*
       ANCHORED ON THE ACTUAL FAQ VALUES, NOT ON THE FIELD NAME.
@@ -1396,6 +1545,7 @@ const APPROVED_RULES = [
     kind: "added",
     field: "jsonLd",
     scope: SITE_WIDE,
+    live: ALWAYS_LIVE,
     why: 'breadcrumb schema on /privacy and /terms, directed',
     test: (v) =>
       /*
@@ -1418,10 +1568,21 @@ const APPROVED_RULES = [
   },
 ];
 
+/*
+  Liveness is asked before the test, not after. An entry whose decision is
+  already in the baseline should never get as far as matching a value, because
+  a match it cannot legitimately claim is exactly what this is here to stop.
+  A missing live declaration is a hard error rather than a default, so a new
+  entry cannot be added without somebody deciding when it expires.
+*/
 function ruleFor(field, kind, value, routes) {
   for (const rule of APPROVED_RULES) {
     if (rule.field !== "*" && rule.field !== field) continue;
     if (rule.kind !== kind) continue;
+    if (typeof rule.live !== "function") {
+      throw new Error(`approval entry has no live declaration: ${rule.why}`);
+    }
+    if (!rule.live()) continue;
     if (!rule.test(value, field)) continue;
     if (!inScope(rule.scope, routes)) continue;
     return rule.why;
@@ -1691,14 +1852,18 @@ const sitemapGained = sitemapGainedAll.filter((r) => !APPROVED_NEW_ROUTES.has(r)
   exists by this point, so batchIsNew can answer, and every entry that is not
   the batch being introduced funds nothing.
 */
-fundBatchFurniture(
-  APPROVED_ARTICLES,
-  'articles 1 and 2, directed: "Approve the two new routes and their propagation"',
-);
-fundBatchFurniture(
-  APPROVED_ARTICLES_2,
-  'articles 3 to 6, directed: "Articles three through six approved... write the approval commit for the four routes and their propagation."',
-);
+const WHY_1 =
+  'articles 1 and 2, directed: "Approve the two new routes and their propagation"';
+if (batchIsNew(APPROVED_ARTICLES.map((a) => a.slug))) {
+  FURNITURE_BOOK = furnitureBudget(APPROVED_ARTICLES, WHY_1);
+}
+fundBatchFurniture(APPROVED_ARTICLES, WHY_1);
+const WHY_2 =
+  'articles 3 to 6, directed: "Articles three through six approved... write the approval commit for the four routes and their propagation."';
+if (batchIsNew(APPROVED_ARTICLES_2.map((a) => a.slug))) {
+  FURNITURE_BOOK_2 = furnitureBudget(APPROVED_ARTICLES_2, WHY_2);
+}
+fundBatchFurniture(APPROVED_ARTICLES_2, WHY_2);
 
 const report = {};
 const splits = {};
@@ -1918,8 +2083,19 @@ if (splitTotal)
   ${splitTotal} block(s) reclassified as SPLIT: element boundaries moved, every word survives on the same route.`,
   );
 
+/*
+  RESOLVED AGAINST THIS FILE, NOT AGAINST THE WORKING DIRECTORY.
+
+  This was "scratch/rule-one-result.json", a path relative to cwd. Run from
+  the project root it worked. Run from scratch/ it resolved to
+  scratch/scratch/, threw ENOENT, and killed the process after the tables had
+  printed but before the verdict line. Six comparisons in one session read as
+  exit 1 and were quoted as red when they had crashed, which is the same
+  failure as a check that cannot match: the broken result and the expected
+  result look identical from outside.
+*/
 writeFileSync(
-  "scratch/rule-one-result.json",
+  new URL("../scratch/rule-one-result.json", import.meta.url),
   JSON.stringify(
     { routesLost, routesGained, sitemapLost, sitemapGained, report, splits },
     null,
@@ -1951,6 +2127,53 @@ const clean =
   sitemapLost.length === 0 &&
   sitemapGained.length === 0;
 
+/*
+  FURNITURE OUTSIDE ITS TEMPLATE BUDGET, NAMED WITH THE SURFACE AND BOTH
+  NUMBERS. Over says a later batch is borrowing an earlier entry's credit.
+  Under says a card stopped rendering. The report has to tell them apart, so
+  it prints what the templates expect against what the capture found.
+*/
+if (FURNITURE_LEDGER.length) {
+  console.log(`\n### furniture outside its template budget`);
+  const seen = new Map();
+  for (const f of FURNITURE_LEDGER) {
+    const key = `${f.why}|${f.value}`;
+    if (!seen.has(key) || seen.get(key).found < f.found) seen.set(key, f);
+  }
+  for (const f of seen.values()) {
+    console.log(`  ${JSON.stringify(f.value)}`);
+    console.log(`      entry:    ${f.why.replace(/, directed.*/, '')}`);
+    console.log(`      surface:  ${f.surface}`);
+    console.log(`      expected: ${f.expected}   found: ${f.found}`);
+  }
+}
+
+/* The other direction: promised by the templates, absent from the capture. */
+{
+  const books = [
+    ['articles 1 and 2', FURNITURE_BOOK],
+    ['articles 3 to 6', FURNITURE_BOOK_2],
+  ];
+  const short = [];
+  for (const [label, book] of books) {
+    if (!book) continue;
+    for (const [value, allowed] of book.budget) {
+      const used = book.spent.get(value) ?? 0;
+      if (used < allowed) {
+        short.push({ label, value, allowed, used, where: book.where.get(value) });
+      }
+    }
+  }
+  if (short.length) {
+    console.log(`\n### furniture the templates promised and the capture did not hold`);
+    for (const f of short) {
+      console.log(`  ${JSON.stringify(f.value)}`);
+      console.log(`      entry:    ${f.label}`);
+      console.log(`      surface:  ${f.where}`);
+      console.log(`      expected: ${f.allowed}   found: ${f.used}`);
+    }
+  }
+}
 console.log(`\n================ RESULT ================`);
 if (clean) {
   console.log(
