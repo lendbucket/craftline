@@ -177,6 +177,45 @@ reachable from a commit, and the owner set them up. CODEOWNERS is the one place
 the recursion works in our favour, because editing it is itself a CODEOWNERS
 change requiring the same review.
 
+**The control was reported as in place, and it was not.**
+
+On 20 September 2026 the owner said both were being set up on GitHub, and this
+file was written on that basis: branch protection on `main` requiring a pull
+request and review, plus CODEOWNERS on `scripts/`. The paragraph above was
+written as though that had happened.
+
+It had not. On 21 September a session pushed four commits straight to `main`
+and the push succeeded. Checking afterwards: `main` returned "Branch not
+protected", the repository rulesets list was empty, and no CODEOWNERS file
+existed anywhere in the tree. So for the whole of the intervening period the
+only control against a session approving its own work was a sentence in this
+file describing a control that did not exist.
+
+That is worse than having no control, and it is the same shape as the stale
+capture: something reported a state it had not verified, and everything
+downstream read the report instead of the state. A rule recorded as enforced is
+read as enforced.
+
+**What is required for the control to mean anything.** Branch protection alone
+does not close this. The owner and the agent were operating under the same
+GitHub credentials, and GitHub cannot distinguish two actors who authenticate
+as one. A rule requiring review by somebody other than the author is satisfied
+by the owner's own identity whoever is driving it, and a CODEOWNERS entry
+naming the owner is satisfied the same way. The agent needs its own GitHub
+identity before either control can tell the two apart, and the owner is setting
+that up alongside the ruleset and CODEOWNERS on `scripts/` and this file.
+
+**Until the owner says it is done, no session pushes to `main`, even where
+the push would succeed.** A push succeeding is not evidence that it was
+allowed; on 21 September it was evidence of the opposite. Feature branches and
+pull requests only, and the fact that a direct push works is a finding to
+report rather than a route to take.
+
+**And do not build either control from inside a session.** A CODEOWNERS file
+written by the session it is meant to constrain, in the commit it is meant to
+gate, is the control that only looks like one. This belongs to the owner, on
+GitHub, under an identity the agent does not hold.
+
 **A separate failure class: the data was right and the reader was not.**
 
 This is not the audit-checking-the-wrong-thing pattern above, and it is on the
