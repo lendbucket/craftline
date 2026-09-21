@@ -214,7 +214,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "That is why searching for the number of registration states returns several confident answers that disagree with each other. The question is underspecified rather than difficult.",
+        text: "So the question is underspecified rather than difficult. An answer to it depends on what the person answering decided to count.",
       },
 
       { kind: "heading", text: "Three different things get called registration" },
@@ -234,11 +234,11 @@ export const COMPLIANCE_POSTS: Insight[] = [
       { kind: "heading", text: "Why this page gives no number" },
       {
         kind: "paragraph",
-        text: "Those three categories overlap differently depending on who is counting. Some states run a registration regime and a relationship statute. Some run one and not the other. Some require only a notice, and a few require a notice in circumstances that a summary would not predict.",
+        text: "The three overlap, and a state may run any combination of them: a registration regime, a relationship statute, both, or only a notice requirement. A count therefore depends on which of the three the counter decided to include.",
       },
       {
         kind: "paragraph",
-        text: "No primary source publishes a single figure. The Federal Trade Commission does not, because registration is not federal. No state publishes a count of other states. The numbers in circulation are secondary, they disagree with one another, and they go stale whenever a statute is amended.",
+        text: "No primary source consulted for this page publishes a single figure. The Federal Trade Commission does not, because registration is not federal, and NASAA, which coordinates the registration guidelines the states work from, publishes no count either. Whatever number is in circulation goes stale as soon as a statute is amended.",
       },
       {
         kind: "paragraph",
@@ -274,11 +274,49 @@ export const COMPLIANCE_POSTS: Insight[] = [
       { kind: "heading", text: "Which is why a website can be the exposure" },
       {
         kind: "paragraph",
-        text: "Offering covers advertising and soliciting. A franchise recruitment page, a paid campaign aimed at a state, or an enquiry form that accepts a submission from somebody in one can all amount to offering, long before anybody has signed anything or paid anything.",
+        text: [
+          "All three statutes define the word the same way, and soliciting is inside the definition. California's reaches ",
+          {
+            text: "every attempt to dispose of, or solicitation of an offer to buy, a franchise",
+            href: "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CORP&sectionNum=31018",
+            external: true,
+          },
+          ", New York's ",
+          {
+            text: "any attempt to offer to dispose of, or solicitation of an offer to buy",
+            href: "https://www.nysenate.gov/legislation/laws/GBS/681",
+            external: true,
+          },
+          ", Washington's ",
+          {
+            text: "every attempt or offer to dispose of or solicitation of an offer to buy",
+            href: "https://app.leg.wa.gov/rcw/default.aspx?cite=19.100.010",
+            external: true,
+          },
+          ". So an enquiry form that accepts a submission, or a conversation begun with somebody in one of those states, is capable of being a solicitation long before anybody signs or pays.",
+        ],
       },
       {
         kind: "paragraph",
-        text: "That is the reason a franchisor in formation keeps its public pages informational and says plainly that nothing is being offered. It is not excessive caution and it is not a disclaimer habit. It is the statute, which uses the word offer and means it.",
+        text: [
+          "Advertising is not inside that definition, and two of the three handle it in a section of its own. California requires that ",
+          {
+            text: "a true copy of the advertisement be filed with the commissioner at least three business days before first publication",
+            href: "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CORP&sectionNum=31156",
+            external: true,
+          },
+          ", and Washington ",
+          {
+            text: "at least seven days before publication",
+            href: "https://app.leg.wa.gov/rcw/default.aspx?cite=19.100.100",
+            external: true,
+          },
+          ". Both apply to advertisements offering a franchise subject to registration, so they bite once registration does.",
+        ],
+      },
+      {
+        kind: "paragraph",
+        text: "Between them those two things are the reason a franchisor in formation keeps its public pages informational and says plainly that nothing is being offered. It is not a disclaimer habit. It is the statutes, which put solicitation inside the definition of an offer, and in two of these three put advertising on a filing clock of its own.",
       },
 
       { kind: "heading", text: "A state with no registration can still require a filing" },
@@ -308,7 +346,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
       { kind: "heading", text: "How to check a single state properly" },
       {
         kind: "paragraph",
-        text: "Start from the state's own statute rather than from anybody's summary. Find the section that makes offering or selling unlawful without registration, filing or exemption. Read what that state defines as a franchise, because several define it more broadly than the federal rule does and a business outside the federal definition can still be inside a state one. Then identify the administering agency, which is usually the securities regulator or the attorney general rather than anything with franchise in its name. The right reader for the answer is a franchise lawyer admitted in that state.",
+        text: "Start from the state's own statute rather than from anybody's summary. Find the section that makes offering or selling unlawful without registration, filing or exemption. Read that state's own definition of a franchise, because it is the definition the section turns on and it need not match the federal one. Then identify the administering agency, which the statute names. The right reader for the answer is a franchise lawyer admitted in that state.",
       },
 
       { kind: "heading", text: "What changes, and how often" },

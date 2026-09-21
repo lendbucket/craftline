@@ -87,7 +87,7 @@ export const SCALE_POSTS: Insight[] = [
       {
         kind: "paragraph",
         text: [
-          "This is the part most descriptions of the model leave out. The Federal Trade Commission's compliance guide states that ",
+          "The Federal Trade Commission's compliance guide states that ",
           {
             text: "subfranchisors are also responsible for preparing disclosure documents",
             href: "https://www.ftc.gov/system/files/documents/plain-language/bus70-franchise-rule-compliance-guide.pdf",
@@ -133,13 +133,13 @@ export const SCALE_POSTS: Insight[] = [
       { kind: "heading", text: "The questions worth asking before the map" },
       {
         kind: "paragraph",
-        text: "Whether the master agreement binds you to a development schedule as well as to a recruitment role. How fees divide between you and the franchisor, on each unit sale and on continuing royalties. What happens to your sub-franchisees if your own master agreement ends, and who carries the obligations to them from that point. The last one is discovered late more often than the others, and it is written down from the start.",
+        text: "Whether the master agreement binds you to a development schedule as well as to a recruitment role. How fees divide between you and the franchisor, on each unit sale and on continuing royalties. What happens to your sub-franchisees if your own master agreement ends, and who carries the obligations to them from that point. That last one sits in the master agreement rather than in the agreements those sub-franchisees signed, so it is readable from the start by whoever thinks to look there.",
       },
 
       { kind: "heading", text: "Where the honest uncertainty sits" },
       {
         kind: "paragraph",
-        text: "Master franchising puts two different businesses in one pair of hands. One is operating, which most buyers understand and can assess from experience. The other is franchise sales and support, which is a regulated activity with its own skills, its own costs and its own liabilities, and which almost nobody has done before doing it.",
+        text: "Master franchising puts two different businesses in one pair of hands. One is operating, which most buyers understand and can assess from experience. The other is franchise sales and support, which is a regulated activity carrying its own skills, its own costs and its own liabilities, and which is not the activity the operating experience was gained in.",
       },
       {
         kind: "paragraph",
@@ -207,7 +207,7 @@ export const SCALE_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "It then goes further, in the direction most people assume it goes the other way. Even where the franchisor has and exercises the right to approve or refuse the sale, the transferee is still not entitled to disclosures, unless the franchisor plays some more significant role in it.",
+        text: "It then goes further. Even where the franchisor has and exercises the right to approve or refuse the sale, the transferee is still not entitled to disclosures, unless the franchisor plays some more significant role in it.",
       },
       {
         kind: "paragraph",
@@ -242,7 +242,13 @@ export const SCALE_POSTS: Insight[] = [
       {
         kind: "paragraph",
         text: [
-          "A transfer typically requires the buyer to qualify with the franchisor, to pay a transfer fee, and to sign the franchisor's current form of agreement rather than to step into the seller's. ",
+          "What a transfer requires is disclosed rather than customary, and there is a fixed place to read it. ",
+          {
+            text: "Item 17 of the disclosure document",
+            href: "https://www.law.cornell.edu/cfr/text/16/436.5",
+            external: true,
+          },
+          " carries a row for the franchisor's approval of a transfer by the franchisee and another for the conditions of that approval, which is where a particular system sets out what it wants: the buyer qualifying, a transfer fee, a release, and which form of agreement gets signed. ",
           {
             text: "What is actually in a franchise agreement",
             href: "/insights/what-is-in-a-franchise-agreement",
@@ -281,7 +287,7 @@ export const SCALE_POSTS: Insight[] = [
     body: [
       {
         kind: "paragraph",
-        text: "Multi unit ownership is ordinary in franchising and it is usually discussed as an ambition rather than as a structure. The structure is what matters, because three quite different contracts produce the same photograph of four locations.",
+        text: "Multi unit ownership is a structure before it is an ambition, and the structure is what matters, because three quite different contracts produce the same photograph of four locations.",
       },
       {
         kind: "paragraph",
@@ -302,13 +308,13 @@ export const SCALE_POSTS: Insight[] = [
       },
       {
         kind: "paragraph",
-        text: "This route carries the most forward obligation of the three, and it is the one most often signed on the strength of a market study rather than on operating experience in the market being studied.",
+        text: "This route carries the most forward obligation of the three, and all of it is committed at signing, which is before any operating experience in that market exists to inform it.",
       },
 
       { kind: "heading", text: "Route two, one unit at a time" },
       {
         kind: "paragraph",
-        text: "The operator signs a single franchise agreement, runs it, and signs another once the first is working. No forward commitment exists, so nothing is forfeited if the second never happens. The price of that flexibility is that the franchisor is under no obligation to hold anything open, and whether a right of first refusal over adjacent areas is available, and what it costs, is a negotiated term rather than a standard one.",
+        text: "The operator signs a single franchise agreement, runs it, and signs another once the first is working. No forward commitment exists, so nothing is forfeited if the second never happens. The price of that flexibility is that the franchisor is under no obligation to hold anything open. Whether a right of first refusal over adjacent areas exists at all is a term of the agreement, so it is readable rather than assumable.",
       },
 
       { kind: "heading", text: "Route three, selling franchises rather than operating them" },
@@ -331,15 +337,15 @@ export const SCALE_POSTS: Insight[] = [
       { kind: "heading", text: "What multiplies, and what does not" },
       {
         kind: "paragraph",
-        text: "The thing multi unit operators consistently underestimate is which parts of the business scale cleanly and which do not.",
+        text: "Not every part of the business scales at the same rate, and which parts do is decided by the structure rather than by effort.",
       },
       {
         kind: "list",
         items: [
-          "Management does not multiply cleanly. A second unit usually needs a supervisory layer the first did not, and that layer arrives before the revenue that pays for it.",
-          "Systems do multiply well, which is the real argument for operating inside a franchise rather than independently. The playbook was written to be run more than once.",
-          "Risk concentrates rather than spreads. Several units of one brand in one region share a brand, a labour market and a local economy, and they move together when any of those move.",
-          "Personal guarantees accumulate, and their total is rarely written down in one place by anybody.",
+          "Management does not multiply cleanly. A second unit needs supervision the first did not, because one owner cannot be in two places, and where that supervision is a hire it is a cost carried before the second unit earns anything.",
+          "Systems do multiply well. A playbook written to be run more than once carries to a second unit without being written again, which is the structural argument for operating inside a franchise rather than independently.",
+          "Risk concentrates rather than spreads. Several units of one brand in one region share a brand, a labour market and a local economy, so where any of those moves the units move together and the second is not a hedge against the first.",
+          "Where each agreement carries a personal guarantee, the guarantees accumulate, and the total appears on none of them.",
         ],
       },
       {
