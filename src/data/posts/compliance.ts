@@ -72,7 +72,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
     body: [
       {
         kind: "paragraph",
-        text: "Item 19 of a Franchise Disclosure Document is the financial performance representation. It is the section a prospective franchisee turns to first and the section most likely to be blank, and neither of those facts is an accident.",
+        text: "Item 19 of a Franchise Disclosure Document is the financial performance representation.",
       },
       {
         kind: "paragraph",
@@ -143,7 +143,7 @@ export const COMPLIANCE_POSTS: Insight[] = [
       {
         kind: "paragraph",
         text: [
-          "This is the part rarely stated plainly, and it is the strongest fact in the section. A franchisor that makes no Item 19 representation is ",
+          "A franchisor that makes no Item 19 representation is ",
           {
             text: "prohibited from making any such representations outside the confines of the disclosure document",
             href: "https://www.ftc.gov/system/files/documents/plain-language/bus70-franchise-rule-compliance-guide.pdf",
@@ -170,12 +170,12 @@ export const COMPLIANCE_POSTS: Insight[] = [
       { kind: "heading", text: "How to read an empty Item 19" },
       {
         kind: "paragraph",
-        text: "An empty Item 19 says nothing about quality in either direction. A young system may have too few units over too short a period to have a defensible basis for saying anything. An established system may decline for reasons of its own, including litigation exposure.",
+        text: "An empty Item 19 says nothing about quality in either direction. A young system may have too few units over too short a period to have a defensible basis for saying anything. An established system may decline for reasons of its own.",
       },
       {
         kind: "paragraph",
         text: [
-          "What it does tell you is where to look instead. Item 20 carries the outlet tables year by year, including terminations, non-renewals, transfers and closures, and those are facts about the system rather than projections about you. ",
+          "What it does tell you is where to look instead. Item 20 carries the outlet tables for the last three fiscal years, including terminations, non-renewals, transfers, and outlets that ceased operations for other reasons, and those are facts about the system rather than projections about you. ",
           {
             text: "How to check a franchisor before you sign",
             href: "/insights/how-to-check-a-franchisor",
